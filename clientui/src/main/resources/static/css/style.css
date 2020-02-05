@@ -1,0 +1,96 @@
+.green, .prolong-loan a, .prolong-loan a:hover {
+    color: #609974;
+}
+
+.red {
+    color: #F00;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.green, .red {
+    font-weight: bold;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.container {
+    margin-top: 380px;
+}
+
+.book-title {
+    font-style: italic;
+}
+
+.img-card-book {
+    width: 220px;
+}
+
+.input-required {
+    color: red;
+    font-weight: bold;
+}
+
+.form-search {
+    margin: auto;
+}
+
+.search-radio {
+    width: 290px;
+}
+
+.logout-link {
+    background-color: inherit;
+    border: none;
+    color: rgba(0, 0, 0, .5);
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.logout-link:hover {
+    color: rgba(0, 0, 0, .7);
+}
+
+.alert {
+    text-align: center;
+}
+
+.alert-danger p, .alert-success p {
+    margin: 0;
+}
+
+.no-copies {
+    width: 200px;
+    text-align: center;
+}
+
+@media all and (max-width: 991px) {
+    .fixed-top {
+        position: static;
+    }
+
+    .alert {
+        margin-top: 20px !important;
+    }
+
+    .container {
+        margin-top: 0;
+    }
+
+    .navbar-brand {
+        margin-right: 0;
+    }
+
+    .logout-link {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .links-menu {
+        text-align: center;
+    }
+}
