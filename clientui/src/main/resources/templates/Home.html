@@ -5,12 +5,70 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Liste des livres de la bibliothèque municipale</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="/css/navbar.css" />
         <link rel="stylesheet" type="text/css" href="/css/style.css" />
+        <link rel="stylesheet" type="text/css" href="/css/home.css" />
     </head>
     <body>
         <div th:replace="Navbar :: navbar"></div>
-        <div class="container">
-            <p>Bienvenue !</p>
+        <div class="container-fluid row">
+            <div class="text-presentation green-text col-lg-4 text-justify">
+                <p><span class="text-uppercase">Bricovoisins</span> est un réseau local dédié à la communauté clermontoise.</p>
+
+                <p>Vous aidez un membre et un membre peut vous aider.</p>
+
+                <p>Vous aidez quelqu'un et vous gagnez des points d'aide pour obtenir 'aide d'un autre membre.</p>
+
+                <p>Pas d'argent.<br />
+                    Juste des échanges et des coups de main.
+                </p>
+
+                <p>Utilisez votre tableau de bord pour :
+                    <ul class="list-dashboard">
+                        <li>Informer les autres membres des services que vous pouvez rendre.</li>
+                        <li>Demander de l'aide à un membre compétent.</li>
+                        <li>Contacter votre aidant ou votre aidé et prendre rendez-vous.</li>
+                    </ul>
+                </p>
+            </div>
+            <div class="icons-professions col-lg-8">
+                <div class="row">
+                    <div class="text-lg-right text-center col-sm-4">
+                        <img src="/img/jardinier.jpg" alt="Un jardinier" />
+                    </div>
+                    <div class="text-lg-right text-center col-sm-4">
+                        <img src="/img/electricien.jpg" alt="Un électricien" />
+                    </div>
+                    <div class="text-lg-right text-center col-sm-4">
+                        <img src="/img/plombier.jpg" alt="Un plombier" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="text-lg-right text-center col-sm-4">
+                        <img src="/img/menuisier.jpg" alt="Un menuisier" />
+                    </div>
+                    <div class="text-lg-right text-center col-sm-4">
+                        <img src="/img/peintre.jpg" alt="Un peintre" />
+                    </div>
+                    <div class="text-lg-right text-center col-sm-4">
+                        <img src="/img/macon.jpg" alt="Un maçon" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="text-lg-right text-center col-sm-8">
+                        <p>Image à mettre ici</p>
+                    </div>
+                    <div class="text-lg-right text-center col-sm-4">
+                        <img src="/img/bricoleur.jpg" alt="Un bricoleur" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8 mx-auto mt-3 text-center">
+                <figure class="big-clermont">
+                    <img src="/img/carteGdClermont.jpg" alt="La carte du Grand Clermont" />
+                    <figcaption class="green-text">Zone d'activité de <span class="text-uppercase">Bricovoisins</span> : Le Grand Clermont</figcaption>
+                </figure>
+            </div>
         </div>
     </body>
 </html>

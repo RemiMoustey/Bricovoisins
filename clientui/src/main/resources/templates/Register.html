@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>S'enregistrer</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
+        <link rel="stylesheet" type="text/css" href="/css/navbar.css" />
         <link rel="stylesheet" type="text/css" href="/css/style.css" />
     </head>
     <body>
@@ -13,57 +14,101 @@
             <h1 class="text-center">S'enregistrer</h1>
 
             <form method="post" action="/validation" class="w-50 m-auto">
-                <div class="form-group">
-                    <label for="firstName">Prénom<span class="input-required">*</span></label>
-                    <input type="text" name="firstName" id="firstName" class="form-control" required />
-                </div>
-                <div class="form-group">
-                    <label for="lastName">Nom<span class="input-required">*</span></label>
-                    <input type="text" name="lastName" id="lastName" class="form-control" required />
-                </div>
-                <div class="form-group">
-                    <label for="email">Email<span class="input-required">*</span></label>
-                    <input type="email" name="email" id="email" class="form-control" required />
-                </div>
-                <div class="form-group">
-                    <label for="password">Mot de passe<span class="input-required">*</span></label>
-                    <input type="password" name="password" id="password" class="form-control" required />
-                </div>
-                <div class="form-group">
-                    <label for="address">Adresse<span class="input-required">*</span></label>
-                    <input type="text" name="address" id="address" class="form-control" required />
-                </div>
-                <div class="form-group">
-                    <label for="postalCode">Code postal<span class="input-required">*</span></label>
-                    <input type="text" name="postalCode" id="postalCode" class="form-control" required />
-                </div>
-                <div class="form-group">
-                    <label for="town">Ville<span class="input-required">*</span></label><br />
-                    <select name="town" id="town">
-                        <option value="aubieres">Aubières</option>
-                        <option value="aulnat">Aulnat</option>
-                        <option value="beaumont">Beaumont</option>
-                        <option value="blanzat">Blanzat</option>
-                        <option value="cebazat">Cébazat</option>
-                        <option value="ceyrat">Ceyrat</option>
-                        <option value="chamalieres">Chamalières</option>
-                        <option value="chateaugay">Châteaugay</option>
-                        <option value="clermont-ferrand">Clermont-Ferrand</option>
-                        <option value="cournon">Cournon</option>
-                        <option value="durtol">Durtol</option>
-                        <option value="gerzat">Gerzat</option>
-                        <option value="le_cendre">Le Cendre</option>
-                        <option value="lempdes">Lempdes</option>
-                        <option value="nohanent">Nohanent</option>
-                        <option value="orcines">Orcines</option>
-                        <option value="perignat-les-sarlieve">Pérignat-lès-Sarliève</option>
-                        <option value="pont-du-chateau">Pont-du-Château</option>
-                        <option value="romagnat">Romagnat</option>
-                        <option value="saint-genes-champanelle">Saint-Genès-Champanelle</option>
-                    </select>
-                </div>
-                <button type="submit" class="mb-5 pointer" onclick='return confirm("Êtes-vous sûr de vouloir enregistrer votre inscription ?")'>Terminer l'inscription</button>
+                <fieldset>
+                    <legend>Vos coordonnées</legend>
+
+                    <div class="form-group">
+                        <label for="firstName">Prénom<span class="input-required">*</span></label>
+                        <input type="text" name="firstName" id="firstName" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Nom<span class="input-required">*</span></label>
+                        <input type="text" name="lastName" id="lastName" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email<span class="input-required">*</span></label>
+                        <input type="email" name="email" id="email" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Mot de passe<span class="input-required">*</span></label>
+                        <input type="password" name="password" id="password" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Adresse<span class="input-required">*</span></label>
+                        <input type="text" name="address" id="address" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="postalCode">Code postal<span class="input-required">*</span></label>
+                        <input type="text" name="postalCode" id="postalCode" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="town">Ville<span class="input-required">*</span></label><br />
+                        <select name="town" id="town">
+                            <option value="aubieres">Aubières</option>
+                            <option value="aulnat">Aulnat</option>
+                            <option value="beaumont">Beaumont</option>
+                            <option value="blanzat">Blanzat</option>
+                            <option value="cebazat">Cébazat</option>
+                            <option value="ceyrat">Ceyrat</option>
+                            <option value="chamalieres">Chamalières</option>
+                            <option value="chateaugay">Châteaugay</option>
+                            <option value="clermont-ferrand">Clermont-Ferrand</option>
+                            <option value="cournon">Cournon</option>
+                            <option value="durtol">Durtol</option>
+                            <option value="gerzat">Gerzat</option>
+                            <option value="le_cendre">Le Cendre</option>
+                            <option value="lempdes">Lempdes</option>
+                            <option value="nohanent">Nohanent</option>
+                            <option value="orcines">Orcines</option>
+                            <option value="perignat-les-sarlieve">Pérignat-lès-Sarliève</option>
+                            <option value="pont-du-chateau">Pont-du-Château</option>
+                            <option value="romagnat">Romagnat</option>
+                            <option value="saint-genes-champanelle">Saint-Genès-Champanelle</option>
+                        </select>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Vos compétences (6 maximum)</legend>
+                    <div id="groups-qualifications">
+                        <div id="group-qualifications">
+                            <label for="qualification1">Qualification n°1 :</label>
+                            <select name="qualification1" id="qualification1">
+                                <option value="jardinier-n1">Jardinier - Petits travaux</option>
+                                <option value="jardinier-n2">Jardinier - Intermédiaire</option>
+                                <option value="jardinier-n3">Jardinier - Expert</option>
+                                <option value="electricien-n1">Electricien - Petits travaux</option>
+                                <option value="electricien-n2">Electricien - Intermédiaire</option>
+                                <option value="electricien-n3">Electricien - Expert</option>
+                                <option value="plombier-n1">Plombier - Petits travaux</option>
+                                <option value="plombier-n2">Plombier - Intermédiaire</option>
+                                <option value="plombier-n3">Plombier - Expert</option>
+                                <option value="menuisier-n1">Menuisier - Petits travaux</option>
+                                <option value="menuisier-n2">Menuisier - Intermédiaire</option>
+                                <option value="menuisier-n3">Menuisier - Expert</option>
+                                <option value="peintre-n1">Peintre - Petits travaux</option>
+                                <option value="peintre-n2">Peintre - Intermédiaire</option>
+                                <option value="peintre-n3">Peintre - Expert</option>
+                                <option value="macon-n1">Maçon - Petits travaux</option>
+                                <option value="macon-n2">Maçon - Intermédiaire</option>
+                                <option value="macon-n3">Maçon - Expert</option>
+                                <option value="divers-n1">Divers - Petits travaux</option>
+                                <option value="divers-n2">Divers - Intermédiaire</option>
+                                <option value="divers-n3">Divers - Expert</option>
+                            </select>
+                        </div>
+                    </div>
+                    <p id="add-list-qualifications"><button class="pointer">Ajouter une qualification</button></p>
+                    <p id="remove-list-qualifications"><button class="pointer" disabled>Retirer une qualification</button></p>
+
+                    <label for="description">Décrivez vos compétences</label>
+                    <textarea name="description" id="description"></textarea>
+                </fieldset>
+
+                <button type="submit" class="my-5 pointer" onclick='return confirm("Êtes-vous sûr de vouloir enregistrer votre inscription ?")'>Terminer l'inscription</button>
             </form>
         </div>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <script src="/js/qualificationsForm.js"></script>
     </body>
 </html>

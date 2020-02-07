@@ -26,6 +26,10 @@ public class User {
 
     private Integer points;
 
+    private String qualifications;
+
+    private String description;
+
     public User() {
 
     }
@@ -102,6 +106,22 @@ public class User {
         this.points = points;
     }
 
+    public String getQualifications() {
+        return qualifications;
+    }
+
+    public void setQualifications(String qualifications) {
+        this.qualifications = qualifications;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -114,6 +134,8 @@ public class User {
                 ", postalCode=" + postalCode +
                 ", town='" + town + '\'' +
                 ", points=" + points +
+                ", qualifications='" + qualifications + '\'' +
+                ", description='" + description + '\'' +
                 '}';
     }
 }

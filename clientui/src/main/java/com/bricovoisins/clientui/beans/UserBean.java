@@ -20,6 +20,10 @@ public class UserBean {
 
     private int points;
 
+    private String qualifications;
+
+    private String description;
+
     public int getId() {
         return id;
     }
@@ -92,6 +96,22 @@ public class UserBean {
         this.points = points;
     }
 
+    public String getQualifications() {
+        return qualifications;
+    }
+
+    public void setQualifications(String qualifications) {
+        this.qualifications = qualifications;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public String toString() {
         return "UserBean{" +
@@ -104,6 +124,8 @@ public class UserBean {
                 ", postalCode=" + postalCode +
                 ", town='" + town + '\'' +
                 ", points=" + points +
+                ", qualifications='" + qualifications + '\'' +
+                ", description='" + description + '\'' +
                 '}';
     }
 }

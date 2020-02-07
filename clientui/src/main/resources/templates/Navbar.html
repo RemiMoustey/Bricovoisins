@@ -4,17 +4,18 @@
     <div th:fragment="navbar">
         <nav class="navbar navbar-expand-lg bg-light navbar-light fixed-top">
             <ul class="navbar-nav d-flex align-items-center flex-column m-auto">
-                <div class="d-lg-flex align-items-lg-center text-center">
+                <div class="d-lg-flex align-items-lg-center text-center green-text">
                     <li class="nav-item">
                         <a class="navbar-brand" href="/accueil">
                             <img src="/img/logo.jpg" alt="Logo Bricovoisins" />
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <h1 class="title-library">Bricovoisins</h1>
-                    </li>
+                    <div class="slogan">
+                        <h1 class="title-library text-uppercase">Bricovoisins</h1>
+                        <p>S'entraider dans le grand Clermont</p>
+                    </div>
                 </div>
-                <div class="links-menu d-lg-flex">
+                <div class="links-menu d-lg-flex text-uppercase">
                     <li class="nav-item">
                         <a class="nav-link" href="/accueil">Accueil</a>
                     </li>
@@ -25,23 +26,28 @@
                     </div>
                     <div sec:authorize="isAuthenticated()">
                         <li class="nav-item">
-                            <a class="nav-link" href="/services">Je souhaite aider</a>
+                            <a class="nav-link" href="/dashboard">Tableau de bord</a>
                         </li>
                     </div>
                     <div sec:authorize="isAuthenticated()">
                         <li class="nav-item">
-                            <a class="nav-link" href="/demands">Je souhaite être aidé</a>
+                            <a class="nav-link" href="/services">Je veux aider</a>
+                        </li>
+                    </div>
+                    <div sec:authorize="isAuthenticated()">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/demands">J'ai besoin d'aide</a>
                         </li>
                     </div>
                     <div sec:authorize="!isAuthenticated()">
                         <li class="nav-item">
-                            <a class="nav-link" href="/login">Se connecter</a>
+                            <a class="nav-link" href="/login">Connexion</a>
                         </li>
                     </div>
                     <div sec:authorize="isAuthenticated()">
                         <li class="nav-item">
                             <form th:action="@{/logout}" method="post">
-                                <input class="logout-link" type="submit" value="Se déconnecter" />
+                                <input class="logout-link" type="submit" value="Déconnexion" />
                             </form>
                         </li>
                     </div>
