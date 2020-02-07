@@ -1,5 +1,21 @@
+.list-dashboard {
+    padding-left: 15px;
+}
+
 .list-dashboard li {
     list-style-type: "- ";
+}
+
+.legend-profession {
+    padding-right: 16px;
+}
+
+.legend-profession-carpentry {
+    padding-right: 7px;
+}
+
+.legend-profession-masonry {
+    padding-right: 8px;
 }
 
 .big-clermont img {

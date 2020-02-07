@@ -8,6 +8,8 @@ public class UserBean {
 
     private String lastName;
 
+    private int age;
+
     private String password;
 
     private String email;
@@ -20,7 +22,7 @@ public class UserBean {
 
     private int points;
 
-    private String qualifications;
+    private String competences;
 
     private String description;
 
@@ -46,6 +48,14 @@ public class UserBean {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
     }
 
     public String getPassword() {
@@ -96,12 +106,12 @@ public class UserBean {
         this.points = points;
     }
 
-    public String getQualifications() {
-        return qualifications;
+    public String getCompetences() {
+        return competences;
     }
 
-    public void setQualifications(String qualifications) {
-        this.qualifications = qualifications;
+    public void setCompetences(String competences) {
+        this.competences = competences;
     }
 
     public String getDescription() {
@@ -118,13 +128,14 @@ public class UserBean {
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", age=" + age +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", address='" + address + '\'' +
                 ", postalCode=" + postalCode +
                 ", town='" + town + '\'' +
                 ", points=" + points +
-                ", qualifications='" + qualifications + '\'' +
+                ", competences='" + competences + '\'' +
                 ", description='" + description + '\'' +
                 '}';
     }

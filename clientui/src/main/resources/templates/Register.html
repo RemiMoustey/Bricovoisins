@@ -7,6 +7,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
         <link rel="stylesheet" type="text/css" href="/css/navbar.css" />
         <link rel="stylesheet" type="text/css" href="/css/style.css" />
+        <link rel="stylesheet" type="text/css" href="/css/register.css" />
     </head>
     <body>
         <div th:replace="Navbar :: navbar"></div>
@@ -24,6 +25,10 @@
                     <div class="form-group">
                         <label for="lastName">Nom<span class="input-required">*</span></label>
                         <input type="text" name="lastName" id="lastName" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="age">Âge<span class="input-required">*</span></label>
+                        <input type="number" name="age" id="age" class="form-control" required />
                     </div>
                     <div class="form-group">
                         <label for="email">Email<span class="input-required">*</span></label>
@@ -68,47 +73,121 @@
                     </div>
                 </fieldset>
 
-                <fieldset>
-                    <legend>Vos compétences (6 maximum)</legend>
-                    <div id="groups-qualifications">
-                        <div id="group-qualifications">
-                            <label for="qualification1">Qualification n°1 :</label>
-                            <select name="qualification1" id="qualification1">
-                                <option value="jardinier-n1">Jardinier - Petits travaux</option>
-                                <option value="jardinier-n2">Jardinier - Intermédiaire</option>
-                                <option value="jardinier-n3">Jardinier - Expert</option>
-                                <option value="electricien-n1">Electricien - Petits travaux</option>
-                                <option value="electricien-n2">Electricien - Intermédiaire</option>
-                                <option value="electricien-n3">Electricien - Expert</option>
-                                <option value="plombier-n1">Plombier - Petits travaux</option>
-                                <option value="plombier-n2">Plombier - Intermédiaire</option>
-                                <option value="plombier-n3">Plombier - Expert</option>
-                                <option value="menuisier-n1">Menuisier - Petits travaux</option>
-                                <option value="menuisier-n2">Menuisier - Intermédiaire</option>
-                                <option value="menuisier-n3">Menuisier - Expert</option>
-                                <option value="peintre-n1">Peintre - Petits travaux</option>
-                                <option value="peintre-n2">Peintre - Intermédiaire</option>
-                                <option value="peintre-n3">Peintre - Expert</option>
-                                <option value="macon-n1">Maçon - Petits travaux</option>
-                                <option value="macon-n2">Maçon - Intermédiaire</option>
-                                <option value="macon-n3">Maçon - Expert</option>
-                                <option value="divers-n1">Divers - Petits travaux</option>
-                                <option value="divers-n2">Divers - Intermédiaire</option>
-                                <option value="divers-n3">Divers - Expert</option>
-                            </select>
+                <fieldset id="competences">
+                    <legend>Sélectionnez vos compétences</legend>
+                    <p>Exemples de compétences : cliquez sur l'ouvrier !</p>
+                    <div class="text-center">
+                        <div class="d-flex">
+                            <figure>
+                                <figcaption class="legend-profession">Jardinage</figcaption>
+                                <img src="/img/jardinier.jpg" alt="Un jardinier" id="img-gardener" />
+                            </figure>
+                            <p>
+                                <input type="radio" name="level-gardening" value="petits-travaux-gardening" id="petits-travaux-gardening" />
+                                <label for="petits-travaux-gardening">Petits travaux</label><br />
+                                <input type="radio" name="level-gardening" value="connaisseur-gardening" id="connaisseur-gardening" />
+                                <label for="connaisseur-gardening">Connaisseur</label><br />
+                                <input type="radio" name="level-gardening" value="expert-gardening" id="expert-gardening" />
+                                <label for="expert-gardening">Expert</label><br />
+                            </p>
+                        </div>
+                        <div id="examples-gardening">
+                            <p>Du texte</p>
+                            <p class="close-link">Fermer</p>
                         </div>
                     </div>
-                    <p id="add-list-qualifications"><button class="pointer">Ajouter une qualification</button></p>
-                    <p id="remove-list-qualifications"><button class="pointer" disabled>Retirer une qualification</button></p>
-
-                    <label for="description">Décrivez vos compétences</label>
-                    <textarea name="description" id="description"></textarea>
+                    <div class="text-center d-flex">
+                        <figure>
+                            <img src="/img/electricien.jpg" alt="Un électricien" />
+                            <figcaption class="legend-profession">Électricité</figcaption>
+                        </figure>
+                        <p>
+                            <input type="radio" name="level-electicity" value="petits-travaux-electricity" id="petits-travaux-electricity" />
+                            <label>Petits travaux</label><br />
+                            <input type="radio" name="level-electicity" value="bonne-experience-electricity" id="bonne-experience-electricity" />
+                            <label>Bonne expérience</label><br />
+                            <input type="radio" name="level-electicity" value="expert-electricity" id="expert-electricity" />
+                            <label>Expert</label><br />
+                        </p>
+                    </div>
+                    <div class="text-center d-flex">
+                        <figure>
+                            <img src="/img/plombier.jpg" alt="Un plombier" />
+                            <figcaption class="legend-profession">Plomberie</figcaption>
+                        </figure>
+                        <p>
+                            <input type="radio" name="level-plumbing" value="petits-travaux-plumbing" id="petits-travaux-plumbing" />
+                            <label>Petits travaux</label><br />
+                            <input type="radio" name="level-plumbing" value="bonne-experience-plumbing" id="bonne-experience-plumbing" />
+                            <label>Bonne expérience</label><br />
+                            <input type="radio" name="level-plumbing" value="expert-plumbing" id="expert-plumbing" />
+                            <label>Expert</label><br />
+                        </p>
+                    </div>
+                    <div class="text-center d-flex">
+                        <figure>
+                            <img src="/img/menuisier.jpg" alt="Un menuisier" />
+                            <figcaption class="legend-profession">Menuiserie</figcaption>
+                        </figure>
+                        <p>
+                            <input type="radio" name="level-carpentry" value="petits-travaux-carpentry" id="petits-travaux-carpentry" />
+                            <label>Petits travaux</label><br />
+                            <input type="radio" name="level-carpentry" value="bonne-experience-carpentry" id="bonne-experience-carpentry" />
+                            <label>Bonne expérience</label><br />
+                            <input type="radio" name="level-carpentry" value="expert-carpentry" id="expert-carpentry" />
+                            <label>Expert</label><br />
+                        </p>
+                    </div>
+                    <div class="text-center d-flex">
+                        <figure>
+                            <img src="/img/peintre.jpg" alt="Un peintre" />
+                            <figcaption class="legend-profession">Peinture</figcaption>
+                        </figure>
+                        <p>
+                            <input type="radio" name="level-painting" value="petits-travaux-painting" id="petits-travaux-painting" />
+                            <label>Petits travaux</label><br />
+                            <input type="radio" name="level-painting" value="bonne-experience-painting" id="bonne-experience-painting" />
+                            <label>Bonne expérience</label><br />
+                            <input type="radio" name="level-painting" value="expert-painting" id="expert-painting" />
+                            <label>Expert</label><br />
+                        </p>
+                    </div>
+                    <div class="text-center d-flex">
+                        <figure>
+                            <img src="/img/macon.jpg" alt="Un maçon" />
+                            <figcaption class="legend-profession">Maçonnerie</figcaption>
+                        </figure>
+                        <p>
+                            <input type="radio" name="level-masonry" value="petits-travaux-masonry" id="petits-travaux-masonry" />
+                            <label>Petits travaux</label><br />
+                            <input type="radio" name="level-masonry" value="bonne-experience-masonry" id="bonne-experience-masonry" />
+                            <label>Bonne expérience</label><br />
+                            <input type="radio" name="level-masonry" value="expert-masonry" id="expert-masonry" />
+                            <label>Expert</label><br />
+                        </p>
+                    </div>
+                    <div class="text-center d-flex">
+                        <figure>
+                            <img src="/img/bricoleur.jpg" alt="Un bricoleur" />
+                            <figcaption class="legend-profession">Tout bricolage</figcaption>
+                        </figure>
+                        <p>
+                            <input type="radio" name="level-diy" value="petits-travaux-diy" id="petits-travaux-diy" />
+                            <label>Petits travaux</label><br />
+                            <input type="radio" name="level-diy" value="bonne-experience-diy" id="bonne-experience-diy" />
+                            <label>Bonne expérience</label><br />
+                            <input type="radio" name="level-diy" value="expert-diy" id="expert-diy" />
+                            <label>Expert</label><br />
+                        </p>
+                    </div>
+                    <label for="description">Précisez votre profil<span class="input-required">*</span></label><br />
+                    <textarea name="description" id="description" required></textarea>
                 </fieldset>
 
                 <button type="submit" class="my-5 pointer" onclick='return confirm("Êtes-vous sûr de vouloir enregistrer votre inscription ?")'>Terminer l'inscription</button>
             </form>
         </div>
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-        <script src="/js/qualificationsForm.js"></script>
+        <script src="/js/register.js"></script>
     </body>
 </html>

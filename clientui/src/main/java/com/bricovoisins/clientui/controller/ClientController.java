@@ -33,21 +33,22 @@ public class ClientController {
         UserBean newUser = new UserBean();
         newUser.setFirstName(request.getParameter("firstName"));
         newUser.setLastName(request.getParameter("lastName"));
+        newUser.setAge(Integer.parseInt(request.getParameter("age")));
         newUser.setEmail(request.getParameter("email"));
         newUser.setPassword(new BCryptPasswordEncoder().encode(request.getParameter("password")));
         newUser.setAddress(request.getParameter("address"));
         newUser.setPostalCode(Integer.parseInt(request.getParameter("postalCode")));
         newUser.setTown(request.getParameter("town"));
         newUser.setPoints(8);
-        String qualifications = request.getParameter("qualification1");
+        String competences = request.getParameter("competence1");
         for (int i = 1; i < 6; i++) {
-            if(request.getParameter("qualification" + (i + 1)) != null) {
-                qualifications += ", " + request.getParameter("qualification" + (i + 1));
+            if(request.getParameter("competence" + (i + 1)) != null) {
+                competences += ", " + request.getParameter("competence" + (i + 1));
             } else {
                 break;
             }
         }
-        newUser.setQualifications(qualifications);
+        newUser.setCompetences(competences);
         newUser.setDescription(request.getParameter("description"));
         UsersProxy.insertUser(newUser);
         response.sendRedirect("/accueil");

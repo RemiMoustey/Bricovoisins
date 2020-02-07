@@ -16,6 +16,8 @@ public class User {
 
     private String password;
 
+    private Integer age;
+
     private String email;
 
     private String address;
@@ -26,7 +28,7 @@ public class User {
 
     private Integer points;
 
-    private String qualifications;
+    private String competences;
 
     private String description;
 
@@ -56,6 +58,14 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
     }
 
     public String getPassword() {
@@ -106,12 +116,12 @@ public class User {
         this.points = points;
     }
 
-    public String getQualifications() {
-        return qualifications;
+    public String getCompetences() {
+        return competences;
     }
 
-    public void setQualifications(String qualifications) {
-        this.qualifications = qualifications;
+    public void setCompetences(String competences) {
+        this.competences = competences;
     }
 
     public String getDescription() {
@@ -129,12 +139,13 @@ public class User {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", password='" + password + '\'' +
+                ", age=" + age +
                 ", email='" + email + '\'' +
                 ", address='" + address + '\'' +
                 ", postalCode=" + postalCode +
                 ", town='" + town + '\'' +
                 ", points=" + points +
-                ", qualifications='" + qualifications + '\'' +
+                ", competences='" + competences + '\'' +
                 ", description='" + description + '\'' +
                 '}';
     }

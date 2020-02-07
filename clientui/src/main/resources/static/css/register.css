@@ -1,0 +1,25 @@
+#competences div {
+    margin-bottom: 20px;
+}
+
+#competences > p {
+    margin-bottom: 40px;
+}
+
+#competences div p {
+    text-align: left;
+    margin: 10px 0 0 10px;
+}
+
+#competences div img {
+    cursor: pointer;
+}
+
+#examples-gardening {
+    display: none;
+}
+
+.close-link {
+    cursor: pointer;
+    text-decoration: underline;
+}
