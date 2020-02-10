@@ -1,3 +1,17 @@
+@font-face {
+    font-family: 'AuberCF';
+    src: url('/fonts/AuberCFBold-Bold.ttf');
+    src: local('AuberCF'), url('/fonts/AuberCFBold-Bold.ttf') format('truetype');
+}
+
+.slogan h1 {
+    margin-bottom: 0;
+}
+
+.slogan p {
+    font-size: 17px;
+}
+
 .navbar-light .navbar-nav .nav-link {
     color: #043308;
 }

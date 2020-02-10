@@ -1,0 +1,92 @@
+.title-icons {
+    width: 100%;
+}
+
+.title-handyman {
+    color: #0C991A;
+}
+
+.first-part-h1-explications {
+    display: block;
+    width: 200px;
+    margin-right: 0;
+}
+
+.second-part-h1-explications {
+    display: block;
+    width: 350px;
+}
+
+.handyman-icon, .first-row-icons, .second-row-icons {
+    position: relative;
+    right: 140px;
+}
+
+.handyman-icon {
+    bottom: 15px;
+}
+
+.icons {
+    width: 200px;
+}
+
+.text-icon {
+    text-align: justify;
+    width: 680px;
+}
+
+.text-icon p {
+    margin-right: 20px;
+}
+
+.title-handyman h1 {
+    font-size: 35px;
+}
+
+.title-site, .title-handyman {
+    font-family: Arial, serif;
+    font-weight: bold;
+    font-size: 38px;
+}
+
+.bricovoisins {
+    font-weight: bold;
+    font-size: 39px;
+}
+
+@media all and (max-width: 767px) {
+    .second-part-h1-explications {
+        display: block;
+        width: 300px;
+    }
+
+    .handyman-icon {
+        right: 115px;
+    }
+
+    .title-handyman {
+        width: 300px;
+    }
+
+    .icons {
+        width: 300px;
+    }
+
+    .first-row-icons, .second-row-icons {
+        position: static;
+    }
+}
+
+@media all and (min-width: 767px) {
+    .text-icon {
+        width: 625px;
+        position: relative;
+        right: 20px;
+    }
+}
+
+/*@media all and (min-width: 1199px) {*/
+/*    .text-icon {*/
+/*        left: 100px;*/
+/*    }*/
+/*}*/

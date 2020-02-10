@@ -1,0 +1,81 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Explications du fonctionnement du site</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="/css/navbar.css" />
+        <link rel="stylesheet" type="text/css" href="/css/explications.css" />
+        <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    </head>
+    <body>
+        <div th:replace="Navbar :: navbar"></div>
+        <div class="container mx-auto row">
+            <div class="title-icons d-flex flex-column flex-md-row justify-content-center align-items-center mt-3">
+                <div class="d-flex title-handyman">
+                    <h1><span class="first-part-h1-explications">L'échange d'aide :</span><span class="second-part-h1-explications">Le principe du site <span class="bricovoisins">Bricovoisins</span></span></h1>
+                    <div class="handyman-icon mr-md-3">
+                        <img src="/img/bricoleur.jpg" alt="Un bricoleur" />
+                    </div>
+                </div>
+                <div class="icons d-flex flex-column">
+                    <div class="d-flex">
+                        <div class="d-flex first-row-icons">
+                            <div>
+                                <img src="/img/macon.jpg" alt="Un maçon" />
+                            </div>
+                            <div>
+                                <img src="/img/peintre.jpg" alt="Un peintre" />
+                            </div>
+                            <div>
+                                <img src="/img/menuisier.jpg" alt="Un menuisier" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex second-row-icons">
+                        <div>
+                            <img src="/img/jardinier.jpg" alt="Un jardinier" />
+                        </div>
+                        <div>
+                            <img src="/img/electricien.jpg" alt="Un électricien" />
+                        </div>
+                        <div>
+                            <img src="/img/plombier.jpg" alt="Un plombier" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-5 text-icon mx-auto d-flex flex-column-reverse flex-md-row">
+                <p>Bricovoisins est un site de mise en relation entre particuliers souhaitant s’entraider en échangeant des services selon leurs compétences.</p>
+                <div>
+                    <img src="/img/echange.png" alt="Icône symbolisant l'échange" />
+                </div>
+            </div>
+            <div class="mt-5 mx-auto text-icon">
+                <p>Sur Bricovoisins, trouver l'aide dont on a besoin est simple : Vous proposez une aide qui entre dans votre domaine de compétence auprès de tous les membres, et vous pouvez bénéficier d'aide dont vous avez vraiment besoin auprès de n’importe quel membre du site.</p>
+            </div>
+            <div class="mt-5 text-icon mx-auto d-flex flex-column-reverse flex-md-row">
+                <p>Chaque membre peut en aider un autre et ainsi créditer son compteur d'un nombre de points correspondant au temps effectif. 1 point est égal à 15mn.</p>
+                <div>
+                    <img src="/img/compteur.png" alt="Un réveil" />
+                </div>
+            </div>
+            <div class="mt-5 text-icon mx-auto d-flex flex-column-reverse flex-md-row">
+                <p>L'autre membre pourra à son tour bénéficier d'aide des membres du site. Tous les services valent le même temps (1h donnée sera toujours égale à 1h à recevoir).</p>
+            </div>
+            <div class="mt-5 text-icon mx-auto">
+                <h2>Comment aider un membre sur Bricovoisins ?</h2>
+                <div class="d-flex flex-column-reverse flex-md-row">
+                    <p>Après avoir complété votre profil et avoir décrit les services que vous pouvez rendre, les membres ayant besoin de vos compétences pourront vous contacter et vous proposer un rendez-vous. Le contact sera donc direct entre deux membres et vous négocierez ensemble les modalités de l'intervention.</p>
+                    <div>
+                        <img src="/img/contact.png" alt="Une enveloppe et un téléphone" />
+                    </div>
+                </div>
+            </div>
+            <div class="mt-5 text-icon mx-auto d-flex flex-column-reverse flex-md-row">
+                <p>Après avoir rendu service, votre compteur est crédité du nombre de points correspondant au temps passé. Vous pourrez alors utiliser ces points pour obtenir l'aide de votre choix.</p>
+            </div>
+        </div>
+    </body>
+</html>

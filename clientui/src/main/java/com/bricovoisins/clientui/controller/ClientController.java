@@ -31,9 +31,14 @@ public class ClientController {
     @Autowired
     private MicroserviceUsersProxy UsersProxy;
 
-    @GetMapping(value = "/accueil")
+    @GetMapping(value = "/home")
     public String getHomePage() {
         return "Home";
+    }
+
+    @GetMapping(value = "/explications")
+    public String getExplicationsPage() {
+        return "Explications";
     }
 
     @GetMapping(value = "/inscription")
@@ -50,11 +55,15 @@ public class ClientController {
         newUser.setEmail(request.getParameter("email"));
         newUser.setPassword(new BCryptPasswordEncoder().encode(request.getParameter("password")));
         newUser.setTown(request.getParameter("town"));
-        try {
-            String imageName = saveImage(imageFile);
-            newUser.setAvatar("/avatars/" + imageName);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (!imageFile.getOriginalFilename().equals("")) {
+            try {
+                String imageName = saveImage(imageFile);
+                newUser.setAvatar("/avatars/" + imageName);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            newUser.setAvatar("/avatars/default.png");
         }
         newUser.setPoints(10);
         newUser.setLevelGardening(request.getParameter("level-gardening"));
@@ -66,7 +75,7 @@ public class ClientController {
         newUser.setLevelDiy(request.getParameter("level-diy"));
         newUser.setDescription(request.getParameter("description"));
         UsersProxy.insertUser(newUser, imageFile);
-        response.sendRedirect("/accueil");
+        response.sendRedirect("/home");
     }
 
     private String saveImage(MultipartFile imageFile) throws Exception {

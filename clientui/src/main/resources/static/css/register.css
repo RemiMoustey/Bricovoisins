@@ -1,7 +1,3 @@
-#competences div {
-    margin-bottom: 20px;
-}
-
 #competences > p {
     margin-bottom: 40px;
 }
@@ -15,11 +11,24 @@
     cursor: pointer;
 }
 
-#examples-gardening {
+.legend-profession {
+    text-transform: uppercase;
+}
+
+.examples {
     display: none;
 }
 
-.close-link {
+#competences .examples p {
+    text-align: justify;
+}
+
+#competences .link-js-competences {
     cursor: pointer;
     text-decoration: underline;
+    margin: 0 0 40px;
+}
+
+#competences .examples .link-js-competences {
+    margin-top: 10px;
 }

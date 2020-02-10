@@ -1,20 +1,37 @@
 class Register {
     constructor() {
-        this.printAndCloseExamples("img-gardener", "examples-gardening");
-        this.printAndCloseExamples("img-electrician", "examples-electricity");
-        this.printAndCloseExamples("img-plumber", "examples-plumbing");
-        this.printAndCloseExamples("img-carpenter", "examples-carpentry");
-        this.printAndCloseExamples("img-painter", "examples-painting");
-        this.printAndCloseExamples("img-builder", "examples-masonry");
-        this.printAndCloseExamples("img-handyman", "examples-diy");
+        this.printAndCloseExamples("img-gardener", "gardening");
+        this.printAndCloseExamples("img-electrician", "electricity");
+        this.printAndCloseExamples("img-plumber", "plumbing");
+        this.printAndCloseExamples("img-carpenter", "carpentry");
+        this.printAndCloseExamples("img-painter", "painting");
+        this.printAndCloseExamples("img-builder", "masonry");
+        this.printAndCloseExamples("img-handyman", "diy");
+        this.removeCompetence("gardening");
+        this.removeCompetence("electricity");
+        this.removeCompetence("plumbing");
+        this.removeCompetence("carpentry");
+        this.removeCompetence("painting");
+        this.removeCompetence("masonry");
+        this.removeCompetence("diy");
     }
 
-    printAndCloseExamples(idImage, idExamples) {
-        $(idImage).on('click', function() {
-            $("#" + idExamples).css("display", "block");
+    printAndCloseExamples(idImage, comptence) {
+        $("#" + idImage).on('click', function() {
+            $("#examples-" + comptence).css("display", "block");
+            $("#remove-competence--" + comptence).css("margin-bottom", "10px");
         }.bind(this));
-        $(".close-link--" + idExamples).on('click', function() {
-            $("#" + idExamples).css("display", "none");
+        $("#close-link--examples-" + comptence).on('click', function() {
+            $("#examples-" + comptence).css("display", "none");
+            $("#remove-competence--" + comptence).css("margin-bottom", "40px");
+        }.bind(this));
+    }
+
+    removeCompetence(competence) {
+        $("#remove-competence--" + competence).on('click', function () {
+            $("#little-works-" + competence).prop("checked", false);
+            $("#connoisseur-" + competence).prop("checked", false);
+            $("#expert-" + competence).prop("checked", false);
         }.bind(this));
     }
 }
