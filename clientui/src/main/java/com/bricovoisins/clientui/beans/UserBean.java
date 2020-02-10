@@ -1,5 +1,7 @@
 package com.bricovoisins.clientui.beans;
 
+import java.sql.Blob;
+
 public class UserBean {
 
     private int id;
@@ -14,15 +16,25 @@ public class UserBean {
 
     private String email;
 
-    private String address;
-
-    private int postalCode;
-
     private String town;
+
+    private String avatar;
 
     private int points;
 
-    private String competences;
+    private String levelGardening;
+
+    private String levelElectricity;
+
+    private String levelPlumbing;
+
+    private String levelCarpentry;
+
+    private String levelPainting;
+
+    private String levelMasonry;
+
+    private String levelDiy;
 
     private String description;
 
@@ -74,28 +86,20 @@ public class UserBean {
         this.email = email;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public int getPostalCode() {
-        return postalCode;
-    }
-
-    public void setPostalCode(int postalCode) {
-        this.postalCode = postalCode;
-    }
-
     public String getTown() {
         return town;
     }
 
     public void setTown(String town) {
         this.town = town;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public int getPoints() {
@@ -106,12 +110,60 @@ public class UserBean {
         this.points = points;
     }
 
-    public String getCompetences() {
-        return competences;
+    public String getLevelGardening() {
+        return levelGardening;
     }
 
-    public void setCompetences(String competences) {
-        this.competences = competences;
+    public void setLevelGardening(String levelGardening) {
+        this.levelGardening = levelGardening;
+    }
+
+    public String getLevelElectricity() {
+        return levelElectricity;
+    }
+
+    public void setLevelElectricity(String levelElectricity) {
+        this.levelElectricity = levelElectricity;
+    }
+
+    public String getLevelPlumbing() {
+        return levelPlumbing;
+    }
+
+    public void setLevelPlumbing(String levelPlumbing) {
+        this.levelPlumbing = levelPlumbing;
+    }
+
+    public String getLevelCarpentry() {
+        return levelCarpentry;
+    }
+
+    public void setLevelCarpentry(String levelCarpentry) {
+        this.levelCarpentry = levelCarpentry;
+    }
+
+    public String getLevelPainting() {
+        return levelPainting;
+    }
+
+    public void setLevelPainting(String levelPainting) {
+        this.levelPainting = levelPainting;
+    }
+
+    public String getLevelMasonry() {
+        return levelMasonry;
+    }
+
+    public void setLevelMasonry(String levelMasonry) {
+        this.levelMasonry = levelMasonry;
+    }
+
+    public String getLevelDiy() {
+        return levelDiy;
+    }
+
+    public void setLevelDiy(String levelDiy) {
+        this.levelDiy = levelDiy;
     }
 
     public String getDescription() {
@@ -131,11 +183,16 @@ public class UserBean {
                 ", age=" + age +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
-                ", address='" + address + '\'' +
-                ", postalCode=" + postalCode +
                 ", town='" + town + '\'' +
+                ", avatar='" + avatar + '\'' +
                 ", points=" + points +
-                ", competences='" + competences + '\'' +
+                ", levelGardening='" + levelGardening + '\'' +
+                ", levelElectricity='" + levelElectricity + '\'' +
+                ", levelPlumbing='" + levelPlumbing + '\'' +
+                ", levelCarpentry='" + levelCarpentry + '\'' +
+                ", levelPainting='" + levelPainting + '\'' +
+                ", levelMasonry='" + levelMasonry + '\'' +
+                ", levelDiy='" + levelDiy + '\'' +
                 ", description='" + description + '\'' +
                 '}';
     }

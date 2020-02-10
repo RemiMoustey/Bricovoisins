@@ -44,6 +44,11 @@
                             <a class="nav-link" href="/login">Connexion</a>
                         </li>
                     </div>
+                    <div sec:authorize="!isAuthenticated()">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/utilisateurs">Utilisateurs</a>
+                        </li>
+                    </div>
                     <div sec:authorize="isAuthenticated()">
                         <li class="nav-item">
                             <form th:action="@{/logout}" method="post">

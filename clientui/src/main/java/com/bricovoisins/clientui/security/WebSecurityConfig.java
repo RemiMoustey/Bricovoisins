@@ -17,7 +17,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/login").permitAll()
+                .antMatchers("/login", "/accueil", "/utilisateurs").permitAll()
                 .and()
                 .formLogin()
                 .defaultSuccessUrl("/accueil", true)
@@ -27,7 +27,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) {
-        web.ignoring().antMatchers("/css/style.css", "/img/**", "/fonts/**");
+        web.ignoring().antMatchers("/css/style.css", "/img/**", "/fonts/**", "/avatars/**");
         web.ignoring().antMatchers(HttpMethod.POST, "/validation");
     }
 

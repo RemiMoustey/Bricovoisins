@@ -14,7 +14,7 @@
     cursor: pointer;
 }
 
-.green, .red {
+.green, .red, .bold {
     font-weight: bold;
 }
 

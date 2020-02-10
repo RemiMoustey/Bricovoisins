@@ -14,7 +14,7 @@
         <div class="container">
             <h1 class="text-center">S'enregistrer</h1>
 
-            <form method="post" action="/validation" class="w-50 m-auto">
+            <form method="post" th:action="@{/validation}" class="w-50 m-auto" enctype="multipart/form-data">
                 <fieldset>
                     <legend>Vos coordonnées</legend>
 
@@ -37,14 +37,6 @@
                     <div class="form-group">
                         <label for="password">Mot de passe<span class="input-required">*</span></label>
                         <input type="password" name="password" id="password" class="form-control" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="address">Adresse<span class="input-required">*</span></label>
-                        <input type="text" name="address" id="address" class="form-control" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="postalCode">Code postal<span class="input-required">*</span></label>
-                        <input type="text" name="postalCode" id="postalCode" class="form-control" required />
                     </div>
                     <div class="form-group">
                         <label for="town">Ville<span class="input-required">*</span></label><br />
@@ -71,6 +63,10 @@
                             <option value="saint-genes-champanelle">Saint-Genès-Champanelle</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label for="avatar">Choisissez une photo de profil</label>
+                        <input type="file" name="avatar" id="avatar" class="form-control" accept="image/png, image/jpeg" />
+                    </div>
                 </fieldset>
 
                 <fieldset id="competences">
@@ -92,92 +88,112 @@
                             </p>
                         </div>
                         <div id="examples-gardening">
-                            <p>Du texte</p>
-                            <p class="close-link">Fermer</p>
+                            <p><span class="bold">Petits travaux :</span> Réparer une fuite d'eau. Déboucher une canalisation.
+                                Changer un robinet. Changer un joint.</p>
+                            <p><span class="bold">Connaisseur :</span> Installer un bac douche. Raccorder un lavabo.
+                                Réaliser une soudure au cuivre.</p>
+                            <p><span class="bold">Expert :</span> Maîtrise du métier. Refaire une salle de bain.
+                                Toutes tuyauteries. Acier - Cuivre - PVC…</p>
+                            <p class="close-link--examples-gardening">Fermer</p>
                         </div>
                     </div>
                     <div class="text-center d-flex">
                         <figure>
-                            <img src="/img/electricien.jpg" alt="Un électricien" />
                             <figcaption class="legend-profession">Électricité</figcaption>
+                            <img src="/img/electricien.jpg" alt="Un électricien" id="img-electrician" />
                         </figure>
                         <p>
                             <input type="radio" name="level-electicity" value="petits-travaux-electricity" id="petits-travaux-electricity" />
                             <label>Petits travaux</label><br />
-                            <input type="radio" name="level-electicity" value="bonne-experience-electricity" id="bonne-experience-electricity" />
-                            <label>Bonne expérience</label><br />
+                            <input type="radio" name="level-electicity" value="connaisseur-electricity" id="bonne-connaisseur-electricity" />
+                            <label>Connaisseur</label><br />
                             <input type="radio" name="level-electicity" value="expert-electricity" id="expert-electricity" />
                             <label>Expert</label><br />
+                            <p class="close-link--examples-electricity">Fermer</p>
                         </p>
+                        <div id="examples-electricity">
+                            <p><span class="bold">Petits travaux :</span> Changement interrupteur ou prise de courant.
+                                Petites réparations. </p>
+                            <p><span class="bold">Connaisseur :</span> Installation d'une nouvelle ligne, départ compteur.
+                                Diagnostic de pannes.</p>
+                            <p><span class="bold">Expert :</span> Maîtrise du métier. Tableau de répartition.
+                                Mise à la terre. Respect des normes.</p>
+                            <p class="close-link--examples-gardening">Fermer</p>
+                        </div>
                     </div>
                     <div class="text-center d-flex">
                         <figure>
-                            <img src="/img/plombier.jpg" alt="Un plombier" />
                             <figcaption class="legend-profession">Plomberie</figcaption>
+                            <img src="/img/plombier.jpg" alt="Un plombier" id="img-plumber" />
                         </figure>
                         <p>
                             <input type="radio" name="level-plumbing" value="petits-travaux-plumbing" id="petits-travaux-plumbing" />
                             <label>Petits travaux</label><br />
-                            <input type="radio" name="level-plumbing" value="bonne-experience-plumbing" id="bonne-experience-plumbing" />
-                            <label>Bonne expérience</label><br />
+                            <input type="radio" name="level-plumbing" value="connaisseur-plumbing" id="connaisseur-plumbing" />
+                            <label>Connaisseur</label><br />
                             <input type="radio" name="level-plumbing" value="expert-plumbing" id="expert-plumbing" />
                             <label>Expert</label><br />
+                            <p class="close-link--examples-plumbing">Fermer</p>
                         </p>
                     </div>
                     <div class="text-center d-flex">
                         <figure>
-                            <img src="/img/menuisier.jpg" alt="Un menuisier" />
                             <figcaption class="legend-profession">Menuiserie</figcaption>
+                            <img src="/img/menuisier.jpg" alt="Un menuisier" id="img-carpenter" />
                         </figure>
                         <p>
                             <input type="radio" name="level-carpentry" value="petits-travaux-carpentry" id="petits-travaux-carpentry" />
                             <label>Petits travaux</label><br />
-                            <input type="radio" name="level-carpentry" value="bonne-experience-carpentry" id="bonne-experience-carpentry" />
-                            <label>Bonne expérience</label><br />
+                            <input type="radio" name="level-carpentry" value="connaisseur-carpentry" id="connaisseur-carpentry" />
+                            <label>Connaisseur</label><br />
                             <input type="radio" name="level-carpentry" value="expert-carpentry" id="expert-carpentry" />
                             <label>Expert</label><br />
+                            <p class="close-link--examples-carpentry">Fermer</p>
                         </p>
                     </div>
                     <div class="text-center d-flex">
                         <figure>
-                            <img src="/img/peintre.jpg" alt="Un peintre" />
                             <figcaption class="legend-profession">Peinture</figcaption>
+                            <img src="/img/peintre.jpg" alt="Un peintre" id="img-painter" />
                         </figure>
                         <p>
                             <input type="radio" name="level-painting" value="petits-travaux-painting" id="petits-travaux-painting" />
                             <label>Petits travaux</label><br />
-                            <input type="radio" name="level-painting" value="bonne-experience-painting" id="bonne-experience-painting" />
-                            <label>Bonne expérience</label><br />
+                            <input type="radio" name="level-painting" value="connaisseur-painting" id="connaisseur-painting" />
+                            <label>Connaisseur</label><br />
                             <input type="radio" name="level-painting" value="expert-painting" id="expert-painting" />
                             <label>Expert</label><br />
+                            <p class="close-link--examples-painting">Fermer</p>
                         </p>
                     </div>
                     <div class="text-center d-flex">
                         <figure>
-                            <img src="/img/macon.jpg" alt="Un maçon" />
                             <figcaption class="legend-profession">Maçonnerie</figcaption>
+                            <img src="/img/macon.jpg" alt="Un maçon" id="img-builder" />
                         </figure>
                         <p>
                             <input type="radio" name="level-masonry" value="petits-travaux-masonry" id="petits-travaux-masonry" />
                             <label>Petits travaux</label><br />
-                            <input type="radio" name="level-masonry" value="bonne-experience-masonry" id="bonne-experience-masonry" />
-                            <label>Bonne expérience</label><br />
+                            <input type="radio" name="level-masonry" value="connaisseur-masonry" id="connaisseur-masonry" />
+                            <label>Connaisseur</label><br />
                             <input type="radio" name="level-masonry" value="expert-masonry" id="expert-masonry" />
                             <label>Expert</label><br />
+                            <p class="close-link--examples-masonry">Fermer</p>
                         </p>
                     </div>
                     <div class="text-center d-flex">
                         <figure>
-                            <img src="/img/bricoleur.jpg" alt="Un bricoleur" />
                             <figcaption class="legend-profession">Tout bricolage</figcaption>
+                            <img src="/img/bricoleur.jpg" alt="Un bricoleur" id="img-handyman" />
                         </figure>
                         <p>
                             <input type="radio" name="level-diy" value="petits-travaux-diy" id="petits-travaux-diy" />
                             <label>Petits travaux</label><br />
-                            <input type="radio" name="level-diy" value="bonne-experience-diy" id="bonne-experience-diy" />
-                            <label>Bonne expérience</label><br />
+                            <input type="radio" name="level-diy" value="connaisseur-diy" id="connaisseur-diy" />
+                            <label>Connaisseur</label><br />
                             <input type="radio" name="level-diy" value="expert-diy" id="expert-diy" />
                             <label>Expert</label><br />
+                            <p class="close-link--examples-diy">Fermer</p>
                         </p>
                     </div>
                     <label for="description">Précisez votre profil<span class="input-required">*</span></label><br />

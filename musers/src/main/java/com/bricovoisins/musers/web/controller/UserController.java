@@ -5,8 +5,10 @@ import com.bricovoisins.musers.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
@@ -47,5 +49,4 @@ public class UserController {
     public User getUserByEmail(@PathVariable String email) {
         return userDao.findByEmail(email);
     }
-
 }
