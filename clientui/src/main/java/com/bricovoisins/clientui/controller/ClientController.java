@@ -6,6 +6,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +25,7 @@ import java.sql.Blob;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 public class ClientController {
@@ -87,8 +89,26 @@ public class ClientController {
         return FilenameUtils.removeExtension(imageFile.getOriginalFilename()) + currentDate + "." + FilenameUtils.getExtension(imageFile.getOriginalFilename()).toLowerCase();
     }
 
+    @GetMapping(value = "/demands")
+    public String getDemandsPage(HttpServletRequest request, Model model) {
+        if(request.getSession().getAttribute("search") != null) {
+            model.addAttribute("users", request.getSession().getAttribute("users"));
+            request.getSession().removeAttribute("search");
+            request.getSession().removeAttribute("users");
+        }
+        return "Demands";
+    }
+
     @GetMapping(value = "/login")
     public String getLoginPage() {
         return "Login";
+    }
+
+    @PostMapping(value = "/results")
+    public void getResults(@RequestParam String search, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        List<UserBean> users = UsersProxy.getSearchedUsers(search);
+        request.getSession().setAttribute("search", search);
+        request.getSession().setAttribute("users", users);
+        response.sendRedirect("/demands");
     }
 }

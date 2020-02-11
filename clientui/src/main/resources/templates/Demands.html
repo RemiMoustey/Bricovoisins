@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Faire une demande</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="/css/navbar.css" />
+        <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    </head>
+    <body>
+        <div th:replace="Navbar :: navbar"></div>
+        <div class="container">
+            <form method="post" action="/results">
+                <div class="form-group">
+                    <label for="search">J'ai besoin d'aide en : <span class="input-required">*</span></label><br />
+                    <select name="search" id="search" required>
+                        <option value="gardening">Jardinage</option>
+                        <option value="electricity">Électricité</option>
+                        <option value="plumbing">Plomberie</option>
+                        <option value="carpentry">Menuiserie</option>
+                        <option value="painting">Peinture</option>
+                        <option value="masonry">Maçonnerie</option>
+                    </select>
+                </div>
+                <div>
+                    <button type="submit" class="pointer">Rechercher</button>
+                </div>
+            </form>
+            <div th:if="${users == null}">
+                <p>Coucou</p>
+            </div>
+            <div th:if="${users != null && #lists.size(users) == 0}">
+                <p>Pas d'utilisateurs</p>
+            </div>
+            <div th:if="${users != null && #lists.size(users) != 0}">
+                <p>Un ou plusieurs utilisateurs</p>
+            </div>
+        </div>
+    </body>
+</html>

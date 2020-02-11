@@ -51,14 +51,6 @@
     width: 290px;
 }
 
-.logout-link {
-    background-color: inherit;
-    border: none;
-    color: rgba(0, 0, 0, .5);
-    cursor: pointer;
-    padding: 0.5rem;
-}
-
 .logout-link:hover {
     color: rgba(0, 0, 0, .7);
 }

@@ -18,9 +18,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/login", "/accueil", "/utilisateurs").permitAll()
+                .antMatchers("/dashboard", "/demands").authenticated()
                 .and()
                 .formLogin()
-                .defaultSuccessUrl("/accueil", true)
+                .defaultSuccessUrl("/home", true)
                 .loginPage("/login")
                 .permitAll();
     }

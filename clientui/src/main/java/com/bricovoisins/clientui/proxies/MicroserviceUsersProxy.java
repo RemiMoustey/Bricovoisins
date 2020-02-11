@@ -20,4 +20,6 @@ public interface MicroserviceUsersProxy {
     @PostMapping(value = "/musers/validation")
     ResponseEntity<Void> insertUser(@RequestBody UserBean user, @RequestParam("avatar") MultipartFile imageFile) throws IOException;
 
+    @PostMapping(value = "/musers/results")
+    List<UserBean> getSearchedUsers(@RequestParam String search);
 }

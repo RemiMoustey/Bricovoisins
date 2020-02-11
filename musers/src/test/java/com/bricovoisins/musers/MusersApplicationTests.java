@@ -78,4 +78,14 @@ class MusersApplicationTests {
 //	void testGetUserByEmail() {
 //		assertEquals(13, (int) userController.getUserByEmail("msanchez@test.com").getId());
 //	}
+
+//	@Test
+//	void testGetSearchedUser() {
+//		assertEquals(3, userController.getSearchedUsers("gardening").size());
+//	}
+//
+//	@Test
+//	void testGetSearchedUserEmptyList() {
+//		assertEquals(0, userController.getSearchedUsers("wrong search").size());
+//	}
 }

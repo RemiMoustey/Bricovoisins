@@ -1,17 +1,39 @@
 @font-face {
-    font-family: 'AuberCF';
-    src: url('/fonts/AuberCFBold-Bold.ttf');
-    src: local('AuberCF'), url('/fonts/AuberCFBold-Bold.ttf') format('truetype');
+    font-family: 'BurnstownDam';
+    src: url('/fonts/burnstown_dam.otf');
+    src: local('BurnstownDam'), url('/fonts/burnstown_dam.otf') format('truetype');
 }
 
 .slogan h1 {
+    font-family: 'BurnstownDam', Arial, sans-serif;
+    font-weight: bold;
+    font-size: 80px;
     margin-bottom: 0;
+    color: #9e672c;
 }
 
 .slogan p {
-    font-size: 17px;
+    font-size: 30px;
 }
 
-.navbar-light .navbar-nav .nav-link {
+.navbar-light .navbar-nav .nav-link, .logout-link {
     color: #043308;
+}
+
+.logout-link {
+    background-color: inherit;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    text-transform: uppercase;
+}
+
+@media all and (max-width: 767px) {
+    .slogan h1 {
+        font-size: 40px;
+    }
+
+    .slogan p {
+        font-size: 15px;
+    }
 }

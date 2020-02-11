@@ -5,11 +5,10 @@ import com.bricovoisins.musers.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.io.IOException;
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -48,5 +47,24 @@ public class UserController {
     @GetMapping(value = "/utilisateur/{email}")
     public User getUserByEmail(@PathVariable String email) {
         return userDao.findByEmail(email);
+    }
+
+    @PostMapping(value = "/results")
+    public List<User> getSearchedUsers(@RequestParam String search) {
+        if (search.equals("gardening")) {
+            return userDao.findAllByLevelGardeningIsNotNullOrLevelDiyIsNotNull();
+        } else if (search.equals("electricity")) {
+            return userDao.findAllByLevelElectricityIsNotNullOrLevelDiyIsNotNull();
+        } else if (search.equals("plumbing")) {
+            return userDao.findAllByLevelPlumbingIsNotNullOrLevelDiyIsNotNull();
+        } else if (search.equals("carpentry")) {
+            return userDao.findAllByLevelCarpentryIsNotNullOrLevelDiyIsNotNull();
+        } else if (search.equals("painting")) {
+            return userDao.findAllByLevelPaintingIsNotNullOrLevelDiyIsNotNull();
+        } else if (search.equals("masonry")) {
+            return userDao.findAllByLevelMasonryIsNotNullOrLevelDiyIsNotNull();
+        } else {
+            return Collections.emptyList();
+        }
     }
 }

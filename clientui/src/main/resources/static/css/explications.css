@@ -23,7 +23,7 @@
 }
 
 .handyman-icon {
-    bottom: 15px;
+    bottom: 11px;
 }
 
 .icons {
@@ -43,15 +43,28 @@
     font-size: 35px;
 }
 
-.title-site, .title-handyman {
-    font-family: Arial, serif;
+.title-handyman {
     font-weight: bold;
     font-size: 38px;
+    color: #9e672c;
 }
 
 .bricovoisins {
+    text-transform: uppercase;
+    font-family: 'BurnstownDam', Arial, sans-serif;
     font-weight: bold;
     font-size: 39px;
+    color: #9e672c;
+}
+
+.paragraph-bricovoisins {
+    font-size: 20px;
+}
+
+.subtitle-explanations {
+    font-size: 25px;
+    text-align: left;
+    text-transform: uppercase;
 }
 
 @media all and (max-width: 767px) {
@@ -75,6 +88,10 @@
     .first-row-icons, .second-row-icons {
         position: static;
     }
+
+    .text-icon p {
+        margin: 0;
+    }
 }
 
 @media all and (min-width: 767px) {
@@ -84,9 +101,3 @@
         right: 20px;
     }
 }
-
-/*@media all and (min-width: 1199px) {*/
-/*    .text-icon {*/
-/*        left: 100px;*/
-/*    }*/
-/*}*/
