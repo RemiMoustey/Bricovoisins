@@ -1,0 +1,24 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Se connecter</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="/css/navbar.css" />
+        <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    </head>
+    <body>
+        <div th:replace="Navbar :: navbar"></div>
+        <div class="container">
+            <form method="post" action="/insert_message">
+                <div class="text-center">
+                    <label for="message">Votre message à <span th:text="${recipient.firstName}"></span><span class="input-required">*</span></label><br />
+                    <textarea name="message" id="message" rows="5" cols="60" required></textarea>
+                    <input type="hidden" name="senderId" id="senderId" th:value="${sender.id}" />
+                    <input type="hidden" name="recipientId" id="recipientId" th:value="${recipient.id}" />
+                </div>
+            </form>
+        </div>
+    </body>
+</html>

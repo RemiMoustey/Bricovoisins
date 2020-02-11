@@ -39,6 +39,11 @@ public class UserController {
         return userDao.findAll();
     }
 
+    @GetMapping(value = "/utilisateurs/{userId}")
+    public User getOneUser(@PathVariable int userId) {
+        return userDao.findById(userId);
+    }
+
     @GetMapping(value = "/supprimer_utilisateur/{id}")
     public void deleteUser(@PathVariable int id) {
         userDao.deleteById(id);
@@ -63,6 +68,8 @@ public class UserController {
             return userDao.findAllByLevelPaintingIsNotNullOrLevelDiyIsNotNull();
         } else if (search.equals("masonry")) {
             return userDao.findAllByLevelMasonryIsNotNullOrLevelDiyIsNotNull();
+        } else if (search.equals("diy")) {
+            return userDao.findAllByLevelDiyIsNotNull();
         } else {
             return Collections.emptyList();
         }

@@ -1,0 +1,42 @@
+#users ul {
+    padding: 0;
+}
+
+#users ul li {
+    list-style-type: none;
+    font-weight: bold;
+    font-size: 18px;
+    color: #F00;
+}
+
+#users p {
+    padding: 0;
+    line-height: normal;
+}
+
+#users > div {
+    width: 400px;
+    border-bottom: 3px solid #0c991a;
+}
+
+.name-town {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.town {
+    color: #0c991a;
+}
+
+.contact a {
+    background: #13a742;
+    color: white;
+    border-radius: 5px;
+    padding: 8px;
+}
+
+@media all and (max-width: 767px) {
+    #users > div {
+        width: 280px;
+    }
+}

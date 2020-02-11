@@ -1,7 +1,5 @@
 package com.bricovoisins.clientui.beans;
 
-import java.sql.Blob;
-
 public class UserBean {
 
     private int id;

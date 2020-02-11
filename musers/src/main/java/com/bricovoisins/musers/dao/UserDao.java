@@ -9,6 +9,7 @@ import java.util.List;
 
 @Repository
 public interface UserDao extends JpaRepository<User, Integer> {
+    User findById(int id);
     User findByEmail(String email);
     List<User> findAllByLevelGardeningIsNotNullOrLevelDiyIsNotNull();
     List<User> findAllByLevelElectricityIsNotNullOrLevelDiyIsNotNull();
@@ -16,5 +17,5 @@ public interface UserDao extends JpaRepository<User, Integer> {
     List<User> findAllByLevelCarpentryIsNotNullOrLevelDiyIsNotNull();
     List<User> findAllByLevelPaintingIsNotNullOrLevelDiyIsNotNull();
     List<User> findAllByLevelMasonryIsNotNullOrLevelDiyIsNotNull();
-    List<User> findAllByLevelDiyIsNotNullOrLevelDiyIsNotNull();
+    List<User> findAllByLevelDiyIsNotNull();
 }

@@ -6,13 +6,17 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -93,6 +97,8 @@ public class ClientController {
     public String getDemandsPage(HttpServletRequest request, Model model) {
         if(request.getSession().getAttribute("search") != null) {
             model.addAttribute("users", request.getSession().getAttribute("users"));
+            model.addAttribute("emailLoggedUser", ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername());
+            model.addAttribute("idLoggedUser", new RestTemplate().getForObject("http://localhost:9001/utilisateur/" + ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername(), UserBean.class).getId());
             request.getSession().removeAttribute("search");
             request.getSession().removeAttribute("users");
         }
@@ -110,5 +116,19 @@ public class ClientController {
         request.getSession().setAttribute("search", search);
         request.getSession().setAttribute("users", users);
         response.sendRedirect("/demands");
+    }
+
+    @GetMapping(value = "/send_message/{senderId}/{recipientId}")
+    public String getMessagePage(@PathVariable int senderId, @PathVariable int recipientId, Model model) {
+        UserBean sender = new RestTemplate().getForObject("http://localhost:9001/utilisateurs/" + senderId, UserBean.class);
+        UserBean recipient = new RestTemplate().getForObject("http://localhost:9001/utilisateurs/" + recipientId, UserBean.class);
+        model.addAttribute("sender", sender);
+        model.addAttribute("recipient", recipient);
+        return "SendMessage";
+    }
+
+    @PostMapping(value = "/insert_message")
+    public void insertMessageInConvention() {
+
     }
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,11 +7,12 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" href="/css/navbar.css" />
         <link rel="stylesheet" type="text/css" href="/css/style.css" />
+        <link rel="stylesheet" type="text/css" href="/css/demands.css" />
     </head>
     <body>
         <div th:replace="Navbar :: navbar"></div>
         <div class="container">
-            <form method="post" action="/results">
+            <form method="post" action="/results" class="text-center">
                 <div class="form-group">
                     <label for="search">J'ai besoin d'aide en : <span class="input-required">*</span></label><br />
                     <select name="search" id="search" required>
@@ -21,20 +22,58 @@
                         <option value="carpentry">Menuiserie</option>
                         <option value="painting">Peinture</option>
                         <option value="masonry">Maçonnerie</option>
+                        <option value="diy">Tout bricolage</option>
                     </select>
                 </div>
                 <div>
                     <button type="submit" class="pointer">Rechercher</button>
                 </div>
             </form>
-            <div th:if="${users == null}">
-                <p>Coucou</p>
-            </div>
-            <div th:if="${users != null && #lists.size(users) == 0}">
-                <p>Pas d'utilisateurs</p>
-            </div>
-            <div th:if="${users != null && #lists.size(users) != 0}">
-                <p>Un ou plusieurs utilisateurs</p>
+            <div class="mt-5">
+                <p th:if="${users != null && #lists.size(users) == 0}" class="text-center">
+                    Aucun membre ne correspondant à votre recherche.
+                </p>
+                <div th:if="${users != null && #lists.size(users) != 0}">
+                    <div th:if="${#lists.size(users) > 1}">
+                        <h2 class="text-center">Vous pouvez être aidé par :</h2>
+                        <div id="users" class="mb-5">
+                            <div th:each="user : ${users}" th:if="${emailLoggedUser != user.email}" class="mx-auto mt-5 text-center">
+                                <ul>
+                                    <li th:if="${user.levelGardening == 'little-works-gardening'}">Jardinier petits travaux</li>
+                                    <li th:if="${user.levelGardening == 'connoisseur-gardening'}">Jardinier confirmé</li>
+                                    <li th:if="${user.levelGardening == 'expert-gardening'}">Jardinier expert</li>
+                                    <li th:if="${user.levelElectricity == 'little-works-electricity'}">Electricien petits travaux</li>
+                                    <li th:if="${user.levelElectricity == 'connoisseur-electricity'}">Electricien confirmé</li>
+                                    <li th:if="${user.levelElectricity == 'expert-electricity'}">Electricien expert</li>
+                                    <li th:if="${user.levelPlumbing == 'little-works-plumbing'}">Plombier petits travaux</li>
+                                    <li th:if="${user.levelPlumbing == 'connoisseur-plumbing'}">Plombier confirmé</li>
+                                    <li th:if="${user.levelPlumbing == 'expert-plumbing'}">Plombier expert</li>
+                                    <li th:if="${user.levelCarpentry == 'little-works-carpentry'}">Menuisier petits travaux</li>
+                                    <li th:if="${user.levelCarpentry == 'connoisseur-carpentry'}">Menuisier confirmé</li>
+                                    <li th:if="${user.levelCarpentry == 'expert-carpentry'}">Menuisier expert</li>
+                                    <li th:if="${user.levelPainting == 'little-works-painting'}">Peintre petits travaux</li>
+                                    <li th:if="${user.levelPainting == 'connoisseur-painting'}">Peintre confirmé</li>
+                                    <li th:if="${user.levelPainting == 'expert-painting'}">Peintre expert</li>
+                                    <li th:if="${user.levelMasonry == 'little-works-masonry'}">Maçon petits travaux</li>
+                                    <li th:if="${user.levelMasonry == 'connoisseur-masonry'}">Maçon confirmé</li>
+                                    <li th:if="${user.levelMasonry == 'expert-masonry'}">Maçon expert</li>
+                                    <li th:if="${user.levelDiy == 'little-works-diy'}">Bricoleur petits travaux</li>
+                                    <li th:if="${user.levelDiy == 'connoisseur-diy'}">Bricoleur confirmé</li>
+                                    <li th:if="${user.levelDiy == 'expert-diy'}">Bricoleur expert</li>
+                                </ul>
+                                <img th:src="${user.avatar}" th:alt="@{|Avatar de ${user.firstName} ${user.lastName}|}" />
+                                <p class="name-town"><span th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span> - <span th:text="${user.town}" class="town"></span></p>
+                                <p th:text="${user.description}"></p>
+                                <div class="contact pb-5">
+                                    <a th:href="@{|/send_message/${idLoggedUser}/${user.id}|}">Contacter <span th:text="${user.firstName}"></span></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p th:if="${#lists.size(users) == 1 && users[0].email == emailLoggedUser}">
+                        Aucun membre ne correspondant à votre recherche.
+                    </p>
+                </div>
             </div>
         </div>
     </body>
