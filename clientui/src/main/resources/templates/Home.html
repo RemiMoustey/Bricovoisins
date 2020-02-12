@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<html xmlns:th="http://www.thymeleaf.org" lang="fr"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,7 +18,7 @@
             </div>
             <div class="row">
                 <div class="text-presentation green-text col-lg-4 text-justify">
-                    <p><span class="text-uppercase">Bricovoisins</span> est un réseau local dédié à la communauté clermontoise.</p>
+                    <p><span class="bricovoisins">Bricovoisins</span> est un réseau local dédié à la communauté clermontoise.</p>
 
                     <p>Vous aidez un membre et un membre peut vous aider.</p>
 
@@ -77,8 +78,11 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="text-lg-right text-center col-sm-4">
-                            <p>Image à mettre ici</p>
+                        <div class="text-center col-sm-4 button-inscription">
+                            <div sec:authorize="!isAuthenticated()">
+                                <a href="/inscription">Inscrivez-vous tout de suite et gagnez 10 points d'aide utilisables immédiatement</a>
+                                <img src="/img/clic.png" alt="Main qui pointe le lien" />
+                            </div>
                         </div>
                         <div class="text-lg-right text-center col-sm-4">
                             <figure>
@@ -96,7 +100,5 @@
                 </figure>
             </div>
         </div>
-<!--        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>-->
-<!--        <script src="/js/dropdownMenu.js"></script>-->
     </body>
 </html>

@@ -8,5 +8,7 @@ import java.util.List;
 
 @Repository
 public interface ConventionDao extends JpaRepository<Convention, Integer> {
-    List<Convention> findBySenderId(int senderId);
+    List<Convention> findBySenderIdAndIsValidatedByRecipientIsFalse(int senderId);
+    List<Convention> findBySenderIdAndIsValidatedByRecipientIsTrue(int userId);
+    List<Convention> findBySenderIdAndIsEndedBySenderIsTrue(int userId);
 }

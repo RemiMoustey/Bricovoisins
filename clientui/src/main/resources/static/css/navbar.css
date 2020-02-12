@@ -44,6 +44,10 @@
     text-transform: lowercase;
 }
 
+.dropdown a:focus {
+    text-decoration: none;
+}
+
 @media all and (max-width: 767px) {
     .slogan h1 {
         font-size: 40px;

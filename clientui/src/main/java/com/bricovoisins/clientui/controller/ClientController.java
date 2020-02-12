@@ -36,6 +36,7 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -81,7 +82,7 @@ public class ClientController {
         return "Register";
     }
 
-    @GetMapping(value = "/accessDenied")
+    @GetMapping(value = "/email_not_found")
     public String getAccessDeniedPage() {
         return "EmailNotFound";
     }
@@ -155,8 +156,8 @@ public class ClientController {
 
     @GetMapping(value = "/send_message/{senderId}/{recipientId}")
     public String getMessagePage(@PathVariable int senderId, @PathVariable int recipientId, Model model) {
-        UserBean sender = new RestTemplate().getForObject("http://localhost:9001/utilisateur/" + senderId, UserBean.class);
-        UserBean recipient = new RestTemplate().getForObject("http://localhost:9001/utilisateur/" + recipientId, UserBean.class);
+        UserBean sender = new RestTemplate().getForObject("http://localhost:9001/utilisateurId/" + senderId, UserBean.class);
+        UserBean recipient = new RestTemplate().getForObject("http://localhost:9001/utilisateurId/" + recipientId, UserBean.class);
         model.addAttribute("sender", sender);
         model.addAttribute("recipient", recipient);
         catchLoggedUserIdAndFirstName(model);
@@ -227,8 +228,8 @@ public class ClientController {
 
     @PostMapping(value = "/insert_message")
     public void insertMessageInConvention(HttpServletRequest request, HttpServletResponse response) throws IOException, MessagingException {
-        UserBean sender = new RestTemplate().getForObject("http://localhost:9001/utilisateur/" + Integer.parseInt(request.getParameter("senderId")), UserBean.class);
-        UserBean recipient = new RestTemplate().getForObject("http://localhost:9001/utilisateur/" + Integer.parseInt(request.getParameter("recipientId")), UserBean.class);
+        UserBean sender = new RestTemplate().getForObject("http://localhost:9001/utilisateurId/" + Integer.parseInt(request.getParameter("senderId")), UserBean.class);
+        UserBean recipient = new RestTemplate().getForObject("http://localhost:9001/utilisateurId/" + Integer.parseInt(request.getParameter("recipientId")), UserBean.class);
         String competences = getCompetences(sender);
         String message = request.getParameter("message") + "\n\nVous pouvez répondre à " + sender.getFirstName() + " " + sender.getLastName() + "à l'adresse email suivante : " + sender.getEmail() + ".\n" +
                 sender.getFirstName() + " " + "habite à " + sender.getTown() + ". Ses compétences sont les suivantes :\n" + competences;
@@ -265,8 +266,12 @@ public class ClientController {
 
     @GetMapping(value = "/my_conventions/{userId}")
     public String getListConventionsUser(@PathVariable int userId, Model model) {
-        List<ConventionBean> allConventionsUser = ConventionsProxy.getListConventionsUser(userId);
-        model.addAttribute("conventions", allConventionsUser);
+        List<ConventionBean> allCurrentConventionsUser = Arrays.asList(new RestTemplate().getForEntity("http://localhost:9002/conventions/" + userId, ConventionBean[].class).getBody());
+        model.addAttribute("conventions", allCurrentConventionsUser);
+        List<ConventionBean> allValidatedConventionUser = Arrays.asList(new RestTemplate().getForEntity("http://localhost:9002/validated_conventions/" + userId, ConventionBean[].class).getBody());
+        model.addAttribute("validatedConventions", allValidatedConventionUser);
+        List<ConventionBean> allFinishedConventions = Arrays.asList(new RestTemplate().getForEntity("http://localhost:9002/ended_conventions/" + userId, ConventionBean[].class).getBody());
+        model.addAttribute("finishedConventions", allFinishedConventions);
         catchLoggedUserIdAndFirstName(model);
         return "MyConventions";
     }
@@ -275,13 +280,20 @@ public class ClientController {
     public void insertConvention(HttpServletRequest request, HttpServletResponse response) throws IOException {
         ConventionBean conventionBean = new ConventionBean();
         conventionBean.setSenderId(new RestTemplate().getForObject("http://localhost:9001/utilisateur/" + SecurityContextHolder.getContext().getAuthentication().getName(), UserBean.class).getId());
-        conventionBean.setRecipientId(new RestTemplate().getForObject("http://localhost:9001/utilisateur/" + request.getParameter("helperEmail"), UserBean.class).getId());
-        conventionBean.setDateConvention(LocalDate.of(Integer.parseInt(request.getParameter("year")), Integer.parseInt(request.getParameter("month")), Integer.parseInt("day")));
+        if (new RestTemplate().getForObject("http://localhost:9001/utilisateur/" + request.getParameter("helperEmail"), UserBean.class) == null) {
+            response.sendRedirect("/email_not_found");
+            return;
+        }
+        UserBean recipient = new RestTemplate().getForObject("http://localhost:9001/utilisateur/" + request.getParameter("helperEmail"), UserBean.class);
+        conventionBean.setRecipientId(recipient.getId());
+        conventionBean.setFirstNameRecipient(recipient.getFirstName());
+        conventionBean.setLastNameRecipient(recipient.getLastName());
+        conventionBean.setDateConvention(LocalDate.of(Integer.parseInt(request.getParameter("year")), Integer.parseInt(request.getParameter("month")), Integer.parseInt(request.getParameter("day"))));
         conventionBean.setBeginningHour(LocalTime.of(Integer.parseInt(request.getParameter("hour")), 0));
         conventionBean.setTimeIntervention(LocalTime.of(Integer.parseInt(request.getParameter("hours-intervention-time")), Integer.parseInt(request.getParameter("minutes-intervention-time"))));
         conventionBean.setPlace(request.getParameter("place"));
         conventionBean.setPhoneNumberHelped(request.getParameter("phone_number"));
-        conventionBean.setMessage(request.getParameter("message"));
+        conventionBean.setMessage(request.getParameter("convention"));
         ConventionsProxy.insertConvention(conventionBean);
         response.sendRedirect("/my_conventions/" + conventionBean.getSenderId() + "?sendConvention=true");
     }

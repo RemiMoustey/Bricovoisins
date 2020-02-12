@@ -24,10 +24,14 @@
 
 .bricovoisins {
     text-transform: uppercase;
+    font-family: 'BurnstownDam', Arial, sans-serif;
+    font-weight: bold;
+    font-size: 39px;
+    color: #9e672c;
 }
 
 .container {
-    margin-top: 220px;
+    margin-top: 270px;
 }
 
 .book-title {

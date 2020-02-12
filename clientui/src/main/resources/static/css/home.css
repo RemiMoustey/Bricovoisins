@@ -18,7 +18,65 @@
     padding-right: 8px;
 }
 
+.button-inscription {
+    position: relative;
+    left: 65px;
+}
+
+.button-inscription a {
+    display: block;
+    background-color: #3ce44d;
+    color: #000;
+}
+
+.button-inscription a:hover {
+    text-decoration: none;
+}
+
+.button-inscription img {
+    position: absolute;
+    right: -4px;
+    bottom: 35px;
+}
+
 .big-clermont img {
     max-width: 100%;
     height: auto;
+}
+
+@media all and (min-width: 991px) and (max-width: 1199px) {
+    .button-inscription img {
+        bottom: 10px;
+        right: 2px;
+    }
+}
+
+@media all and (max-width: 991px) {
+    .button-inscription {
+        left: 0;
+    }
+
+    .button-inscription img {
+        right: -6px;
+    }
+}
+
+@media all and (max-width: 767px) {
+    .button-inscription img {
+        bottom: -12px;
+        right: -4px;
+    }
+}
+
+@media all and (max-width: 575px) {
+    .button-inscription {
+        width: 235px;
+        margin: 0 auto 35px;
+        order: 1;
+    }
+
+    .button-inscription img {
+        right: -8px;
+        bottom: -36px;
+    }
 }

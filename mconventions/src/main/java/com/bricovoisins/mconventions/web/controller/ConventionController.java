@@ -15,8 +15,8 @@ public class ConventionController {
     @Autowired
     ConventionDao conventionDao;
 
-    @PostMapping(value = "/insert_message")
-    public ResponseEntity<Void> insertUser(@RequestBody Convention convention) {
+    @PostMapping(value = "/send_convention")
+    public ResponseEntity<Void> insertConvention(@RequestBody Convention convention) {
         Convention addedConvention = conventionDao.save(convention);
 
         if (addedConvention == null) {
@@ -33,7 +33,17 @@ public class ConventionController {
     }
 
     @GetMapping(value = "/conventions/{userId}")
-    public List<Convention> getListConventionsUser(@PathVariable int userId) {
-        return conventionDao.findBySenderId(userId);
+    public List<Convention> getListCurrentConventionsUser(@PathVariable int userId) {
+        return conventionDao.findBySenderIdAndIsValidatedByRecipientIsFalse(userId);
+    }
+
+    @GetMapping(value = "/validated_conventions/{userId}")
+    public List<Convention> getListValidatedConventionsUser(@PathVariable int userId) {
+        return conventionDao.findBySenderIdAndIsValidatedByRecipientIsTrue(userId);
+    }
+
+    @GetMapping(value = "/ended_conventions/{userId}")
+    public List<Convention> getListEndedConventionsUser(@PathVariable int userId) {
+        return conventionDao.findBySenderIdAndIsEndedBySenderIsTrue(userId);
     }
 }

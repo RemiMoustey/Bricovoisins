@@ -5,7 +5,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
 
 @Entity
 public class Convention {
@@ -16,6 +15,10 @@ public class Convention {
     private Integer senderId;
 
     private Integer recipientId;
+
+    private String firstNameRecipient;
+
+    private String lastNameRecipient;
 
     private LocalDate dateConvention;
 
@@ -29,7 +32,9 @@ public class Convention {
 
     private String message;
 
-    private Boolean isValidatedBySender;
+    private Boolean isValidatedByRecipient;
+
+    private Boolean isEndedBySender;
 
     public Integer getId() {
         return id;
@@ -53,6 +58,22 @@ public class Convention {
 
     public void setRecipientId(Integer recipientId) {
         this.recipientId = recipientId;
+    }
+
+    public String getFirstNameRecipient() {
+        return firstNameRecipient;
+    }
+
+    public void setFirstNameRecipient(String firstNameRecipient) {
+        this.firstNameRecipient = firstNameRecipient;
+    }
+
+    public String getLastNameRecipient() {
+        return lastNameRecipient;
+    }
+
+    public void setLastNameRecipient(String lastNameRecipient) {
+        this.lastNameRecipient = lastNameRecipient;
     }
 
     public LocalDate getDateConvention() {
@@ -103,12 +124,20 @@ public class Convention {
         this.message = message;
     }
 
-    public Boolean getValidatedBySender() {
-        return isValidatedBySender;
+    public Boolean getValidatedByRecipient() {
+        return isValidatedByRecipient;
     }
 
-    public void setValidatedBySender(Boolean validatedBySender) {
-        isValidatedBySender = validatedBySender;
+    public void setValidatedByRecipient(Boolean validatedByRecipient) {
+        isValidatedByRecipient = validatedByRecipient;
+    }
+
+    public Boolean getEndedBySender() {
+        return isEndedBySender;
+    }
+
+    public void setEndedBySender(Boolean endedBySender) {
+        isEndedBySender = endedBySender;
     }
 
     @Override
@@ -117,13 +146,16 @@ public class Convention {
                 "id=" + id +
                 ", senderId=" + senderId +
                 ", recipientId=" + recipientId +
+                ", firstNameRecipient='" + firstNameRecipient + '\'' +
+                ", lastNameRecipient='" + lastNameRecipient + '\'' +
                 ", dateConvention=" + dateConvention +
                 ", beginningHour=" + beginningHour +
                 ", timeIntervention=" + timeIntervention +
                 ", place='" + place + '\'' +
                 ", phoneNumberHelped='" + phoneNumberHelped + '\'' +
                 ", message='" + message + '\'' +
-                ", isValidatedBySender=" + isValidatedBySender +
+                ", isValidatedByRecipient=" + isValidatedByRecipient +
+                ", isEndedBySender=" + isEndedBySender +
                 '}';
     }
 }

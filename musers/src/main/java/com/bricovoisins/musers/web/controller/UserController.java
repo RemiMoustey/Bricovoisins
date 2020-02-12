@@ -39,7 +39,7 @@ public class UserController {
         return userDao.findAll();
     }
 
-    @GetMapping(value = "/utilisateur/{userId}")
+    @GetMapping(value = "/utilisateurId/{userId}")
     public User getOneUser(@PathVariable int userId) {
         return userDao.findById(userId);
     }

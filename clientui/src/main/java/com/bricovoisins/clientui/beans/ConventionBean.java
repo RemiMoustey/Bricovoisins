@@ -12,6 +12,10 @@ public class ConventionBean {
 
     private int recipientId;
 
+    private String firstNameRecipient;
+
+    private String lastNameRecipient;
+
     private LocalDate dateConvention;
 
     private LocalTime beginningHour;
@@ -25,6 +29,8 @@ public class ConventionBean {
     private String message;
 
     private boolean isValidatedByRecipient;
+
+    private boolean isEndedBySender;
 
     public int getId() {
         return id;
@@ -48,6 +54,22 @@ public class ConventionBean {
 
     public void setRecipientId(int recipientId) {
         this.recipientId = recipientId;
+    }
+
+    public String getFirstNameRecipient() {
+        return firstNameRecipient;
+    }
+
+    public void setFirstNameRecipient(String firstNameRecipient) {
+        this.firstNameRecipient = firstNameRecipient;
+    }
+
+    public String getLastNameRecipient() {
+        return lastNameRecipient;
+    }
+
+    public void setLastNameRecipient(String lastNameRecipient) {
+        this.lastNameRecipient = lastNameRecipient;
     }
 
     public LocalDate getDateConvention() {
@@ -106,12 +128,22 @@ public class ConventionBean {
         isValidatedByRecipient = validatedByRecipient;
     }
 
+    public boolean isEndedBySender() {
+        return isEndedBySender;
+    }
+
+    public void setEndedBySender(boolean endedBySender) {
+        isEndedBySender = endedBySender;
+    }
+
     @Override
     public String toString() {
         return "ConventionBean{" +
                 "id=" + id +
                 ", senderId=" + senderId +
                 ", recipientId=" + recipientId +
+                ", firstNameRecipient='" + firstNameRecipient + '\'' +
+                ", lastNameRecipient='" + lastNameRecipient + '\'' +
                 ", dateConvention=" + dateConvention +
                 ", beginningHour=" + beginningHour +
                 ", timeIntervention=" + timeIntervention +
@@ -119,6 +151,7 @@ public class ConventionBean {
                 ", phoneNumberHelped='" + phoneNumberHelped + '\'' +
                 ", message='" + message + '\'' +
                 ", isValidatedByRecipient=" + isValidatedByRecipient +
+                ", isEndedBySender=" + isEndedBySender +
                 '}';
     }
 }
