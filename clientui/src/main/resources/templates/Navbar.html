@@ -22,35 +22,35 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/explications">Comment ça marche ?</a>
                     </li>
-                    <div sec:authorize="!isAuthenticated()">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/inscription">S'inscrire</a>
-                        </li>
-                    </div>
-                    <div sec:authorize="isAuthenticated()">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/dashboard">Tableau de bord</a>
-                        </li>
-                    </div>
-                    <div sec:authorize="isAuthenticated()">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/demands">J'ai besoin d'aide</a>
-                        </li>
-                    </div>
-                    <div sec:authorize="!isAuthenticated()">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/login">Connexion</a>
-                        </li>
-                    </div>
-                    <div sec:authorize="isAuthenticated()">
-                        <li class="nav-item">
-                            <form th:action="@{/logout}" method="post">
-                                <input class="logout-link" type="submit" value="Déconnexion" />
-                            </form>
-                        </li>
-                    </div>
+                    <li sec:authorize="!isAuthenticated()" class="nav-item">
+                        <a class="nav-link" href="/inscription">S'inscrire</a>
+                    </li>
+                    <li class="nav-item d-flex align-items-center">
+                        <div class="dropdown">
+                            <a role="button" aria-haspopup="true" aria-expanded="false" href="#" id="dropdown-menu-link">Tableau de bord</a>
+                            <div id="menutest">
+                                <a class="dropdown-item" href="/create_convention">R<span class="lowercase-link">édiger une convention</span></a>
+                                <a class="dropdown-item" th:href="@{|/my_conventions/${userId}|}">M<span class="lowercase-link">es conventions</span></a>
+                                <a class="dropdown-item" th:href="@{|/addressed_conventions/${userId}|}">C<span class="lowercase-link">onventions adressées</span></a>
+                            </div>
+                        </div>
+                    </li>
+                    <li sec:authorize="isAuthenticated()" class="nav-item">
+                        <a class="nav-link" href="/demands">J'ai besoin d'aide</a>
+                    </li>
+                    <li sec:authorize="!isAuthenticated()" class="nav-item">
+                        <a class="nav-link" href="/login">Connexion</a>
+                    </li>
+                    <li sec:authorize="isAuthenticated()" class="nav-item">
+                        <form th:action="@{/logout}" method="post">
+                            <input class="logout-link" type="submit" value="Déconnexion" />
+                        </form>
+                    </li>
                 </div>
             </ul>
+            <div sec:authorize="isAuthenticated()">
+                <p>Bonjour <span th:text="${firstName}"></span> !</p>
+            </div>
         </nav>
     </div>
 </html>

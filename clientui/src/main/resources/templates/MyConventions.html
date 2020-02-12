@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes conventions</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/css/navbar.css" />
+    <link rel="stylesheet" type="text/css" href="/css/dashboard.css" />
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+</head>
+    <body>
+        <div th:replace="Navbar :: navbar"></div>
+        <div class="container mx-auto row">
+            <div th:if="${param.sendConvention}" class="alert alert-success w-50 mx-auto mb-2">
+                <p>Votre convention a bien été créée !</p>
+            </div>
+            <h1 class="text-center mb-3">Mes conventions</h1>
+            <div th:each="convention : ${conventions}">
+                <p th:text="${convention.message}"></p>
+            </div>
+        </div>
+
+    </body>
+</html>

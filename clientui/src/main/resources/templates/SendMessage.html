@@ -11,12 +11,16 @@
     <body>
         <div th:replace="Navbar :: navbar"></div>
         <div class="container">
+            <h1 class="text-center mb-3">Envoyer un message à <span th:text="${recipient.firstName}"></span></h1>
             <form method="post" action="/insert_message">
                 <div class="text-center">
                     <label for="message">Votre message à <span th:text="${recipient.firstName}"></span><span class="input-required">*</span></label><br />
                     <textarea name="message" id="message" rows="5" cols="60" required></textarea>
                     <input type="hidden" name="senderId" id="senderId" th:value="${sender.id}" />
                     <input type="hidden" name="recipientId" id="recipientId" th:value="${recipient.id}" />
+                    <div>
+                        <input type="submit" value="Envoyer le message" />
+                    </div>
                 </div>
             </form>
         </div>

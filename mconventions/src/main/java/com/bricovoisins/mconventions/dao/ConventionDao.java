@@ -4,6 +4,9 @@ import com.bricovoisins.mconventions.model.Convention;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ConventionDao extends JpaRepository<Convention, Integer> {
+    List<Convention> findBySenderId(int senderId);
 }

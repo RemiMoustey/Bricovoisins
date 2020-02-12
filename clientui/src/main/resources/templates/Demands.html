@@ -62,7 +62,8 @@
                                     <li th:if="${user.levelDiy == 'expert-diy'}">Bricoleur expert</li>
                                 </ul>
                                 <img th:src="${user.avatar}" th:alt="@{|Avatar de ${user.firstName} ${user.lastName}|}" />
-                                <p class="name-town"><span th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span> - <span th:text="${user.town}" class="town"></span></p>
+                                <p class="name-town"><span th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span> - <span th:text="${user.town}" class="town"></span><br />
+                                <span class="age"><span th:text="${user.age}" class="age"></span> ans</span></p>
                                 <p th:text="${user.description}"></p>
                                 <div class="contact pb-5">
                                     <a th:href="@{|/send_message/${idLoggedUser}/${user.id}|}">Contacter <span th:text="${user.firstName}"></span></a>

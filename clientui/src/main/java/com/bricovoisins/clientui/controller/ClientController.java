@@ -1,13 +1,13 @@
 package com.bricovoisins.clientui.controller;
 
+import com.bricovoisins.clientui.beans.ConventionBean;
 import com.bricovoisins.clientui.beans.UserBean;
+import com.bricovoisins.clientui.proxies.MicroserviceConventionsProxy;
 import com.bricovoisins.clientui.proxies.MicroserviceUsersProxy;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -19,17 +19,26 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Blob;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 @Controller
 public class ClientController {
@@ -37,19 +46,44 @@ public class ClientController {
     @Autowired
     private MicroserviceUsersProxy UsersProxy;
 
+    @Autowired
+    private MicroserviceConventionsProxy ConventionsProxy;
+
+    public void catchLoggedUserIdAndFirstName(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        RestTemplate restTemplate = new RestTemplate();
+        UserBean loggedUser = restTemplate.getForObject("http://localhost:9001/utilisateur/" + email, UserBean.class);
+        if(loggedUser != null) {
+            model.addAttribute("firstName", loggedUser.getFirstName());
+            model.addAttribute("userId", loggedUser.getId());
+        }
+    }
+
     @GetMapping(value = "/home")
-    public String getHomePage() {
+    public String getHomePage(Model model) {
+        if (SecurityContextHolder.getContext().getAuthentication() != null) {
+            catchLoggedUserIdAndFirstName(model);
+        }
         return "Home";
     }
 
     @GetMapping(value = "/explications")
-    public String getExplicationsPage() {
+    public String getExplicationsPage(Model model) {
+        if (SecurityContextHolder.getContext().getAuthentication() != null) {
+            catchLoggedUserIdAndFirstName(model);
+        }
         return "Explications";
     }
 
     @GetMapping(value = "/inscription")
     public String getRegistrationPage() {
         return "Register";
+    }
+
+    @GetMapping(value = "/accessDenied")
+    public String getAccessDeniedPage() {
+        return "EmailNotFound";
     }
 
     @PostMapping(value = "/validation")
@@ -102,6 +136,7 @@ public class ClientController {
             request.getSession().removeAttribute("search");
             request.getSession().removeAttribute("users");
         }
+        catchLoggedUserIdAndFirstName(model);
         return "Demands";
     }
 
@@ -120,15 +155,134 @@ public class ClientController {
 
     @GetMapping(value = "/send_message/{senderId}/{recipientId}")
     public String getMessagePage(@PathVariable int senderId, @PathVariable int recipientId, Model model) {
-        UserBean sender = new RestTemplate().getForObject("http://localhost:9001/utilisateurs/" + senderId, UserBean.class);
-        UserBean recipient = new RestTemplate().getForObject("http://localhost:9001/utilisateurs/" + recipientId, UserBean.class);
+        UserBean sender = new RestTemplate().getForObject("http://localhost:9001/utilisateur/" + senderId, UserBean.class);
+        UserBean recipient = new RestTemplate().getForObject("http://localhost:9001/utilisateur/" + recipientId, UserBean.class);
         model.addAttribute("sender", sender);
         model.addAttribute("recipient", recipient);
+        catchLoggedUserIdAndFirstName(model);
         return "SendMessage";
     }
 
-    @PostMapping(value = "/insert_message")
-    public void insertMessageInConvention() {
+    public String getCompetences(UserBean sender) {
+        String competences = "";
+        if (sender.getLevelGardening() != null) {
+            if (sender.getLevelGardening().equals("little-works-gardening")) {
+                competences += "Jardinier petits travaux\n";
+            } else if (sender.getLevelGardening().equals("connoisseur-gardening")) {
+                competences += "Jardinier confirmé\n";
+            } else if (sender.getLevelGardening().equals("expert-gardening")) {
+                competences += "Jardinier expert\n";
+            }
+        } if (sender.getLevelElectricity() != null) {
+            if (sender.getLevelElectricity().equals("little-works-electricity")) {
+                competences += "Électricien petits travaux\n";
+            } else if (sender.getLevelElectricity().equals("connoisseur-electricity")) {
+                competences += "Électricien confirmé\n";
+            } else if (sender.getLevelElectricity().equals("expert-electricity")) {
+                competences += "Électricien expert\n";
+            }
+        } if (sender.getLevelPlumbing() != null) {
+            if (sender.getLevelPlumbing().equals("little-works-plumbing")) {
+                competences += "Plombier petits travaux\n";
+            } else if (sender.getLevelPlumbing().equals("connoisseur-plumbing")) {
+                competences += "Plombier confirmé\n";
+            } else if (sender.getLevelPlumbing().equals("expert-plumbing")) {
+                competences += "Plombier expert\n";
+            }
+        } if (sender.getLevelCarpentry() != null) {
+            if (sender.getLevelCarpentry().equals("little-works-carpentry")) {
+                competences += "Menuisier petits travaux\n";
+            } else if (sender.getLevelCarpentry().equals("connoisseur-carpentry")) {
+                competences += "Menuisier confirmé\n";
+            } else if (sender.getLevelCarpentry().equals("expert-carpentry")) {
+                competences += "Menuisier expert\n";
+            }
+        } if (sender.getLevelPainting() != null) {
+            if (sender.getLevelPainting().equals("little-works-painting")) {
+                competences += "Peintre petits travaux\n";
+            } else if (sender.getLevelPainting().equals("connoisseur-painting")) {
+                competences += "Peintre confirmé\n";
+            } else if (sender.getLevelPainting().equals("expert-painting")) {
+                competences += "Peintre expert\n";
+            }
+        } if (sender.getLevelMasonry() != null) {
+            if (sender.getLevelMasonry().equals("little-works-masonry")) {
+                competences += "Maçon petits travaux\n";
+            } else if (sender.getLevelMasonry().equals("connoisseur-masonry")) {
+                competences += "Maçon confirmé\n";
+            } else if (sender.getLevelMasonry().equals("expert-masonry")) {
+                competences += "Maçon expert\n";
+            }
+        } if (sender.getLevelDiy() != null) {
+            if (sender.getLevelDiy().equals("little-works-diy")) {
+                competences += "Bricoleur petits travaux\n";
+            } else if (sender.getLevelDiy().equals("connoisseur-diy")) {
+                competences += "Bricoleur confirmé\n";
+            } else if (sender.getLevelDiy().equals("expert-diy")) {
+                competences += "Bricoleur expert\n";
+            }
+        }
+        return competences;
+    }
 
+    @PostMapping(value = "/insert_message")
+    public void insertMessageInConvention(HttpServletRequest request, HttpServletResponse response) throws IOException, MessagingException {
+        UserBean sender = new RestTemplate().getForObject("http://localhost:9001/utilisateur/" + Integer.parseInt(request.getParameter("senderId")), UserBean.class);
+        UserBean recipient = new RestTemplate().getForObject("http://localhost:9001/utilisateur/" + Integer.parseInt(request.getParameter("recipientId")), UserBean.class);
+        String competences = getCompetences(sender);
+        String message = request.getParameter("message") + "\n\nVous pouvez répondre à " + sender.getFirstName() + " " + sender.getLastName() + "à l'adresse email suivante : " + sender.getEmail() + ".\n" +
+                sender.getFirstName() + " " + "habite à " + sender.getTown() + ". Ses compétences sont les suivantes :\n" + competences;
+        readPropertiesAndSend(recipient.getEmail(), "Vous avez reçu un message de " + sender.getFirstName() + " " + sender.getLastName(), message);
+        response.sendRedirect("/home?sendMessage=true");
+    }
+
+    private void readPropertiesAndSend(String email, String subject, String sentMessage) throws IOException, MessagingException {
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("configuration.properties");
+        Properties properties = new Properties();
+        if(inputStream != null) {
+            properties.load(inputStream);
+        } else {
+            throw new FileNotFoundException("Le fichier de propriétés n'existe pas");
+        }
+        Session session = Session.getDefaultInstance(properties);
+        MimeMessage message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(properties.getProperty("mail.smtp.user")));
+        message.setSubject(subject);
+        message.setContent(sentMessage, "text/plain");
+        message.setRecipient(Message.RecipientType.TO, new InternetAddress(email));
+
+        Transport transport = session.getTransport("smtp");
+        transport.connect(properties.getProperty("mail.smtp.host"), properties.getProperty("mail.smtp.user"), properties.getProperty("mail.smtp.password"));
+        transport.sendMessage(message, message.getAllRecipients());
+        transport.close();
+    }
+
+    @GetMapping(value = "/create_convention")
+    public String getPageCreateConvention(Model model) {
+        catchLoggedUserIdAndFirstName(model);
+        return "CreateConvention";
+    }
+
+    @GetMapping(value = "/my_conventions/{userId}")
+    public String getListConventionsUser(@PathVariable int userId, Model model) {
+        List<ConventionBean> allConventionsUser = ConventionsProxy.getListConventionsUser(userId);
+        model.addAttribute("conventions", allConventionsUser);
+        catchLoggedUserIdAndFirstName(model);
+        return "MyConventions";
+    }
+
+    @PostMapping(value = "/send_convention")
+    public void insertConvention(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        ConventionBean conventionBean = new ConventionBean();
+        conventionBean.setSenderId(new RestTemplate().getForObject("http://localhost:9001/utilisateur/" + SecurityContextHolder.getContext().getAuthentication().getName(), UserBean.class).getId());
+        conventionBean.setRecipientId(new RestTemplate().getForObject("http://localhost:9001/utilisateur/" + request.getParameter("helperEmail"), UserBean.class).getId());
+        conventionBean.setDateConvention(LocalDate.of(Integer.parseInt(request.getParameter("year")), Integer.parseInt(request.getParameter("month")), Integer.parseInt("day")));
+        conventionBean.setBeginningHour(LocalTime.of(Integer.parseInt(request.getParameter("hour")), 0));
+        conventionBean.setTimeIntervention(LocalTime.of(Integer.parseInt(request.getParameter("hours-intervention-time")), Integer.parseInt(request.getParameter("minutes-intervention-time"))));
+        conventionBean.setPlace(request.getParameter("place"));
+        conventionBean.setPhoneNumberHelped(request.getParameter("phone_number"));
+        conventionBean.setMessage(request.getParameter("message"));
+        ConventionsProxy.insertConvention(conventionBean);
+        response.sendRedirect("/my_conventions/" + conventionBean.getSenderId() + "?sendConvention=true");
     }
 }

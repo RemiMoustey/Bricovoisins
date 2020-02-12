@@ -4,12 +4,11 @@ import com.bricovoisins.mconventions.dao.ConventionDao;
 import com.bricovoisins.mconventions.model.Convention;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 public class ConventionController {
@@ -31,5 +30,10 @@ public class ConventionController {
                 .toUri();
 
         return ResponseEntity.created(location).build();
+    }
+
+    @GetMapping(value = "/conventions/{userId}")
+    public List<Convention> getListConventionsUser(@PathVariable int userId) {
+        return conventionDao.findBySenderId(userId);
     }
 }

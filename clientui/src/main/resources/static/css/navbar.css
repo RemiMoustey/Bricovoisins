@@ -16,16 +16,32 @@
     font-size: 30px;
 }
 
-.navbar-light .navbar-nav .nav-link, .logout-link {
+.navbar-light .navbar-nav .nav-link, .logout-link, #dropdown-menu-link {
     color: #043308;
 }
 
-.logout-link {
+.logout-link, #dropdown-menu-link {
     background-color: inherit;
     border: none;
     cursor: pointer;
     padding: 0.5rem;
     text-transform: uppercase;
+}
+
+#dropdown-menu-link:hover {
+    text-decoration: none;
+}
+
+#menutest {
+    display: none;
+}
+
+#dropdown-menu-link:hover + #menutest, .dropdown:hover #menutest {
+    display: block;
+}
+
+.lowercase-link {
+    text-transform: lowercase;
 }
 
 @media all and (max-width: 767px) {
@@ -35,5 +51,18 @@
 
     .slogan p {
         font-size: 15px;
+    }
+}
+
+@media all and (min-width: 768px) {
+    .dropdown:hover {
+        position: relative;
+        top: 8px;
+        width: 149.52px;
+    }
+
+    #menutest a {
+        padding-left: 0;
+        padding-right: 0;
     }
 }
