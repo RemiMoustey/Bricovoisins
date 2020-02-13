@@ -10,6 +10,10 @@ public class ConventionBean {
 
     private int senderId;
 
+    private String firstNameSender;
+
+    private String lastNameSender;
+
     private int recipientId;
 
     private String firstNameRecipient;
@@ -17,6 +21,10 @@ public class ConventionBean {
     private String lastNameRecipient;
 
     private LocalDate dateConvention;
+
+    private LocalDate dateBeginning;
+
+    private LocalDate dateEndConvention;
 
     private LocalTime beginningHour;
 
@@ -46,6 +54,22 @@ public class ConventionBean {
 
     public void setSenderId(int senderId) {
         this.senderId = senderId;
+    }
+
+    public String getFirstNameSender() {
+        return firstNameSender;
+    }
+
+    public void setFirstNameSender(String firstNameSender) {
+        this.firstNameSender = firstNameSender;
+    }
+
+    public String getLastNameSender() {
+        return lastNameSender;
+    }
+
+    public void setLastNameSender(String lastNameSender) {
+        this.lastNameSender = lastNameSender;
     }
 
     public int getRecipientId() {
@@ -78,6 +102,22 @@ public class ConventionBean {
 
     public void setDateConvention(LocalDate dateConvention) {
         this.dateConvention = dateConvention;
+    }
+
+    public LocalDate getDateBeginning() {
+        return dateBeginning;
+    }
+
+    public void setDateBeginning(LocalDate dateBeginning) {
+        this.dateBeginning = dateBeginning;
+    }
+
+    public LocalDate getDateEndConvention() {
+        return dateEndConvention;
+    }
+
+    public void setDateEndConvention(LocalDate dateEndConvention) {
+        this.dateEndConvention = dateEndConvention;
     }
 
     public LocalTime getBeginningHour() {
@@ -141,10 +181,14 @@ public class ConventionBean {
         return "ConventionBean{" +
                 "id=" + id +
                 ", senderId=" + senderId +
+                ", firstNameSender='" + firstNameSender + '\'' +
+                ", lastNameSender='" + lastNameSender + '\'' +
                 ", recipientId=" + recipientId +
                 ", firstNameRecipient='" + firstNameRecipient + '\'' +
                 ", lastNameRecipient='" + lastNameRecipient + '\'' +
                 ", dateConvention=" + dateConvention +
+                ", dateBeginning=" + dateBeginning +
+                ", dateEndConvention=" + dateEndConvention +
                 ", beginningHour=" + beginningHour +
                 ", timeIntervention=" + timeIntervention +
                 ", place='" + place + '\'' +

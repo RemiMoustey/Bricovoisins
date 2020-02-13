@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes conventions</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/css/navbar.css" />
+    <link rel="stylesheet" type="text/css" href="/css/dashboard.css" />
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+</head>
+<body>
+    <div th:replace="Navbar :: navbar"></div>
+    <div class="container mx-auto text-center" id="conventions">
+        <div th:if="${param.acceptedConvention}" class="alert alert-success w-50 mx-auto mb-2">
+            <p>La convention a bien été validée !</p>
+        </div>
+        <div th:if="${param.refusedConvention}" class="alert alert-success w-50 mx-auto mb-2">
+            <p>La convention a bien été refusée et supprimée !</p>
+        </div>
+        <h1 class="mb-3">Mes conventions d'aidé</h1>
+        <h2 class="mb-3">Conventions classées</h2>
+        <p th:if="${#lists.size(finishedConventions) == 0}">
+            Aucune convention.
+        </p>
+        <div th:if="${#lists.size(finishedConventions) >= 0}" th:each="convention : ${finishedConventions}">
+            <p>Classée le <span th:text="${convention.dateConvention}"></span></p>
+        </div>
+        <h2 class="mb-3">Conventions à valider</h2>
+        <p th:if="${#lists.size(noValidatedConventions) == 0}">
+            Aucune convention.
+        </p>
+        <div th:if="${#lists.size(noValidatedConventions) >= 0}" th:each="convention : ${noValidatedConventions}">
+            <p>Rédigée le <span th:text="${convention.dateConvention}"></span> par <span th:text="${convention.firstNameSender}"></span> <span th:text="${convention.lastNameSender}"></span></p>
+            <a role="button" th:href="@{|/validate_convention_recipient/${convention.id}|}" class="btn btn-success">Valider</a>
+            <a role="button" th:href="@{|/refuse_convention_recipient/${convention.id}|}" class="btn btn-danger">Refuser</a>
+        </div>
+        <h2 class="mb-3">Conventions en cours</h2>
+        <p th:if="${#lists.size(validatedConventions) == 0}">
+            Aucune convention.
+        </p>
+        <div th:if="${#lists.size(validatedConventions) >= 0}" th:each="convention : ${validatedConventions}">
+            <p>Rédigée le <span th:text="${convention.dateConvention}"></span></p>
+        </div>
+    </div>
+</body>
+</html>

@@ -50,13 +50,14 @@ public class ClientController {
     @Autowired
     private MicroserviceConventionsProxy ConventionsProxy;
 
-    public void catchLoggedUserIdAndFirstName(Model model) {
+    public void catchLoggedUserIdPointsAndFirstName(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         RestTemplate restTemplate = new RestTemplate();
         UserBean loggedUser = restTemplate.getForObject("http://localhost:9001/utilisateur/" + email, UserBean.class);
         if(loggedUser != null) {
             model.addAttribute("firstName", loggedUser.getFirstName());
+            model.addAttribute("points", loggedUser.getPoints());
             model.addAttribute("userId", loggedUser.getId());
         }
     }
@@ -64,15 +65,20 @@ public class ClientController {
     @GetMapping(value = "/home")
     public String getHomePage(Model model) {
         if (SecurityContextHolder.getContext().getAuthentication() != null) {
-            catchLoggedUserIdAndFirstName(model);
+            catchLoggedUserIdPointsAndFirstName(model);
         }
         return "Home";
+    }
+
+    @GetMapping(value = "/access_denied")
+    public String getAccessDeniedPage() {
+        return "AccessDenied";
     }
 
     @GetMapping(value = "/explications")
     public String getExplicationsPage(Model model) {
         if (SecurityContextHolder.getContext().getAuthentication() != null) {
-            catchLoggedUserIdAndFirstName(model);
+            catchLoggedUserIdPointsAndFirstName(model);
         }
         return "Explications";
     }
@@ -83,7 +89,7 @@ public class ClientController {
     }
 
     @GetMapping(value = "/email_not_found")
-    public String getAccessDeniedPage() {
+    public String getEmailNotFoundPage() {
         return "EmailNotFound";
     }
 
@@ -137,7 +143,7 @@ public class ClientController {
             request.getSession().removeAttribute("search");
             request.getSession().removeAttribute("users");
         }
-        catchLoggedUserIdAndFirstName(model);
+        catchLoggedUserIdPointsAndFirstName(model);
         return "Demands";
     }
 
@@ -160,7 +166,7 @@ public class ClientController {
         UserBean recipient = new RestTemplate().getForObject("http://localhost:9001/utilisateurId/" + recipientId, UserBean.class);
         model.addAttribute("sender", sender);
         model.addAttribute("recipient", recipient);
-        catchLoggedUserIdAndFirstName(model);
+        catchLoggedUserIdPointsAndFirstName(model);
         return "SendMessage";
     }
 
@@ -260,7 +266,7 @@ public class ClientController {
 
     @GetMapping(value = "/create_convention")
     public String getPageCreateConvention(Model model) {
-        catchLoggedUserIdAndFirstName(model);
+        catchLoggedUserIdPointsAndFirstName(model);
         return "CreateConvention";
     }
 
@@ -272,14 +278,17 @@ public class ClientController {
         model.addAttribute("validatedConventions", allValidatedConventionUser);
         List<ConventionBean> allFinishedConventions = Arrays.asList(new RestTemplate().getForEntity("http://localhost:9002/ended_conventions/" + userId, ConventionBean[].class).getBody());
         model.addAttribute("finishedConventions", allFinishedConventions);
-        catchLoggedUserIdAndFirstName(model);
+        catchLoggedUserIdPointsAndFirstName(model);
         return "MyConventions";
     }
 
     @PostMapping(value = "/send_convention")
     public void insertConvention(HttpServletRequest request, HttpServletResponse response) throws IOException {
         ConventionBean conventionBean = new ConventionBean();
-        conventionBean.setSenderId(new RestTemplate().getForObject("http://localhost:9001/utilisateur/" + SecurityContextHolder.getContext().getAuthentication().getName(), UserBean.class).getId());
+        UserBean sender = new RestTemplate().getForObject("http://localhost:9001/utilisateur/" + SecurityContextHolder.getContext().getAuthentication().getName(), UserBean.class);
+        conventionBean.setSenderId(sender.getId());
+        conventionBean.setFirstNameSender(sender.getFirstName());
+        conventionBean.setLastNameSender(sender.getLastName());
         if (new RestTemplate().getForObject("http://localhost:9001/utilisateur/" + request.getParameter("helperEmail"), UserBean.class) == null) {
             response.sendRedirect("/email_not_found");
             return;
@@ -296,5 +305,55 @@ public class ClientController {
         conventionBean.setMessage(request.getParameter("convention"));
         ConventionsProxy.insertConvention(conventionBean);
         response.sendRedirect("/my_conventions/" + conventionBean.getSenderId() + "?sendConvention=true");
+    }
+
+    @GetMapping(value = "/addressed_conventions/{recipientId}")
+    public String getListAddressedConventions(@PathVariable int recipientId, Model model) {
+        List<ConventionBean> allNoValidatedConventionsUser = Arrays.asList(new RestTemplate().getForEntity("http://localhost:9002/conventions_recipient/" + recipientId, ConventionBean[].class).getBody());
+        model.addAttribute("noValidatedConventions", allNoValidatedConventionsUser);
+        List<ConventionBean> allValidatedConventionsUser = Arrays.asList(new RestTemplate().getForEntity("http://localhost:9002/validated_conventions_recipient/" + recipientId, ConventionBean[].class).getBody());
+        model.addAttribute("validatedConventions", allValidatedConventionsUser);
+        List<ConventionBean> allFinishedConventions = Arrays.asList(new RestTemplate().getForEntity("http://localhost:9002/ended_conventions/" + recipientId, ConventionBean[].class).getBody());
+        model.addAttribute("finishedConventions", allFinishedConventions);
+        catchLoggedUserIdPointsAndFirstName(model);
+        return "AddressedConventions";
+    }
+
+    public boolean verifyConvention(ConventionBean convention) {
+        UserBean loggedUser = new RestTemplate().getForObject("http://localhost:9001/utilisateur/" + SecurityContextHolder.getContext().getAuthentication().getName(), UserBean.class);
+        List<ConventionBean> listConventionsUser = Arrays.asList(new RestTemplate().getForEntity("http://localhost:9002/conventions/" + loggedUser.getId(), ConventionBean[].class).getBody());
+        for (ConventionBean oneConventionOfUser : listConventionsUser) {
+            if (oneConventionOfUser.getId() == convention.getId()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @GetMapping(value = "/validate_convention_recipient/{id}")
+    public void updateIsValidatedByRecipient(@PathVariable int id, HttpServletResponse response) throws IOException {
+        ConventionBean modifiedConvention = new RestTemplate().getForObject("http://localhost:9002/convention/" + id, ConventionBean.class);
+        if (verifyConvention(modifiedConvention)) {
+            modifiedConvention.setValidatedByRecipient(true);
+            new RestTemplate().put("http://localhost:9002/update_convention", modifiedConvention);
+            response.sendRedirect("/addressed_conventions/" + modifiedConvention.getRecipientId() + "?acceptedConvention=true");
+        } else {
+            response.sendRedirect("/access_denied");
+        }
+    }
+
+    @GetMapping(value = "/refuse_convention_recipient/{id}")
+    public void updateIsRefusedByRecipient(@PathVariable int id, HttpServletResponse response) throws IOException {
+        ConventionBean modifiedConvention = new RestTemplate().getForObject("http://localhost:9002/convention/" + id, ConventionBean.class);
+        new RestTemplate().delete("http://localhost:9002/delete_convention/" + modifiedConvention.getId());
+        response.sendRedirect("/addressed_conventions/" + modifiedConvention.getRecipientId() + "?refusedConvention=true");
+    }
+
+    @GetMapping(value = "/validate_convention_sender/{id}")
+    public void updateIsEndedBySender(@PathVariable int id, HttpServletResponse response) throws IOException {
+        ConventionBean modifiedConvention = new RestTemplate().getForObject("http://localhost:9002/convention/" + id, ConventionBean.class);
+        modifiedConvention.setEndedBySender(true);
+        new RestTemplate().put("http://localhost:9002/update_convention", modifiedConvention);
+        response.sendRedirect("/addressed_conventions/" + modifiedConvention.getRecipientId() + "?acceptedConvention=true");
     }
 }

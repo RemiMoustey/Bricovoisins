@@ -15,8 +15,11 @@
                         <p>S'entraider dans le Grand Clermont</p>
                     </div>
                 </div>
-                <p>
+                <p class="navbar-user">
                     <span sec:authorize="isAuthenticated()">Bonjour <span th:text="${firstName}"></span> !</span>
+                </p>
+                <p class="navbar-user counting text-center">
+                    <span sec:authorize="isAuthenticated()">Votre compteur d'entraide est à <span th:text="${points}"></span> <span th:if="${points == 0 || points == 1}">point</span><span th:if="${points > 1}">points</span>.</span>
                 </p>
                 <div class="links-menu d-lg-flex text-uppercase">
                     <li class="nav-item">
@@ -30,11 +33,11 @@
                     </li>
                     <li sec:authorize="isAuthenticated()" class="nav-item d-flex align-items-center justify-content-center">
                         <div class="dropdown">
-                            <a role="button" aria-haspopup="true" aria-expanded="false" href="#" id="dropdown-menu-link">Tableau de bord</a>
+                            <a role="button" aria-haspopup="true" aria-expanded="false" href="#" id="dropdown-menu-link">Conventions</a>
                             <div id="menutest">
-                                <a class="dropdown-item" href="/create_convention">R<span class="lowercase-link">édiger une convention</span></a>
-                                <a class="dropdown-item" th:href="@{|/my_conventions/${userId}|}">M<span class="lowercase-link">es conventions</span></a>
-                                <a class="dropdown-item" th:href="@{|/addressed_conventions/${userId}|}">C<span class="lowercase-link">onventions adressées</span></a>
+                                <a class="dropdown-item" href="/create_convention">R<span class="lowercase-link">édiger une convention d'aidé</span></a>
+                                <a class="dropdown-item" th:href="@{|/my_conventions/${userId}|}">M<span class="lowercase-link">es conventions d'aidé</span></a>
+                                <a class="dropdown-item" th:href="@{|/addressed_conventions/${userId}|}">M<span class="lowercase-link">es conventions d'aidant</span></a>
                             </div>
                         </div>
                     </li>

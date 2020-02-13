@@ -15,6 +15,26 @@ public class ConventionController {
     @Autowired
     ConventionDao conventionDao;
 
+    @GetMapping(value = "/conventions")
+    public List<Convention> getAllConventions() {
+        return conventionDao.findAll();
+    }
+
+    @GetMapping(value = "/convention/{id}")
+    public Convention getOneConventionById(@PathVariable int id) {
+        return conventionDao.findById(id);
+    }
+
+    @GetMapping(value = "/conventions_sender/{senderId}")
+    public List<Convention> getAllConventionsOfSender(@PathVariable int senderId) {
+        return conventionDao.findAllBySenderId(senderId);
+    }
+
+    @RequestMapping(value = "/delete_convention/{id}")
+    public void deleteConvention(@PathVariable int id) {
+        conventionDao.deleteById(id);
+    }
+
     @PostMapping(value = "/send_convention")
     public ResponseEntity<Void> insertConvention(@RequestBody Convention convention) {
         Convention addedConvention = conventionDao.save(convention);
@@ -37,13 +57,28 @@ public class ConventionController {
         return conventionDao.findBySenderIdAndIsValidatedByRecipientIsFalse(userId);
     }
 
+    @GetMapping(value = "/conventions_recipient/{recipientId}")
+    public List<Convention> getListNoValidatedConventionsHelper(@PathVariable int recipientId) {
+        return conventionDao.findByRecipientIdAndIsValidatedByRecipientIsFalse(recipientId);
+    }
+
     @GetMapping(value = "/validated_conventions/{userId}")
     public List<Convention> getListValidatedConventionsUser(@PathVariable int userId) {
         return conventionDao.findBySenderIdAndIsValidatedByRecipientIsTrue(userId);
     }
 
+    @GetMapping(value = "/validated_conventions_recipient/{recipientId}")
+    public List<Convention> getListValidatedConventionsHelper(@PathVariable int recipientId) {
+        return conventionDao.findByRecipientIdAndIsValidatedByRecipientIsTrue(recipientId);
+    }
+
     @GetMapping(value = "/ended_conventions/{userId}")
     public List<Convention> getListEndedConventionsUser(@PathVariable int userId) {
         return conventionDao.findBySenderIdAndIsEndedBySenderIsTrue(userId);
+    }
+
+    @RequestMapping(value = "/update_convention", method = RequestMethod.PUT)
+    public void updateConvention(@RequestBody Convention convention) {
+        conventionDao.save(convention);
     }
 }

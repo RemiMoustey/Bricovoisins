@@ -10,6 +10,10 @@
     color: #0c991a;
 }
 
+input[type="submit"] {
+    cursor: pointer;
+}
+
 .pointer {
     cursor: pointer;
 }
@@ -31,7 +35,7 @@
 }
 
 .container {
-    margin-top: 270px;
+    margin-top: 290px;
 }
 
 .book-title {

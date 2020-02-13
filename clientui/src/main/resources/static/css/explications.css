@@ -87,6 +87,11 @@
 }
 
 @media all and (min-width: 767px) {
+    .bloc-explanations {
+        position: relative;
+        left: 20px;
+    }
+
     .text-icon {
         width: 625px;
         position: relative;

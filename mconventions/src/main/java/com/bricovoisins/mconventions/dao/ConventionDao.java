@@ -11,4 +11,8 @@ public interface ConventionDao extends JpaRepository<Convention, Integer> {
     List<Convention> findBySenderIdAndIsValidatedByRecipientIsFalse(int senderId);
     List<Convention> findBySenderIdAndIsValidatedByRecipientIsTrue(int userId);
     List<Convention> findBySenderIdAndIsEndedBySenderIsTrue(int userId);
+    List<Convention> findAllBySenderId(int senderId);
+    List<Convention> findByRecipientIdAndIsValidatedByRecipientIsFalse(int recipientId);
+    List<Convention> findByRecipientIdAndIsValidatedByRecipientIsTrue(int recipientId);
+    Convention findById(int id);
 }
