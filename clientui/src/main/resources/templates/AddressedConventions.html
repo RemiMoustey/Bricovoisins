@@ -18,7 +18,7 @@
         <div th:if="${param.refusedConvention}" class="alert alert-success w-50 mx-auto mb-2">
             <p>La convention a bien été refusée et supprimée !</p>
         </div>
-        <h1 class="mb-3">Mes conventions d'aidé</h1>
+        <h1 class="mb-3">Mes conventions d'aidant</h1>
         <h2 class="mb-3">Conventions classées</h2>
         <p th:if="${#lists.size(finishedConventions) == 0}">
             Aucune convention.
@@ -32,8 +32,8 @@
         </p>
         <div th:if="${#lists.size(noValidatedConventions) >= 0}" th:each="convention : ${noValidatedConventions}">
             <p>Rédigée le <span th:text="${convention.dateConvention}"></span> par <span th:text="${convention.firstNameSender}"></span> <span th:text="${convention.lastNameSender}"></span></p>
-            <a role="button" th:href="@{|/validate_convention_recipient/${convention.id}|}" class="btn btn-success">Valider</a>
-            <a role="button" th:href="@{|/refuse_convention_recipient/${convention.id}|}" class="btn btn-danger">Refuser</a>
+            <a role="button" th:href="@{|/validate_convention_recipient/${convention.id}|}" class="btn btn-success" onclick='return confirm("Êtes-vous sûr de valider cette convention ?")'>Valider</a>
+            <a role="button" th:href="@{|/refuse_convention_recipient/${convention.id}|}" class="btn btn-danger" onclick='return confirm("Êtes-vous sûr de valider cette convention ?")'>Annuler</a>
         </div>
         <h2 class="mb-3">Conventions en cours</h2>
         <p th:if="${#lists.size(validatedConventions) == 0}">

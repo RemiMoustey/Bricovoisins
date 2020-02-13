@@ -71,7 +71,10 @@ public class ClientController {
     }
 
     @GetMapping(value = "/access_denied")
-    public String getAccessDeniedPage() {
+    public String getAccessDeniedPage(Model model) {
+        if (SecurityContextHolder.getContext().getAuthentication() != null) {
+            catchLoggedUserIdPointsAndFirstName(model);
+        }
         return "AccessDenied";
     }
 
@@ -89,7 +92,10 @@ public class ClientController {
     }
 
     @GetMapping(value = "/email_not_found")
-    public String getEmailNotFoundPage() {
+    public String getEmailNotFoundPage(Model model) {
+        if (SecurityContextHolder.getContext().getAuthentication() != null) {
+            catchLoggedUserIdPointsAndFirstName(model);
+        }
         return "EmailNotFound";
     }
 
@@ -237,7 +243,7 @@ public class ClientController {
         UserBean sender = new RestTemplate().getForObject("http://localhost:9001/utilisateurId/" + Integer.parseInt(request.getParameter("senderId")), UserBean.class);
         UserBean recipient = new RestTemplate().getForObject("http://localhost:9001/utilisateurId/" + Integer.parseInt(request.getParameter("recipientId")), UserBean.class);
         String competences = getCompetences(sender);
-        String message = request.getParameter("message") + "\n\nVous pouvez répondre à " + sender.getFirstName() + " " + sender.getLastName() + "à l'adresse email suivante : " + sender.getEmail() + ".\n" +
+        String message = request.getParameter("message") + "\n\nVous pouvez répondre à " + sender.getFirstName() + " " + sender.getLastName() + " à l'adresse email suivante : " + sender.getEmail() + ".\n" +
                 sender.getFirstName() + " " + "habite à " + sender.getTown() + ". Ses compétences sont les suivantes :\n" + competences;
         readPropertiesAndSend(recipient.getEmail(), "Vous avez reçu un message de " + sender.getFirstName() + " " + sender.getLastName(), message);
         response.sendRedirect("/home?sendMessage=true");
@@ -266,7 +272,9 @@ public class ClientController {
 
     @GetMapping(value = "/create_convention")
     public String getPageCreateConvention(Model model) {
-        catchLoggedUserIdPointsAndFirstName(model);
+        if (SecurityContextHolder.getContext().getAuthentication() != null) {
+            catchLoggedUserIdPointsAndFirstName(model);
+        }
         return "CreateConvention";
     }
 
@@ -282,10 +290,22 @@ public class ClientController {
         return "MyConventions";
     }
 
+    @GetMapping(value = "/not_enough_points")
+    public String getPageNotEnoughPoints(Model model) {
+        if (SecurityContextHolder.getContext().getAuthentication() != null) {
+            catchLoggedUserIdPointsAndFirstName(model);
+        }
+        return "NotEnoughPoints";
+    }
+
     @PostMapping(value = "/send_convention")
     public void insertConvention(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        ConventionBean conventionBean = new ConventionBean();
         UserBean sender = new RestTemplate().getForObject("http://localhost:9001/utilisateur/" + SecurityContextHolder.getContext().getAuthentication().getName(), UserBean.class);
+        if (sender.getPoints() - Integer.parseInt(request.getParameter("hours-intervention-time")) * 4 - Integer.parseInt(request.getParameter("minutes-intervention-time")) / 15 < 0) {
+            response.sendRedirect("/not_enough_points");
+            return;
+        }
+        ConventionBean conventionBean = new ConventionBean();
         conventionBean.setSenderId(sender.getId());
         conventionBean.setFirstNameSender(sender.getFirstName());
         conventionBean.setLastNameSender(sender.getLastName());
@@ -297,13 +317,16 @@ public class ClientController {
         conventionBean.setRecipientId(recipient.getId());
         conventionBean.setFirstNameRecipient(recipient.getFirstName());
         conventionBean.setLastNameRecipient(recipient.getLastName());
-        conventionBean.setDateConvention(LocalDate.of(Integer.parseInt(request.getParameter("year")), Integer.parseInt(request.getParameter("month")), Integer.parseInt(request.getParameter("day"))));
-        conventionBean.setBeginningHour(LocalTime.of(Integer.parseInt(request.getParameter("hour")), 0));
-        conventionBean.setTimeIntervention(LocalTime.of(Integer.parseInt(request.getParameter("hours-intervention-time")), Integer.parseInt(request.getParameter("minutes-intervention-time"))));
+        conventionBean.setDateConvention(LocalDate.now().plusDays(1));
+        conventionBean.setDateBeginning(LocalDate.of(Integer.parseInt(request.getParameter("year")), Integer.parseInt(request.getParameter("month")), Integer.parseInt(request.getParameter("day"))));
+        conventionBean.setBeginningHour(LocalTime.of(Integer.parseInt(request.getParameter("hour")) + 1, 0));
+        conventionBean.setTimeIntervention(LocalTime.of(Integer.parseInt(request.getParameter("hours-intervention-time")) + 1, Integer.parseInt(request.getParameter("minutes-intervention-time"))));
         conventionBean.setPlace(request.getParameter("place"));
         conventionBean.setPhoneNumberHelped(request.getParameter("phone_number"));
         conventionBean.setMessage(request.getParameter("convention"));
         ConventionsProxy.insertConvention(conventionBean);
+        sender.setPoints(sender.getPoints() - ((conventionBean.getTimeIntervention().getHour() - 1) * 4) - conventionBean.getTimeIntervention().getMinute() / 15);
+        new RestTemplate().put("http://localhost:9001/update_user/" + sender.getId(), sender);
         response.sendRedirect("/my_conventions/" + conventionBean.getSenderId() + "?sendConvention=true");
     }
 
@@ -313,27 +336,39 @@ public class ClientController {
         model.addAttribute("noValidatedConventions", allNoValidatedConventionsUser);
         List<ConventionBean> allValidatedConventionsUser = Arrays.asList(new RestTemplate().getForEntity("http://localhost:9002/validated_conventions_recipient/" + recipientId, ConventionBean[].class).getBody());
         model.addAttribute("validatedConventions", allValidatedConventionsUser);
-        List<ConventionBean> allFinishedConventions = Arrays.asList(new RestTemplate().getForEntity("http://localhost:9002/ended_conventions/" + recipientId, ConventionBean[].class).getBody());
+        List<ConventionBean> allFinishedConventions = Arrays.asList(new RestTemplate().getForEntity("http://localhost:9002/ended_conventions_recipient/" + recipientId, ConventionBean[].class).getBody());
         model.addAttribute("finishedConventions", allFinishedConventions);
         catchLoggedUserIdPointsAndFirstName(model);
         return "AddressedConventions";
     }
 
-    public boolean verifyConvention(ConventionBean convention) {
+    public boolean verifyConvention(ConventionBean convention, String typeUser) throws Exception {
         UserBean loggedUser = new RestTemplate().getForObject("http://localhost:9001/utilisateur/" + SecurityContextHolder.getContext().getAuthentication().getName(), UserBean.class);
-        List<ConventionBean> listConventionsUser = Arrays.asList(new RestTemplate().getForEntity("http://localhost:9002/conventions/" + loggedUser.getId(), ConventionBean[].class).getBody());
-        for (ConventionBean oneConventionOfUser : listConventionsUser) {
-            if (oneConventionOfUser.getId() == convention.getId()) {
-                return true;
+        if (typeUser.equals("sender")) {
+            List<ConventionBean> listConventionsUser = Arrays.asList(new RestTemplate().getForEntity("http://localhost:9002/validated_conventions/" + loggedUser.getId(), ConventionBean[].class).getBody());
+            for (ConventionBean oneConventionOfUser : listConventionsUser) {
+                if (oneConventionOfUser.getId() == convention.getId()) {
+                    return true;
+                }
             }
+            return false;
+        } else if (typeUser.equals("recipient")) {
+            List<ConventionBean> listConventionsUser = Arrays.asList(new RestTemplate().getForEntity("http://localhost:9002/conventions_recipient/" + loggedUser.getId(), ConventionBean[].class).getBody());
+            for (ConventionBean oneConventionOfUser : listConventionsUser) {
+                if (oneConventionOfUser.getId() == convention.getId()) {
+                    return true;
+                }
+            }
+            return false;
+        } else {
+            throw new Exception("Mauvais paramètre typeUser");
         }
-        return false;
     }
 
     @GetMapping(value = "/validate_convention_recipient/{id}")
-    public void updateIsValidatedByRecipient(@PathVariable int id, HttpServletResponse response) throws IOException {
+    public void updateIsValidatedByRecipient(@PathVariable int id, HttpServletResponse response) throws Exception {
         ConventionBean modifiedConvention = new RestTemplate().getForObject("http://localhost:9002/convention/" + id, ConventionBean.class);
-        if (verifyConvention(modifiedConvention)) {
+        if (verifyConvention(modifiedConvention, "recipient")) {
             modifiedConvention.setValidatedByRecipient(true);
             new RestTemplate().put("http://localhost:9002/update_convention", modifiedConvention);
             response.sendRedirect("/addressed_conventions/" + modifiedConvention.getRecipientId() + "?acceptedConvention=true");
@@ -343,17 +378,31 @@ public class ClientController {
     }
 
     @GetMapping(value = "/refuse_convention_recipient/{id}")
-    public void updateIsRefusedByRecipient(@PathVariable int id, HttpServletResponse response) throws IOException {
+    public void updateIsRefusedByRecipient(@PathVariable int id, HttpServletResponse response) throws Exception {
         ConventionBean modifiedConvention = new RestTemplate().getForObject("http://localhost:9002/convention/" + id, ConventionBean.class);
-        new RestTemplate().delete("http://localhost:9002/delete_convention/" + modifiedConvention.getId());
-        response.sendRedirect("/addressed_conventions/" + modifiedConvention.getRecipientId() + "?refusedConvention=true");
+        UserBean sender = new RestTemplate().getForObject("http://localhost:9001/utilisateurId/" + modifiedConvention.getSenderId(), UserBean.class);
+        sender.setPoints(sender.getPoints() + (modifiedConvention.getTimeIntervention().getHour() - 1) * 4 + modifiedConvention.getTimeIntervention().getMinute() / 15);
+        new RestTemplate().put("http://localhost:9001/update_user/" + sender.getId(), sender);
+        if (verifyConvention(modifiedConvention, "recipient")) {
+            new RestTemplate().delete("http://localhost:9002/delete_convention/" + modifiedConvention.getId());
+            response.sendRedirect("/addressed_conventions/" + modifiedConvention.getRecipientId() + "?refusedConvention=true");
+        } else {
+            response.sendRedirect("/access_denied");
+        }
     }
 
     @GetMapping(value = "/validate_convention_sender/{id}")
-    public void updateIsEndedBySender(@PathVariable int id, HttpServletResponse response) throws IOException {
+    public void updateIsEndedBySender(@PathVariable int id, HttpServletResponse response) throws Exception {
         ConventionBean modifiedConvention = new RestTemplate().getForObject("http://localhost:9002/convention/" + id, ConventionBean.class);
-        modifiedConvention.setEndedBySender(true);
-        new RestTemplate().put("http://localhost:9002/update_convention", modifiedConvention);
-        response.sendRedirect("/addressed_conventions/" + modifiedConvention.getRecipientId() + "?acceptedConvention=true");
+        UserBean recipient = new RestTemplate().getForObject("http://localhost:9001/utilisateurId/" + modifiedConvention.getRecipientId(), UserBean.class);
+        recipient.setPoints(recipient.getPoints() + (modifiedConvention.getTimeIntervention().getHour() - 1) * 4 + modifiedConvention.getTimeIntervention().getMinute() / 15);
+        new RestTemplate().put("http://localhost:9001/update_user/" + recipient.getId(), recipient);
+        if (verifyConvention(modifiedConvention, "sender")) {
+            modifiedConvention.setEndedBySender(true);
+            new RestTemplate().put("http://localhost:9002/update_convention", modifiedConvention);
+            response.sendRedirect("/addressed_conventions/" + modifiedConvention.getRecipientId() + "?acceptedConvention=true");
+        } else {
+            response.sendRedirect("/access_denied");
+        }
     }
 }

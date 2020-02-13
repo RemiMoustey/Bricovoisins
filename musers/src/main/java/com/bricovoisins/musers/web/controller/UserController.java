@@ -74,4 +74,9 @@ public class UserController {
             return Collections.emptyList();
         }
     }
+
+    @PutMapping(value = "/update_user/{id}")
+    public void updateUser(@RequestBody User user) {
+        userDao.save(user);
+    }
 }

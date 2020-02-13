@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.web.client.RestTemplate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -87,5 +88,33 @@ class MusersApplicationTests {
 //	@Test
 //	void testGetSearchedUserEmptyList() {
 //		assertEquals(0, userController.getSearchedUsers("wrong search").size());
+//	}
+
+//	@Test
+//	void testUpdateUser() {
+//		User newUser = new User();
+//		newUser.setFirstName("Test");
+//		newUser.setLastName("Nom");
+//		newUser.setAge(50);
+//		newUser.setPassword("test");
+//		newUser.setEmail("test@example.com");
+//		newUser.setTown("Paris");
+//		newUser.setPoints(10);
+//		newUser.setAvatar("/avatars/default.png");
+//		newUser.setLevelGardening(null);
+//		newUser.setLevelElectricity(null);
+//		newUser.setLevelPlumbing(null);
+//		newUser.setLevelCarpentry("expert-carpentry");
+//		newUser.setLevelPainting(null);
+//		newUser.setLevelMasonry(null);
+//		newUser.setLevelDiy(null);
+//		newUser.setDescription("Description");
+//		userController.insertUser(newUser);
+//		User addedUser = userController.getUserByEmail("test@example.com");
+//		addedUser.setPoints(999);
+//		userController.updateUser(addedUser);
+//		//assertEquals(70, userController.getUserByEmail("test@example.com").getId());
+//		assertEquals(999, userController.getUserByEmail("test@example.com").getPoints());
+//		userController.deleteUser(userController.getUserByEmail("test@example.com").getId());
 //	}
 }

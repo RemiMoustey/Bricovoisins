@@ -10,7 +10,7 @@
     color: #0c991a;
 }
 
-input[type="submit"] {
+input[type="submit"], button[type="submit"] {
     cursor: pointer;
 }
 

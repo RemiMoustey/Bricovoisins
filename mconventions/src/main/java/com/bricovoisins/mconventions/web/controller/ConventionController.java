@@ -64,17 +64,22 @@ public class ConventionController {
 
     @GetMapping(value = "/validated_conventions/{userId}")
     public List<Convention> getListValidatedConventionsUser(@PathVariable int userId) {
-        return conventionDao.findBySenderIdAndIsValidatedByRecipientIsTrue(userId);
+        return conventionDao.findBySenderIdAndIsValidatedByRecipientIsTrueAndIsEndedBySenderIsFalse(userId);
     }
 
     @GetMapping(value = "/validated_conventions_recipient/{recipientId}")
     public List<Convention> getListValidatedConventionsHelper(@PathVariable int recipientId) {
-        return conventionDao.findByRecipientIdAndIsValidatedByRecipientIsTrue(recipientId);
+        return conventionDao.findByRecipientIdAndIsValidatedByRecipientIsTrueAndIsEndedBySenderIsFalse(recipientId);
     }
 
     @GetMapping(value = "/ended_conventions/{userId}")
-    public List<Convention> getListEndedConventionsUser(@PathVariable int userId) {
+    public List<Convention> getListEndedConventionsSender(@PathVariable int userId) {
         return conventionDao.findBySenderIdAndIsEndedBySenderIsTrue(userId);
+    }
+
+    @GetMapping(value = "/ended_conventions_recipient/{userId}")
+    public List<Convention> getListEndedConventionsRecipient(@PathVariable int userId) {
+        return conventionDao.findByRecipientIdAndIsEndedBySenderIsTrue(userId);
     }
 
     @RequestMapping(value = "/update_convention", method = RequestMethod.PUT)

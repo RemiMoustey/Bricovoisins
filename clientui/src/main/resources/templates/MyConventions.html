@@ -37,8 +37,7 @@
             </p>
             <div th:if="${#lists.size(validatedConventions) >= 0}" th:each="convention : ${validatedConventions}">
                 <p>Rédigée le <span th:text="${convention.dateConvention}"></span></p>
-                <a role="button" th:href="@{|/validate_convention_sender/${convention.id}|}" class="btn btn-success">Valider</a>
-                <a role="button" th:href="@{|/refuse_convention_sender/${convention.id}|}" class="btn btn-danger">Refuser</a>
+                <a role="button" th:href="@{|/validate_convention_sender/${convention.id}|}" class="btn btn-success" onclick='return confirm("Êtes-vous sûr de valider cette convention ?")'>Valider (intervention terminée)</a>
             </div>
         </div>
     </body>
