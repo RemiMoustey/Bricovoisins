@@ -420,11 +420,11 @@ public class ClientController {
     }
 
     @GetMapping(value = "/print_convention/{conventionId}")
-    public void generateConvention(@PathVariable int conventionId, HttpServletResponse response) {
+    public void generateConvention(@PathVariable int conventionId, HttpServletResponse response) throws DocumentException {
         ConventionBean convention = new RestTemplate().getForObject("http://localhost:9002/convention/" + conventionId, ConventionBean.class);
         Document document = new Document();
         try {
-            PdfWriter.getInstance(document, new FileOutputStream("/conventions/" + convention.getLastNameSender() + "-" + convention.getLastNameRecipient() + "-Convention.pdf"));
+            PdfWriter.getInstance(document, new FileOutputStream("src/main/resources/static/conventions/" + convention.getLastNameSender() + "-" + convention.getLastNameRecipient() + "-Convention.pdf"));
         } catch (DocumentException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
@@ -432,17 +432,21 @@ public class ClientController {
         }
         document.open();
 
-//        addImage(document);
+        addImage(document);
         addText(document, convention);
 
         document.close();
+
+
     }
 
-    public void addImage(Document document) {
+    private void addImage(Document document) {
         try {
-            Path path = Paths.get(ClassLoader.getSystemResource("/img/logo-pdf.png").toURI());
+            Path path = Paths.get(ClassLoader.getSystemResource("static/img/logo-title.png").toURI());
             Image img = Image.getInstance(path.toAbsolutePath().toString());
+            img.setAlignment(Element.ALIGN_CENTER);
             document.add(img);
+            addEmptyLine(document, 2);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         } catch (MalformedURLException e) {
@@ -456,14 +460,38 @@ public class ClientController {
         }
     }
 
-    public void addText(Document document, ConventionBean convention) {
-        Font font = FontFactory.getFont(FontFactory.TIMES, 16, BaseColor.BLACK);
-        Chunk chunk = new Chunk("CONVENTION D'INTERVENTION\n\n\nENTRE LES SOUSSIGNÉS :\n\n"
-                + convention.getFirstNameSender() + " " + convention.getLastNameSender().toUpperCase() + " Domicilé(e) à ", font);
-        try {
-            document.add(chunk);
-        } catch (DocumentException e) {
-            e.printStackTrace();
+    private void addText(Document document, ConventionBean convention) throws DocumentException {
+        Paragraph title = new Paragraph("CONVENTION D'INTERVENTION");
+        title.setAlignment(Element.ALIGN_CENTER);
+        document.add(title);
+        addEmptyLine(document, 2);
+        document.add(new Paragraph("ENTRE LES SOUSSIGNÉS :"));
+        addEmptyLine(document, 1);
+        document.add(new Paragraph(convention.getFirstNameSender() + " " + convention.getLastNameSender().toUpperCase() + " Domicilié(e) à "));
+        document.add(new Paragraph("Et"));
+        document.add(new Paragraph(convention.getFirstNameRecipient() + " " + convention.getLastNameRecipient().toUpperCase() + " Domicilié(e) à "));
+        addEmptyLine(document, 1);
+        document.add(new Paragraph("Il est conclu cette convention d'intervention basée sur une confiance mutuelle, qui est la base de la mise en relation des membres du site BRICOVOISINS."));
+        addEmptyLine(document, 1);
+        document.add(new Paragraph("L'aidant accomplira l'intervention décrite ci-dessous le (date) à partir de (heure) à l'adresse qui lui a été communiquée par l'aidé."));
+        addEmptyLine(document, 1);
+        document.add(new Paragraph("La signature des 2 membres vaut acceptation de la description ci-dessous, qu'ils ont préalablement mise au point. A l'issue de l'intervention, il est convenu que l'aidé en validera l'achèvement sur le site BRICOVOISINS."));
+        addEmptyLine(document, 2);
+        Paragraph description = new Paragraph("DESCRIPTION DE L'INTERVENTION");
+        description.setAlignment(Element.ALIGN_CENTER);
+        document.add(description);
+        addEmptyLine(document, 1);
+        document.add(new Paragraph(convention.getMessage()));
+        addEmptyLine(document, 1);
+        document.add(new Paragraph("Signatures"));
+        Paragraph actors = new Paragraph("L'aidant,            L'aidé,");
+        actors.setAlignment(Element.ALIGN_CENTER);
+        document.add(actors);
+    }
+
+    private void addEmptyLine(Document document, int number) throws DocumentException {
+        for (int i = 0; i < number; i++) {
+            document.add(new Paragraph(" "));
         }
     }
 }
