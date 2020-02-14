@@ -1,0 +1,22 @@
+#conventions h1 {
+    font-size: 30px;
+}
+
+#conventions h2 {
+    font-size: 24px;
+}
+
+summary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+*:focus {
+    outline: none;
+}
+
+summary p {
+    margin-bottom: 0;
+}

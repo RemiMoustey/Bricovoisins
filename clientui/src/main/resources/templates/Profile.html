@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Mes conventions</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="/css/navbar.css" />
+        <link rel="stylesheet" type="text/css" href="/css/dashboard.css" />
+        <link rel="stylesheet" type="text/css" href="/css/style.css" />
+        <link rel="stylesheet" type="text/css" href="/css/profile.css" />
+    </head>
+    <body>
+        <div th:replace="Navbar :: navbar"></div>
+        <div class="container mx-auto text-center" id="conventions">
+            <div id="user">
+                <div id="image">
+                    <img th:src="${user.avatar}" th:alt="@{|Avatar de ${user.firstName} ${user.lastName}|}" />
+                </div>
+                <div id="informations">
+                    <p><span th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span>, <span th:text="${user.age}"></span> ans</p>
+                    <p><span class="bold">Email</span> : <span th:text="${user.email}"></span></p>
+                    <p><span class="bold">Ville</span> : <span th:text="${user.town}"></span></p>
+                    <p id="competences"><span class="bold">Compétences</span> :</p>
+                    <div th:replace="ListCompetences :: competences"></div>
+                    <p th:text="${user.description}"></p>
+                    <a th:if="${userId == user.id}" role="button" th:href="@{/update_profile/${user.id}}">Modifier</a>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

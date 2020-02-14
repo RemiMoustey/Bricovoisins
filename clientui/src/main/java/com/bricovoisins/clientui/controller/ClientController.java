@@ -4,6 +4,8 @@ import com.bricovoisins.clientui.beans.ConventionBean;
 import com.bricovoisins.clientui.beans.UserBean;
 import com.bricovoisins.clientui.proxies.MicroserviceConventionsProxy;
 import com.bricovoisins.clientui.proxies.MicroserviceUsersProxy;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfWriter;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -28,8 +30,11 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -78,12 +83,12 @@ public class ClientController {
         return "AccessDenied";
     }
 
-    @GetMapping(value = "/explications")
+    @GetMapping(value = "/explanations")
     public String getExplicationsPage(Model model) {
         if (SecurityContextHolder.getContext().getAuthentication() != null) {
             catchLoggedUserIdPointsAndFirstName(model);
         }
-        return "Explications";
+        return "Explanations";
     }
 
     @GetMapping(value = "/inscription")
@@ -140,12 +145,20 @@ public class ClientController {
         return FilenameUtils.removeExtension(imageFile.getOriginalFilename()) + currentDate + "." + FilenameUtils.getExtension(imageFile.getOriginalFilename()).toLowerCase();
     }
 
+    @GetMapping(value = "/profile/{userId}")
+    public String getProfilePage(@PathVariable int userId, Model model) {
+        model.addAttribute("user", new RestTemplate().getForObject("http://localhost:9001/utilisateurId/" + userId, UserBean.class));
+        catchLoggedUserIdPointsAndFirstName(model);
+        return "Profile";
+    }
+
     @GetMapping(value = "/demands")
     public String getDemandsPage(HttpServletRequest request, Model model) {
         if(request.getSession().getAttribute("search") != null) {
             model.addAttribute("users", request.getSession().getAttribute("users"));
             model.addAttribute("emailLoggedUser", ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername());
             model.addAttribute("idLoggedUser", new RestTemplate().getForObject("http://localhost:9001/utilisateur/" + ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername(), UserBean.class).getId());
+            model.addAttribute("search", request.getSession().getAttribute("search"));
             request.getSession().removeAttribute("search");
             request.getSession().removeAttribute("users");
         }
@@ -403,6 +416,54 @@ public class ClientController {
             response.sendRedirect("/addressed_conventions/" + modifiedConvention.getRecipientId() + "?acceptedConvention=true");
         } else {
             response.sendRedirect("/access_denied");
+        }
+    }
+
+    @GetMapping(value = "/print_convention/{conventionId}")
+    public void generateConvention(@PathVariable int conventionId, HttpServletResponse response) {
+        ConventionBean convention = new RestTemplate().getForObject("http://localhost:9002/convention/" + conventionId, ConventionBean.class);
+        Document document = new Document();
+        try {
+            PdfWriter.getInstance(document, new FileOutputStream("/conventions/" + convention.getLastNameSender() + "-" + convention.getLastNameRecipient() + "-Convention.pdf"));
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        document.open();
+
+//        addImage(document);
+        addText(document, convention);
+
+        document.close();
+    }
+
+    public void addImage(Document document) {
+        try {
+            Path path = Paths.get(ClassLoader.getSystemResource("/img/logo-pdf.png").toURI());
+            Image img = Image.getInstance(path.toAbsolutePath().toString());
+            document.add(img);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (BadElementException e) {
+            e.printStackTrace();
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addText(Document document, ConventionBean convention) {
+        Font font = FontFactory.getFont(FontFactory.TIMES, 16, BaseColor.BLACK);
+        Chunk chunk = new Chunk("CONVENTION D'INTERVENTION\n\n\nENTRE LES SOUSSIGNÉS :\n\n"
+                + convention.getFirstNameSender() + " " + convention.getLastNameSender().toUpperCase() + " Domicilé(e) à ", font);
+        try {
+            document.add(chunk);
+        } catch (DocumentException e) {
+            e.printStackTrace();
         }
     }
 }

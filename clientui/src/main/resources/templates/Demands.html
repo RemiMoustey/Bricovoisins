@@ -29,6 +29,7 @@
                     <button type="submit" class="pointer">Rechercher</button>
                 </div>
             </form>
+
             <div class="mt-5">
                 <p th:if="${users != null && #lists.size(users) == 0}" class="text-center">
                     Aucun membre ne correspondant à votre recherche.
@@ -37,36 +38,172 @@
                     <div th:if="${#lists.size(users) > 1}">
                         <h2 class="text-center">Vous pouvez être aidé par :</h2>
                         <div id="users" class="mb-5">
-                            <div th:each="user : ${users}" th:if="${emailLoggedUser != user.email}" class="mx-auto mt-5 text-center">
-                                <ul>
-                                    <li th:if="${user.levelGardening == 'little-works-gardening'}">Jardinier petits travaux</li>
-                                    <li th:if="${user.levelGardening == 'connoisseur-gardening'}">Jardinier confirmé</li>
-                                    <li th:if="${user.levelGardening == 'expert-gardening'}">Jardinier expert</li>
-                                    <li th:if="${user.levelElectricity == 'little-works-electricity'}">Electricien petits travaux</li>
-                                    <li th:if="${user.levelElectricity == 'connoisseur-electricity'}">Electricien confirmé</li>
-                                    <li th:if="${user.levelElectricity == 'expert-electricity'}">Electricien expert</li>
-                                    <li th:if="${user.levelPlumbing == 'little-works-plumbing'}">Plombier petits travaux</li>
-                                    <li th:if="${user.levelPlumbing == 'connoisseur-plumbing'}">Plombier confirmé</li>
-                                    <li th:if="${user.levelPlumbing == 'expert-plumbing'}">Plombier expert</li>
-                                    <li th:if="${user.levelCarpentry == 'little-works-carpentry'}">Menuisier petits travaux</li>
-                                    <li th:if="${user.levelCarpentry == 'connoisseur-carpentry'}">Menuisier confirmé</li>
-                                    <li th:if="${user.levelCarpentry == 'expert-carpentry'}">Menuisier expert</li>
-                                    <li th:if="${user.levelPainting == 'little-works-painting'}">Peintre petits travaux</li>
-                                    <li th:if="${user.levelPainting == 'connoisseur-painting'}">Peintre confirmé</li>
-                                    <li th:if="${user.levelPainting == 'expert-painting'}">Peintre expert</li>
-                                    <li th:if="${user.levelMasonry == 'little-works-masonry'}">Maçon petits travaux</li>
-                                    <li th:if="${user.levelMasonry == 'connoisseur-masonry'}">Maçon confirmé</li>
-                                    <li th:if="${user.levelMasonry == 'expert-masonry'}">Maçon expert</li>
-                                    <li th:if="${user.levelDiy == 'little-works-diy'}">Bricoleur petits travaux</li>
-                                    <li th:if="${user.levelDiy == 'connoisseur-diy'}">Bricoleur confirmé</li>
-                                    <li th:if="${user.levelDiy == 'expert-diy'}">Bricoleur expert</li>
-                                </ul>
-                                <img th:src="${user.avatar}" th:alt="@{|Avatar de ${user.firstName} ${user.lastName}|}" />
-                                <p class="name-town"><span th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span> - <span th:text="${user.town}" class="town"></span><br />
-                                <span class="age"><span th:text="${user.age}" class="age"></span> ans</span></p>
-                                <p th:text="${user.description}"></p>
-                                <div class="contact pb-5">
-                                    <a th:href="@{|/send_message/${idLoggedUser}/${user.id}|}">Contacter <span th:text="${user.firstName}"></span></a>
+                            <div th:if="${search == 'gardening'}">
+                                <div th:each="user : ${users}" th:if="${emailLoggedUser != user.email && user.levelGardening != null}" class="mt-5 text-center">
+                                    <div th:replace="ListCompetences :: competences"></div>
+                                    <img th:src="${user.avatar}" th:alt="@{|Avatar de ${user.firstName} ${user.lastName}|}" />
+                                    <p class="name-town"><span th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span> - <span th:text="${user.town}" class="town"></span><br />
+                                        <span class="age"><span th:text="${user.age}" class="age"></span> ans</span></p>
+                                    <p th:text="${user.description}"></p>
+                                    <div class="see-profile pb-4">
+                                        <a th:href="@{|/profile/${user.id}|}">Voir les avis</a>
+                                    </div>
+                                    <div class="contact pb-5">
+                                        <a th:href="@{|/send_message/${idLoggedUser}/${user.id}|}">Contacter <span th:text="${user.firstName}"></span></a>
+                                    </div>
+                                </div>
+                                <div th:each="user : ${users}" th:if="${emailLoggedUser != user.email && user.levelGardening == null && user.levelDiy != null}" class="mt-5 text-center">
+                                    <div th:replace="ListCompetences :: competences"></div>
+                                    <img th:src="${user.avatar}" th:alt="@{|Avatar de ${user.firstName} ${user.lastName}|}" />
+                                    <p class="name-town"><span th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span> - <span th:text="${user.town}" class="town"></span><br />
+                                        <span class="age"><span th:text="${user.age}" class="age"></span> ans</span></p>
+                                    <p th:text="${user.description}"></p>
+                                    <div class="see-profile pb-4">
+                                        <a th:href="@{|/profile/${user.id}|}">Voir les avis</a>
+                                    </div>
+                                    <div class="contact pb-5">
+                                        <a th:href="@{|/send_message/${idLoggedUser}/${user.id}|}">Contacter <span th:text="${user.firstName}"></span></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div th:if="${search == 'electricity'}">
+                                <div th:each="user : ${users}" th:if="${emailLoggedUser != user.email && user.levelElectricity != null}" class="mt-5 text-center">
+                                    <div th:replace="ListCompetences :: competences"></div>
+                                    <img th:src="${user.avatar}" th:alt="@{|Avatar de ${user.firstName} ${user.lastName}|}" />
+                                    <p class="name-town"><span th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span> - <span th:text="${user.town}" class="town"></span><br />
+                                        <span class="age"><span th:text="${user.age}" class="age"></span> ans</span></p>
+                                    <p th:text="${user.description}"></p>
+                                    <div class="see-profile pb-4">
+                                        <a th:href="@{|/profile/${user.id}|}">Voir les avis</a>
+                                    </div>
+                                    <div class="contact pb-5">
+                                        <a th:href="@{|/send_message/${idLoggedUser}/${user.id}|}">Contacter <span th:text="${user.firstName}"></span></a>
+                                    </div>
+                                </div>
+                                <div th:each="user : ${users}" th:if="${emailLoggedUser != user.email && user.levelElectricity == null && user.levelDiy != null}" class="mt-5 text-center">
+                                    <div th:replace="ListCompetences :: competences"></div>
+                                    <img th:src="${user.avatar}" th:alt="@{|Avatar de ${user.firstName} ${user.lastName}|}" />
+                                    <p class="name-town"><span th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span> - <span th:text="${user.town}" class="town"></span><br />
+                                        <span class="age"><span th:text="${user.age}" class="age"></span> ans</span></p>
+                                    <p th:text="${user.description}"></p>
+                                    <div class="see-profile pb-4">
+                                        <a th:href="@{|/profile/${user.id}|}">Voir les avis</a>
+                                    </div>
+                                    <div class="contact pb-5">
+                                        <a th:href="@{|/send_message/${idLoggedUser}/${user.id}|}">Contacter <span th:text="${user.firstName}"></span></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div th:if="${search == 'plumbing'}">
+                                <div th:each="user : ${users}" th:if="${emailLoggedUser != user.email && user.levelPlumbing != null}" class="mt-5 text-center">
+                                    <div th:replace="ListCompetences :: competences"></div>
+                                    <img th:src="${user.avatar}" th:alt="@{|Avatar de ${user.firstName} ${user.lastName}|}" />
+                                    <p class="name-town"><span th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span> - <span th:text="${user.town}" class="town"></span><br />
+                                        <span class="age"><span th:text="${user.age}" class="age"></span> ans</span></p>
+                                    <p th:text="${user.description}"></p>
+                                    <div class="see-profile pb-4">
+                                        <a th:href="@{|/profile/${user.id}|}">Voir les avis</a>
+                                    </div>
+                                    <div class="contact pb-5">
+                                        <a th:href="@{|/send_message/${idLoggedUser}/${user.id}|}">Contacter <span th:text="${user.firstName}"></span></a>
+                                    </div>
+                                </div>
+                                <div th:each="user : ${users}" th:if="${emailLoggedUser != user.email && user.levelPlumbing == null && user.levelDiy != null}" class="mt-5 text-center">
+                                    <div th:replace="ListCompetences :: competences"></div>
+                                    <img th:src="${user.avatar}" th:alt="@{|Avatar de ${user.firstName} ${user.lastName}|}" />
+                                    <p class="name-town"><span th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span> - <span th:text="${user.town}" class="town"></span><br />
+                                        <span class="age"><span th:text="${user.age}" class="age"></span> ans</span></p>
+                                    <p th:text="${user.description}"></p>
+                                    <div class="see-profile pb-4">
+                                        <a th:href="@{|/profile/${user.id}|}">Voir les avis</a>
+                                    </div>
+                                    <div class="contact pb-5">
+                                        <a th:href="@{|/send_message/${idLoggedUser}/${user.id}|}">Contacter <span th:text="${user.firstName}"></span></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div th:if="${search == 'carpentry'}">
+                                <div th:each="user : ${users}" th:if="${emailLoggedUser != user.email && user.levelCarpentry != null}" class="mt-5 text-center">
+                                    <div th:replace="ListCompetences :: competences"></div>
+                                    <img th:src="${user.avatar}" th:alt="@{|Avatar de ${user.firstName} ${user.lastName}|}" />
+                                    <p class="name-town"><span th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span> - <span th:text="${user.town}" class="town"></span><br />
+                                        <span class="age"><span th:text="${user.age}" class="age"></span> ans</span></p>
+                                    <p th:text="${user.description}"></p>
+                                    <div class="see-profile pb-4">
+                                        <a th:href="@{|/profile/${user.id}|}">Voir les avis</a>
+                                    </div>
+                                    <div class="contact pb-5">
+                                        <a th:href="@{|/send_message/${idLoggedUser}/${user.id}|}">Contacter <span th:text="${user.firstName}"></span></a>
+                                    </div>
+                                </div>
+                                <div th:each="user : ${users}" th:if="${emailLoggedUser != user.email && user.levelCarpentry == null && user.levelDiy != null}" class="mt-5 text-center">
+                                    <div th:replace="ListCompetences :: competences"></div>
+                                    <img th:src="${user.avatar}" th:alt="@{|Avatar de ${user.firstName} ${user.lastName}|}" />
+                                    <p class="name-town"><span th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span> - <span th:text="${user.town}" class="town"></span><br />
+                                        <span class="age"><span th:text="${user.age}" class="age"></span> ans</span></p>
+                                    <p th:text="${user.description}"></p>
+                                    <div class="see-profile pb-4">
+                                        <a th:href="@{|/profile/${user.id}|}">Voir les avis</a>
+                                    </div>
+                                    <div class="contact pb-5">
+                                        <a th:href="@{|/send_message/${idLoggedUser}/${user.id}|}">Contacter <span th:text="${user.firstName}"></span></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div th:if="${search == 'painting'}">
+                                <div th:each="user : ${users}" th:if="${emailLoggedUser != user.email && user.levelPainting != null}" class="mt-5 text-center">
+                                    <div th:replace="ListCompetences :: competences"></div>
+                                    <img th:src="${user.avatar}" th:alt="@{|Avatar de ${user.firstName} ${user.lastName}|}" />
+                                    <p class="name-town"><span th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span> - <span th:text="${user.town}" class="town"></span><br />
+                                        <span class="age"><span th:text="${user.age}" class="age"></span> ans</span></p>
+                                    <p th:text="${user.description}"></p>
+                                    <div class="see-profile pb-4">
+                                        <a th:href="@{|/profile/${user.id}|}">Voir les avis</a>
+                                    </div>
+                                    <div class="contact pb-5">
+                                        <a th:href="@{|/send_message/${idLoggedUser}/${user.id}|}">Contacter <span th:text="${user.firstName}"></span></a>
+                                    </div>
+                                </div>
+                                <div th:each="user : ${users}" th:if="${emailLoggedUser != user.email && user.levelPainting == null && user.levelDiy != null}" class="mt-5 text-center">
+                                    <div th:replace="ListCompetences :: competences"></div>
+                                    <img th:src="${user.avatar}" th:alt="@{|Avatar de ${user.firstName} ${user.lastName}|}" />
+                                    <p class="name-town"><span th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span> - <span th:text="${user.town}" class="town"></span><br />
+                                        <span class="age"><span th:text="${user.age}" class="age"></span> ans</span></p>
+                                    <p th:text="${user.description}"></p>
+                                    <div class="see-profile pb-4">
+                                        <a th:href="@{|/profile/${user.id}|}">Voir les avis</a>
+                                    </div>
+                                    <div class="contact pb-5">
+                                        <a th:href="@{|/send_message/${idLoggedUser}/${user.id}|}">Contacter <span th:text="${user.firstName}"></span></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div th:if="${search == 'masonry'}">
+                                <div th:each="user : ${users}" th:if="${emailLoggedUser != user.email && user.levelMasonry != null}" class="mx-auto mt-5 text-center">
+                                    <div th:replace="ListCompetences :: competences"></div>
+                                    <img th:src="${user.avatar}" th:alt="@{|Avatar de ${user.firstName} ${user.lastName}|}" />
+                                    <p class="name-town"><span th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span> - <span th:text="${user.town}" class="town"></span><br />
+                                        <span class="age"><span th:text="${user.age}" class="age"></span> ans</span></p>
+                                    <p th:text="${user.description}"></p>
+                                    <div class="see-profile pb-4">
+                                        <a th:href="@{|/profile/${user.id}|}">Voir les avis</a>
+                                    </div>
+                                    <div class="contact pb-5">
+                                        <a th:href="@{|/send_message/${idLoggedUser}/${user.id}|}">Contacter <span th:text="${user.firstName}"></span></a>
+                                    </div>
+                                </div>
+                                <div th:each="user : ${users}" th:if="${emailLoggedUser != user.email && user.levelMasonry == null && user.levelDiy != null}" class="mx-auto mt-5 text-center">
+                                    <div th:replace="ListCompetences :: competences"></div>
+                                    <img th:src="${user.avatar}" th:alt="@{|Avatar de ${user.firstName} ${user.lastName}|}" />
+                                    <p class="name-town"><span th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span> - <span th:text="${user.town}" class="town"></span><br />
+                                        <span class="age"><span th:text="${user.age}" class="age"></span> ans</span></p>
+                                    <p th:text="${user.description}"></p>
+                                    <div class="see-profile pb-4">
+                                        <a th:href="@{|/profile/${user.id}|}">Voir les avis</a>
+                                    </div>
+                                    <div class="contact pb-5">
+                                        <a th:href="@{|/send_message/${idLoggedUser}/${user.id}|}">Contacter <span th:text="${user.firstName}"></span></a>
+                                    </div>
                                 </div>
                             </div>
                         </div>

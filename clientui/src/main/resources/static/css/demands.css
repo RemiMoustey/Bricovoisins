@@ -14,9 +14,10 @@
     line-height: normal;
 }
 
-#users > div {
+#users > div > div {
     width: 400px;
     border-bottom: 3px solid #0c991a;
+    margin: auto;
 }
 
 .name-town {
@@ -29,14 +30,21 @@
 }
 
 .contact a {
-    background: #13a742;
-    color: white;
+    background: #a7c607;
+    color: #000;
     border-radius: 5px;
     padding: 8px;
 }
 
 .age {
     font-weight: normal;
+}
+
+.see-profile a {
+    background: #3ccc06;
+    color: #000;
+    border-radius: 5px;
+    padding: 8px;
 }
 
 @media all and (max-width: 767px) {

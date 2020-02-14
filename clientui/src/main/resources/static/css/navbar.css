@@ -63,6 +63,16 @@
     margin-bottom: 1rem;
 }
 
+@media all and (max-width: 991px) {
+    #menutest {
+        padding: 0;
+    }
+
+    .dropdown-item {
+        padding: 0;
+    }
+}
+
 @media all and (max-width: 767px) {
     .slogan h1 {
         font-size: 40px;

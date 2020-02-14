@@ -1,0 +1,26 @@
+#image {
+    float: left;
+    margin-right: 10px;
+}
+
+#informations {
+    text-align: left;
+}
+
+#competences {
+    margin-bottom: 0;
+}
+
+#competences + ul li {
+    list-style-type: none;
+}
+
+@media all and (max-width: 576px) {
+    #image {
+        float: none;
+    }
+
+    #informations {
+        text-align: center;
+    }
+}

@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+    <ul th:fragment="competences">
+        <li th:if="${user.levelGardening == 'little-works-gardening'}">Jardinier petits travaux</li>
+        <li th:if="${user.levelGardening == 'connoisseur-gardening'}">Jardinier confirmé</li>
+        <li th:if="${user.levelGardening == 'expert-gardening'}">Jardinier expert</li>
+        <li th:if="${user.levelElectricity == 'little-works-electricity'}">Electricien petits travaux</li>
+        <li th:if="${user.levelElectricity == 'connoisseur-electricity'}">Electricien confirmé</li>
+        <li th:if="${user.levelElectricity == 'expert-electricity'}">Electricien expert</li>
+        <li th:if="${user.levelPlumbing == 'little-works-plumbing'}">Plombier petits travaux</li>
+        <li th:if="${user.levelPlumbing == 'connoisseur-plumbing'}">Plombier confirmé</li>
+        <li th:if="${user.levelPlumbing == 'expert-plumbing'}">Plombier expert</li>
+        <li th:if="${user.levelCarpentry == 'little-works-carpentry'}">Menuisier petits travaux</li>
+        <li th:if="${user.levelCarpentry == 'connoisseur-carpentry'}">Menuisier confirmé</li>
+        <li th:if="${user.levelCarpentry == 'expert-carpentry'}">Menuisier expert</li>
+        <li th:if="${user.levelPainting == 'little-works-painting'}">Peintre petits travaux</li>
+        <li th:if="${user.levelPainting == 'connoisseur-painting'}">Peintre confirmé</li>
+        <li th:if="${user.levelPainting == 'expert-painting'}">Peintre expert</li>
+        <li th:if="${user.levelMasonry == 'little-works-masonry'}">Maçon petits travaux</li>
+        <li th:if="${user.levelMasonry == 'connoisseur-masonry'}">Maçon confirmé</li>
+        <li th:if="${user.levelMasonry == 'expert-masonry'}">Maçon expert</li>
+        <li th:if="${user.levelDiy == 'little-works-diy'}">Bricoleur petits travaux</li>
+        <li th:if="${user.levelDiy == 'connoisseur-diy'}">Bricoleur confirmé</li>
+        <li th:if="${user.levelDiy == 'expert-diy'}">Bricoleur expert</li>
+    </ul>
+</html>
