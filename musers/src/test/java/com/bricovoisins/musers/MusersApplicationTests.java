@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.web.client.RestTemplate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -89,6 +88,11 @@ class MusersApplicationTests {
 //	void testGetSearchedUserEmptyList() {
 //		assertEquals(0, userController.getSearchedUsers("wrong search").size());
 //	}
+
+	@Test
+	void testGetOneUser() {
+		assertEquals(62, userController.getOneUser(62).getId());
+	}
 
 //	@Test
 //	void testUpdateUser() {

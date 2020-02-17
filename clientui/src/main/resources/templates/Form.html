@@ -1,0 +1,250 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+    <div th:fragment="form">
+        <fieldset>
+            <legend>Vos coordonnées</legend>
+
+            <div class="form-group">
+                <label for="firstName">Prénom<span class="input-required">*</span></label>
+                <input type="text" name="firstName" id="firstName" class="form-control" th:value="${user?.firstName}" required />
+            </div>
+            <div class="form-group">
+                <label for="lastName">Nom<span class="input-required">*</span></label>
+                <input type="text" name="lastName" id="lastName" class="form-control" th:value="${user?.lastName}" required />
+            </div>
+            <div class="form-group">
+                <label for="age">Âge<span class="input-required">*</span></label>
+                <input type="number" name="age" id="age" class="form-control" th:value="${user?.age}" required />
+            </div>
+            <div class="form-group">
+                <label for="email">Email<span class="input-required">*</span></label>
+                <input type="email" name="email" id="email" class="form-control" th:value="${user?.email}" required />
+            </div>
+            <div class="form-group">
+                <label for="password">Mot de passe<span class="input-required">*</span></label>
+                <input type="password" name="password" id="password" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="town">Ville<span class="input-required">*</span></label><br />
+                <select name="town" id="town">
+                    <option value="Aubières" th:selected="${user?.town == 'Aubières'}">Aubières</option>
+                    <option value="Aulnat" th:selected="${user?.town == 'Aulnat'}">Aulnat</option>
+                    <option value="Beaumont" th:selected="${user?.town == 'Beaumont'}">Beaumont</option>
+                    <option value="Blanzat" th:selected="${user?.town == 'Blanzat'}">Blanzat</option>
+                    <option value="Cébazat" th:selected="${user?.town == 'Cébazat'}">Cébazat</option>
+                    <option value="Ceyrat" th:selected="${user?.town == 'Ceyrat'}">Ceyrat</option>
+                    <option value="Chamalières" th:selected="${user?.town == 'Chamalières'}">Chamalières</option>
+                    <option value="Châteaugay" th:selected="${user?.town == 'Châteaugay'}">Châteaugay</option>
+                    <option value="Clermont-Ferrand" th:selected="${user?.town == 'Clermont-Ferrand'}">Clermont-Ferrand</option>
+                    <option value="Cournon" th:selected="${user?.town == 'Cournon'}">Cournon</option>
+                    <option value="Durtol" th:selected="${user?.town == 'Durtol'}">Durtol</option>
+                    <option value="Gerzat" th:selected="${user?.town == 'Gerzat'}">Gerzat</option>
+                    <option value="Le Cendre" th:selected="${user?.town == 'Le Cendre'}">Le Cendre</option>
+                    <option value="Lempdes" th:selected="${user?.town == 'Lempdes'}">Lempdes</option>
+                    <option value="Nohanent" th:selected="${user?.town == 'Nohanent'}">Nohanent</option>
+                    <option value="Orcines" th:selected="${user?.town == 'Orcines'}">Orcines</option>
+                    <option value="Pérignat-lès-Sarliève" th:selected="${user?.town == 'Pérignat-lès-Sarliève'}">Pérignat-lès-Sarliève</option>
+                    <option value="Pont-du-Château" th:selected="${user?.town == 'Pont-du-Château'}">Pont-du-Château</option>
+                    <option value="Romagnat" th:selected="${user?.town == 'Romagnat'}">Romagnat</option>
+                    <option value="Royat" th:selected="${user?.town == 'Royat'}">Royat</option>
+                    <option value="Saint-Genès-Champanelle" th:selected="${user?.town == 'Saint-Genès-Champanelle'}">Saint-Genès-Champanelle</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="avatar">Choisissez une photo de profil</label>
+                <input type="file" name="avatar" id="avatar" class="form-control" accept="image/png, image/jpeg" />
+            </div>
+        </fieldset>
+
+        <fieldset id="competences">
+            <legend>Sélectionnez vos compétences</legend>
+            <p>Exemples de compétences : cliquez sur l'ouvrier !</p>
+            <div class="text-center">
+                <div class="d-flex justify-content-center">
+                    <figure>
+                        <figcaption class="legend-profession">Jardinage</figcaption>
+                        <img src="/img/jardinier.jpg" alt="Un jardinier" id="img-gardener" />
+                    </figure>
+                    <p>
+                        <input type="radio" name="level-gardening" value="little-works-gardening" id="little-works-gardening" th:selected="${user?.levelGardening == 'little-works-gardening'}" />
+                        <label for="little-works-gardening">Petits travaux</label><br />
+                        <input type="radio" name="level-gardening" value="connoisseur-gardening" id="connoisseur-gardening" th:selected="${user?.levelGardening == 'connoisseur-gardening'}" />
+                        <label for="connoisseur-gardening">Connaisseur</label><br />
+                        <input type="radio" name="level-gardening" value="expert-gardening" id="expert-gardening" th:selected="${user?.levelGardening == 'expert-gardening'}" />
+                        <label for="expert-gardening">Expert</label><br />
+                    </p>
+                </div>
+                <p class="link-js-competences text-center" id="remove-competence--gardening">Annuler la compétence</p>
+                <div class="examples" id="examples-gardening">
+                    <p><span class="bold">Petits travaux :</span> Tondre une pelouse. Ratisser les feuilles.
+                        Manier la brouette…</p>
+                    <p><span class="bold">Connaisseur :</span> Tailler une grande haie. Élaguer les branches.
+                        Préparer et semer une pelouse.</p>
+                    <p><span class="bold">Expert :</span> Maîtrise du métier. Connaissance des plantes et des fleurs.
+                        Gestion d'un potager. Horticulture.</p>
+                    <p class="link-js-competences" id="close-link--examples-gardening">Fermer</p>
+                </div>
+            </div>
+            <div class="text-center">
+                <div class="d-flex justify-content-center">
+                    <figure>
+                        <figcaption class="legend-profession">Électricité</figcaption>
+                        <img src="/img/electricien.jpg" alt="Un électricien" id="img-electrician" />
+                    </figure>
+                    <p>
+                        <input type="radio" name="level-electricity" value="little-works-electricity" id="little-works-electricity" th:selected="${user?.levelElectricity == 'little-works-electricity'}" />
+                        <label for="little-works-electricity">Petits travaux</label><br />
+                        <input type="radio" name="level-electricity" value="connoisseur-electricity" id="connoisseur-electricity" th:selected="${user?.levelElectricity == 'connoisseur-electricity'}" />
+                        <label for="connoisseur-electricity">Connaisseur</label><br />
+                        <input type="radio" name="level-electricity" value="expert-electricity" id="expert-electricity" th:selected="${user?.levelElectricity == 'expert-electricity'}" />
+                        <label for="expert-electricity">Expert</label><br />
+                    </p>
+                </div>
+                <p class="link-js-competences text-center" id="remove-competence--electricity">Annuler la compétence</p>
+                <div class="examples" id="examples-electricity">
+                    <p><span class="bold">Petits travaux :</span> Changement interrupteur ou prise de courant.
+                        Petites réparations.</p>
+                    <p><span class="bold">Connaisseur :</span> Installation d'une nouvelle ligne, départ compteur.
+                        Diagnostic de pannes.</p>
+                    <p><span class="bold">Expert :</span> Maîtrise du métier. Tableau de répartition.
+                        Mise à la terre. Respect des normes.</p>
+                    <p class="link-js-competences" id="close-link--examples-electricity">Fermer</p>
+                </div>
+            </div>
+            <div class="text-center">
+                <div class="d-flex justify-content-center">
+                    <figure>
+                        <figcaption class="legend-profession">Plomberie</figcaption>
+                        <img src="/img/plombier.jpg" alt="Un plombier" id="img-plumber" />
+                    </figure>
+                    <p>
+                        <input type="radio" name="level-plumbing" value="little-works-plumbing" id="little-works-plumbing" th:selected="${user?.levelPlumbing == 'little-works-plumbing'}" />
+                        <label for="little-works-plumbing">Petits travaux</label><br />
+                        <input type="radio" name="level-plumbing" value="connoisseur-plumbing" id="connoisseur-plumbing" th:selected="${user?.levelPlumbing == 'connoisseur-plumbing'}" />
+                        <label for="connoisseur-plumbing">Connaisseur</label><br />
+                        <input type="radio" name="level-plumbing" value="expert-plumbing" id="expert-plumbing" th:selected="${user?.levelPlumbing == 'expert-plumbing'}" />
+                        <label for="expert-plumbing">Expert</label><br />
+                    </p>
+                </div>
+                <p class="link-js-competences text-center" id="remove-competence--plumbing">Annuler la compétence</p>
+                <div class="examples" id="examples-plumbing">
+                    <p><span class="bold">Petits travaux :</span> Réparer une fuite d'eau. Déboucher une canalisation.
+                        Changer un robinet. Changer un joint.</p>
+                    <p><span class="bold">Connaisseur :</span> Installer un bac douche. Raccorder un lavabo.
+                        Réaliser une soudure au cuivre.</p>
+                    <p><span class="bold">Expert :</span> Maîtrise du métier. Refaire une salle de bain.
+                        Toutes tuyauteries. Acier - Cuivre - PVC…</p>
+                    <p class="link-js-competences" id="close-link--examples-plumbing">Fermer</p>
+                </div>
+            </div>
+            <div class="text-center">
+                <div class="d-flex justify-content-center">
+                    <figure>
+                        <figcaption class="legend-profession">Menuiserie</figcaption>
+                        <img src="/img/menuisier.jpg" alt="Un menuisier" id="img-carpenter" />
+                    </figure>
+                    <p>
+                        <input type="radio" name="level-carpentry" value="little-works-carpentry" id="little-works-carpentry" th:selected="${user?.levelCarpentry == 'little-works-carpentry'}" />
+                        <label for="little-works-carpentry">Petits travaux</label><br />
+                        <input type="radio" name="level-carpentry" value="connoisseur-carpentry" id="connoisseur-carpentry" th:selected="${user?.levelCarpentry == 'connoisseur-carpentry'}" />
+                        <label for="connoisseur-carpentry">Connaisseur</label><br />
+                        <input type="radio" name="level-carpentry" value="expert-carpentry" id="expert-carpentry" th:selected="${user?.levelCarpentry == 'expert-carpentry'}" />
+                        <label for="expert-carpentry">Expert</label><br />
+                    </p>
+                </div>
+                <p class="link-js-competences text-center" id="remove-competence--carpentry">Annuler la compétence</p>
+                <div class="examples" id="examples-carpentry">
+                    <p><span class="bold">Petits travaux :</span> Montage d'un meuble IKEA.
+                        Pose d'étagères. Rabotage de porte.</p>
+                    <p><span class="bold">Connaisseur :</span> Agencement de placards. Découpe de panneaux.
+                        Pose de plan de travail. Pose de parquet flottant.</p>
+                    <p><span class="bold">Expert :</span> Maîtrise du métier. Fabrication et installation de meubles.
+                        Pose portes et fenêtres. Volets roulants.</p>
+                    <p class="link-js-competences" id="close-link--examples-carpentry">Fermer</p>
+                </div>
+            </div>
+            <div class="text-center">
+                <div class="d-flex justify-content-center">
+                    <figure>
+                        <figcaption class="legend-profession">Peinture</figcaption>
+                        <img src="/img/peintre.jpg" alt="Un peintre" id="img-painter" />
+                    </figure>
+                    <p>
+                        <input type="radio" name="level-painting" value="little-works-painting" id="little-works-painting" th:selected="${user?.levelPainting == 'little-works-painting'}" />
+                        <label for="little-works-painting">Petits travaux</label><br />
+                        <input type="radio" name="level-painting" value="connoisseur-painting" id="connoisseur-painting" th:selected="${user?.levelPainting == 'connoisseur-painting'}" />
+                        <label  for="connoisseur-painting">Connaisseur</label><br />
+                        <input type="radio" name="level-painting" value="expert-painting" id="expert-painting" th:selected="${user?.levelPainting == 'expert-painting'}" />
+                        <label for="expert-painting">Expert</label><br />
+                    </p>
+                </div>
+                <p class="link-js-competences text-center" id="remove-competence--painting">Annuler la compétence</p>
+                <div class="examples" id="examples-painting">
+                    <p><span class="bold">Petits travaux :</span> Remise à neuf d'un portail.
+                        Poncer et vernir un meuble.</p>
+                    <p><span class="bold">Connaisseur :</span> Pose de papier peint. Boucher une saignée.
+                        Enduire et peindre un mur.</p>
+                    <p><span class="bold">Expert :</span> Maîtrise du métier.
+                        Réfection d'une pièce. Plâtre, enduit et peinture.</p>
+                    <p class="link-js-competences" id="close-link--examples-painting">Fermer</p>
+                </div>
+            </div>
+            <div class="text-center">
+                <div class="d-flex justify-content-center">
+                    <figure>
+                        <figcaption class="legend-profession">Maçonnerie</figcaption>
+                        <img src="/img/macon.jpg" alt="Un maçon" id="img-builder" />
+                    </figure>
+                    <p>
+                        <input type="radio" name="level-masonry" value="little-works-masonry" id="little-works-masonry" th:selected="${user?.levelMasonry == 'little-works-masonry'}" />
+                        <label for="little-works-masonry">Petits travaux</label><br />
+                        <input type="radio" name="level-masonry" value="connoisseur-masonry" id="connoisseur-masonry" th:selected="${user?.levelMasonry == 'connoisseur-masonry'}" />
+                        <label for="connoisseur-masonry">Connaisseur</label><br />
+                        <input type="radio" name="level-masonry" value="expert-masonry" id="expert-masonry" th:selected="${user?.levelMasonry == 'expert-masonry'}" />
+                        <label for="expert-masonry">Expert</label><br />
+                    </p>
+                </div>
+                <p class="link-js-competences text-center" id="remove-competence--masonry">Annuler la compétence</p>
+                <div class="examples" id="examples-masonry">
+                    <p><span class="bold">Petits travaux :</span> Maçonner un regard. Monter un muret.
+                        Plots en béton pour une terrasse.</p>
+                    <p><span class="bold">Connaisseur :</span> Maçonner les piliers d'un portail.
+                        Couler une dalle. Faire un ragréage.</p>
+                    <p><span class="bold">Expert :</span> Maîtrise du métier.
+                        Maçonnerie générale de bâtiment.</p>
+                    <p class="link-js-competences" id="close-link--examples-masonry">Fermer</p>
+                </div>
+            </div>
+            <div class="text-center">
+                <div class="d-flex justify-content-center">
+                    <figure>
+                        <figcaption class="legend-profession">Tout<br /> bricolage</figcaption>
+                        <img src="/img/bricoleur.jpg" alt="Un bricoleur" id="img-handyman" />
+                    </figure>
+                    <p>
+                        <input type="radio" name="level-diy" value="little-works-diy" id="little-works-diy" th:checked="${user?.levelDiy == 'little-works-diy'}" />
+                        <label for="little-works-diy">Petits travaux</label><br />
+                        <input type="radio" name="level-diy" value="connoisseur-diy" id="connoisseur-diy" th:checked="${user?.levelDiy == 'connoisseur-diy'}" />
+                        <label for="connoisseur-diy">Connaisseur</label><br />
+                        <input type="radio" name="level-diy" value="expert-diy" id="expert-diy" th:checked="${user?.levelDiy == 'expert-diy'}" />
+                        <label for="expert-diy">Expert</label><br />
+                    </p>
+                </div>
+                <p class="link-js-competences text-center" id="remove-competence--diy">Annuler la compétence</p>
+                <div class="examples" id="examples-diy">
+                    <p>L'aidant "tout bricolage" est capable de répondre aux compétences des six catégories de métiers selon tous les critères du niveau (petits travaux ou connaisseur ou expert).</p>
+                    <p class="link-js-competences" id="close-link--examples-diy">Fermer</p>
+                </div>
+            </div>
+            <div class="text-center">
+                <label for="description">Précisez votre profil<span class="input-required">*</span></label><br />
+                <textarea name="description" id="description" rows="4" cols="40" th:text="${user?.description}" required></textarea>
+            </div>
+        </fieldset>
+
+        <div class="text-center">
+            <button th:if="${user == null}" type="submit" class="my-5 pointer" onclick='return confirm("Êtes-vous sûr de vouloir enregistrer votre inscription ?")'>Terminer l'inscription</button>
+            <button th:if="${user != null}" type="submit" class="my-5 pointer" onclick='return confirm("Êtes-vous sûr de vouloir modifier votre profil ?")'>Modifier le profil</button>
+        </div>
+    </div>
+</html>

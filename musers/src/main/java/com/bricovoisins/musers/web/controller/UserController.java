@@ -75,7 +75,7 @@ public class UserController {
         }
     }
 
-    @PutMapping(value = "/update_user/{id}")
+    @PutMapping(value = "/update_user")
     public void updateUser(@RequestBody User user) {
         userDao.save(user);
     }

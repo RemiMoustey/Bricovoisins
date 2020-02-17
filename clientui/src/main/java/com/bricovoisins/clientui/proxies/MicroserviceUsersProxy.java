@@ -19,4 +19,7 @@ public interface MicroserviceUsersProxy {
 
     @PostMapping(value = "/musers/results")
     List<UserBean> getSearchedUsers(@RequestParam String search);
+
+    @GetMapping(value = "/musers/utilisateurId/{userId}")
+    UserBean getOneUser(@PathVariable int userId);
 }

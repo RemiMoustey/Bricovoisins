@@ -14,10 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -339,7 +336,7 @@ public class ClientController {
         conventionBean.setMessage(request.getParameter("convention"));
         ConventionsProxy.insertConvention(conventionBean);
         sender.setPoints(sender.getPoints() - ((conventionBean.getTimeIntervention().getHour() - 1) * 4) - conventionBean.getTimeIntervention().getMinute() / 15);
-        new RestTemplate().put("http://localhost:9001/update_user/" + sender.getId(), sender);
+        new RestTemplate().put("http://localhost:9001/update_user/", sender);
         response.sendRedirect("/my_conventions/" + conventionBean.getSenderId() + "?sendConvention=true");
     }
 
@@ -395,7 +392,7 @@ public class ClientController {
         ConventionBean modifiedConvention = new RestTemplate().getForObject("http://localhost:9002/convention/" + id, ConventionBean.class);
         UserBean sender = new RestTemplate().getForObject("http://localhost:9001/utilisateurId/" + modifiedConvention.getSenderId(), UserBean.class);
         sender.setPoints(sender.getPoints() + (modifiedConvention.getTimeIntervention().getHour() - 1) * 4 + modifiedConvention.getTimeIntervention().getMinute() / 15);
-        new RestTemplate().put("http://localhost:9001/update_user/" + sender.getId(), sender);
+        new RestTemplate().put("http://localhost:9001/update_user/", sender);
         if (verifyConvention(modifiedConvention, "recipient")) {
             new RestTemplate().delete("http://localhost:9002/delete_convention/" + modifiedConvention.getId());
             response.sendRedirect("/addressed_conventions/" + modifiedConvention.getRecipientId() + "?refusedConvention=true");
@@ -409,7 +406,7 @@ public class ClientController {
         ConventionBean modifiedConvention = new RestTemplate().getForObject("http://localhost:9002/convention/" + id, ConventionBean.class);
         UserBean recipient = new RestTemplate().getForObject("http://localhost:9001/utilisateurId/" + modifiedConvention.getRecipientId(), UserBean.class);
         recipient.setPoints(recipient.getPoints() + (modifiedConvention.getTimeIntervention().getHour() - 1) * 4 + modifiedConvention.getTimeIntervention().getMinute() / 15);
-        new RestTemplate().put("http://localhost:9001/update_user/" + recipient.getId(), recipient);
+        new RestTemplate().put("http://localhost:9001/update_user/", recipient);
         if (verifyConvention(modifiedConvention, "sender")) {
             modifiedConvention.setEndedBySender(true);
             new RestTemplate().put("http://localhost:9002/update_convention", modifiedConvention);
@@ -493,5 +490,18 @@ public class ClientController {
         for (int i = 0; i < number; i++) {
             document.add(new Paragraph(" "));
         }
+    }
+
+    @GetMapping(value = "/update_profile/{userId}")
+    public String updateProfile(@PathVariable int userId, Model model, HttpServletResponse response) {
+        model.addAttribute("user", UsersProxy.getOneUser(userId));
+        catchLoggedUserIdPointsAndFirstName(model);
+        return "Register";
+    }
+
+    @PostMapping(value = "/update_user")
+    public void updateUser(@RequestBody UserBean user, HttpServletResponse response) throws IOException {
+        new RestTemplate().put("http://localhost:9001/update_user", user);
+        response.sendRedirect("/home?updateUser=true");
     }
 }

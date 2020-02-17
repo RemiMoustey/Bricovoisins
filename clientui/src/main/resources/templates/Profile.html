@@ -24,7 +24,7 @@
                     <p id="competences"><span class="bold">Compétences</span> :</p>
                     <div th:replace="ListCompetences :: competences"></div>
                     <p th:text="${user.description}"></p>
-                    <a th:if="${userId == user.id}" role="button" th:href="@{/update_profile/${user.id}}">Modifier</a>
+                    <a th:if="${userId == user.id}" role="button" th:href="@{|/update_profile/${user.id}|}">Modifier</a>
                 </div>
             </div>
         </div>
