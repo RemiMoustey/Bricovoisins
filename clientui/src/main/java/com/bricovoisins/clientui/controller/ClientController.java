@@ -1,7 +1,9 @@
 package com.bricovoisins.clientui.controller;
 
+import com.bricovoisins.clientui.beans.CommentBean;
 import com.bricovoisins.clientui.beans.ConventionBean;
 import com.bricovoisins.clientui.beans.UserBean;
+import com.bricovoisins.clientui.proxies.MicroserviceCommentsProxy;
 import com.bricovoisins.clientui.proxies.MicroserviceConventionsProxy;
 import com.bricovoisins.clientui.proxies.MicroserviceUsersProxy;
 import com.itextpdf.text.*;
@@ -51,6 +53,9 @@ public class ClientController {
 
     @Autowired
     private MicroserviceConventionsProxy ConventionsProxy;
+
+    @Autowired
+    private MicroserviceCommentsProxy CommentsProxy;
 
     public void catchLoggedUserIdPointsAndFirstName(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -133,6 +138,14 @@ public class ClientController {
     public String getProfilePage(@PathVariable int userId, Model model) {
         model.addAttribute("user", new RestTemplate().getForObject("http://localhost:9001/utilisateurId/" + userId, UserBean.class));
         catchLoggedUserIdPointsAndFirstName(model);
+        for (ConventionBean convention : Arrays.asList(new RestTemplate().getForEntity("http://localhost:9002/ended_conventions_recipient/" + userId, ConventionBean[].class).getBody())) {
+            if (convention.getSenderId() == (int) model.getAttribute("userId")) {
+                model.addAttribute("hasConvention", true);
+                break;
+            }
+            model.addAttribute("hasConvention", false);
+        }
+        model.addAttribute("comments", Arrays.asList(new RestTemplate().getForEntity("http://localhost:9003/comments_user/" + userId, CommentBean[].class).getBody()));
         return "Profile";
     }
 
@@ -529,7 +542,20 @@ public class ClientController {
     }
 
     @PostMapping(value = "/add_comment")
-    public void addComment() {
-
+    public void addComment(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        CommentBean newComment = new CommentBean();
+        UserBean author = new RestTemplate().getForObject("http://localhost:9001/utilisateur/" + SecurityContextHolder.getContext().getAuthentication().getName(), UserBean.class);
+        newComment.setAuthor(author.getFirstName() + " " + author.getLastName());
+        newComment.setComment(request.getParameter("comment"));
+        newComment.setUserId(Integer.parseInt(request.getParameter("userId")));
+        newComment.setAuthorId(author.getId());
+        for (ConventionBean convention : Arrays.asList(new RestTemplate().getForEntity("http://localhost:9002/ended_conventions_recipient/" + newComment.getUserId(), ConventionBean[].class).getBody())) {
+            if (convention.getSenderId() == newComment.getAuthorId()) {
+                CommentsProxy.insertComment(newComment);
+                response.sendRedirect("/profile/" + newComment.getUserId() + "?addComment=true");
+                return;
+            }
+        }
+        throw new Exception("Vous n'avez pas les droits pour ajouter ce commentaire");
     }
 }

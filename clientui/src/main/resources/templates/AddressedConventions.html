@@ -25,7 +25,7 @@
             Aucune convention.
         </p>
         <div th:if="${#lists.size(finishedConventions) >= 0}" th:each="convention : ${finishedConventions}">
-            <p>Classée le <span th:text="${#temporals.format(convention.dateConvention, 'dd/MM/yyyy')}"></span>.</p>
+            <p>Classée le <span th:text="${#temporals.format(convention.dateConvention, 'dd/MM/yyyy')}"></span> avec <a th:href="@{|/profile/${convention.senderId}|}"><span th:text="${convention.firstNameSender}"></span> <span th:text="${convention.lastNameSender}"></span></a>.</p>
         </div>
         <h2 class="mb-3">Conventions à valider (cliquer sur l'en-tête pour voir la convention)</h2>
         <p th:if="${#lists.size(noValidatedConventions) == 0}">
@@ -33,7 +33,7 @@
         </p>
         <div th:if="${#lists.size(noValidatedConventions) >= 0}" th:each="convention : ${noValidatedConventions}">
             <details>
-                <summary><p>Rédigée le <span th:text="${#temporals.format(convention.dateConvention, 'dd/MM/yyyy')}"></span> par <span th:text="${convention.firstNameSender}"></span> <span th:text="${convention.lastNameSender}"></span>.</p></summary>
+                <summary><p>Rédigée le <span th:text="${#temporals.format(convention.dateConvention, 'dd/MM/yyyy')}"></span> par <a th:href="@{|/profile/${convention.senderId}|}"><span th:text="${convention.firstNameSender}"></span> <span th:text="${convention.lastNameSender}"></span></a>.</p></summary>
                 <p th:text="${convention.message}"></p>
             </details>
             <a role="button" th:href="@{|/validate_convention_recipient/${convention.id}|}" class="btn btn-success" onclick='return confirm("Êtes-vous sûr de valider cette convention ?")'>Valider</a>
@@ -45,7 +45,7 @@
         </p>
         <div th:if="${#lists.size(validatedConventions) >= 0}" th:each="convention : ${validatedConventions}">
             <details>
-                <summary><p>Rédigée le <span th:text="${#temporals.format(convention.dateConvention, 'dd/MM/yyyy')}"></span>.</p></summary>
+                <summary><p>Rédigée le <span th:text="${#temporals.format(convention.dateConvention, 'dd/MM/yyyy')}"></span> par <a th:href="@{|/profile/${convention.senderId}|}"><span th:text="${convention.firstNameSender}"></span> <span th:text="${convention.lastNameSender}"></span></a>.</p></summary>
                 <p th:text="${convention.message}"></p>
             </details>
             <p><a th:href="@{|/print_convention/${convention.id}|}" + >Télécharger la convention</a></p>

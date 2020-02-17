@@ -1,9 +1,23 @@
 package com.bricovoisins.clientui.beans;
 
 public class CommentBean {
+    private int id;
+
     public String author;
 
     public String comment;
+
+    public int userId;
+
+    public int authorId;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getAuthor() {
         return author;
@@ -21,11 +35,30 @@ public class CommentBean {
         this.comment = comment;
     }
 
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public int getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(int authorId) {
+        this.authorId = authorId;
+    }
+
     @Override
     public String toString() {
         return "CommentBean{" +
-                "author='" + author + '\'' +
+                "id=" + id +
+                ", author='" + author + '\'' +
                 ", comment='" + comment + '\'' +
+                ", userId=" + userId +
+                ", authorId=" + authorId +
                 '}';
     }
 }

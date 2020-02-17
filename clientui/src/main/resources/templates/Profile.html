@@ -12,7 +12,10 @@
     </head>
     <body>
         <div th:replace="Navbar :: navbar"></div>
-        <div class="container mx-auto text-center" id="conventions">
+        <div class="container mx-auto">
+            <div th:if="${param.addComment}" class="alert alert-success w-50 mx-auto mb-2">
+                <p>Votre commentaire a bien été ajouté !</p>
+            </div>
             <div id="user">
                 <div id="image">
                     <img th:src="${user.avatar}" th:alt="@{|Avatar de ${user.firstName} ${user.lastName}|}" />
@@ -26,12 +29,24 @@
                     <p th:text="${user.description}"></p>
                     <a th:if="${userId == user.id}" role="button" th:href="@{|/update_profile/${user.id}|}">Modifier</a>
                 </div>
-                <div id="bloc-comment">
+                <div th:if="${userId != user.id && hasConvention == true}" id="bloc-comment">
                     <h2>Ajouter un commentaire</h2>
                     <form method="post" action="/add_comment">
                         <label for="comment">Commentaire</label><br />
                         <textarea name="comment" id="comment"></textarea>
+                        <input type="hidden" name="userId" id="userId" th:value="${user.id}" /><br />
+                        <button type="submit" class="pointer">Envoyer</button>
                     </form>
+                </div>
+            </div>
+            <div id="comments">
+                <h2>Commentaires</h2>
+                <div th:if="${#lists.size(comments) == 0}">
+                    Aucun commentaire
+                </div>
+                <div th:if="${#lists.size(comments) >= 0}" th:each="comment : ${comments}" class="mt-5">
+                    <h3>Commentaire de <span th:text="${comment.author}"></span> :</h3>
+                    <p th:text="${comment.comment}"></p>
                 </div>
             </div>
         </div>
