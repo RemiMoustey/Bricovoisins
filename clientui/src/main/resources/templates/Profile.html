@@ -26,6 +26,13 @@
                     <p th:text="${user.description}"></p>
                     <a th:if="${userId == user.id}" role="button" th:href="@{|/update_profile/${user.id}|}">Modifier</a>
                 </div>
+                <div id="bloc-comment">
+                    <h2>Ajouter un commentaire</h2>
+                    <form method="post" action="/add_comment">
+                        <label for="comment">Commentaire</label><br />
+                        <textarea name="comment" id="comment"></textarea>
+                    </form>
+                </div>
             </div>
         </div>
     </body>

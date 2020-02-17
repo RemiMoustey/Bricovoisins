@@ -104,12 +104,7 @@ public class ClientController {
     @PostMapping(value = "/validation")
     public void insertUser(HttpServletRequest request, HttpServletResponse response, @RequestParam("avatar") MultipartFile imageFile) throws IOException {
         UserBean newUser = new UserBean();
-        newUser.setFirstName(request.getParameter("firstName"));
-        newUser.setLastName(request.getParameter("lastName"));
-        newUser.setAge(Integer.parseInt(request.getParameter("age")));
-        newUser.setEmail(request.getParameter("email"));
-        newUser.setPassword(new BCryptPasswordEncoder().encode(request.getParameter("password")));
-        newUser.setTown(request.getParameter("town"));
+        setAttributesUser(newUser, request);
         if (!imageFile.getOriginalFilename().equals("")) {
             try {
                 String imageName = saveImage(imageFile);
@@ -121,14 +116,6 @@ public class ClientController {
             newUser.setAvatar("/avatars/default.png");
         }
         newUser.setPoints(10);
-        newUser.setLevelGardening(request.getParameter("level-gardening"));
-        newUser.setLevelElectricity(request.getParameter("level-electricity"));
-        newUser.setLevelPlumbing(request.getParameter("level-plumbing"));
-        newUser.setLevelCarpentry(request.getParameter("level-carpentry"));
-        newUser.setLevelPainting(request.getParameter("level-painting"));
-        newUser.setLevelMasonry(request.getParameter("level-masonry"));
-        newUser.setLevelDiy(request.getParameter("level-diy"));
-        newUser.setDescription(request.getParameter("description"));
         UsersProxy.insertUser(newUser, imageFile);
         response.sendRedirect("/home");
     }
@@ -493,15 +480,56 @@ public class ClientController {
     }
 
     @GetMapping(value = "/update_profile/{userId}")
-    public String updateProfile(@PathVariable int userId, Model model, HttpServletResponse response) {
-        model.addAttribute("user", UsersProxy.getOneUser(userId));
+    public String updateProfile(@PathVariable int userId, Model model) {
         catchLoggedUserIdPointsAndFirstName(model);
-        return "Register";
+        if (userId == new RestTemplate().getForObject("http://localhost:9001/utilisateur/" + SecurityContextHolder.getContext().getAuthentication().getName(), UserBean.class).getId()) {
+            model.addAttribute("user", UsersProxy.getOneUser(userId));
+            return "Register";
+        } else {
+            return "AccessDenied";
+        }
     }
 
     @PostMapping(value = "/update_user")
-    public void updateUser(@RequestBody UserBean user, HttpServletResponse response) throws IOException {
+    public void updateUser(HttpServletRequest request, HttpServletResponse response, @RequestParam("avatar") MultipartFile imageFile) throws IOException {
+        UserBean user = new UserBean();
+        setAttributesUser(user, request);
+        UserBean existedUser = new RestTemplate().getForObject("http://localhost:9001/utilisateur/" + request.getParameter("email"), UserBean.class);
+        user.setId(existedUser.getId());
+        user.setPoints(existedUser.getPoints());
+        if (!imageFile.getOriginalFilename().equals("")) {
+            try {
+                String imageName = saveImage(imageFile);
+                user.setAvatar("/avatars/" + imageName);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            user.setAvatar(existedUser.getAvatar());
+        }
         new RestTemplate().put("http://localhost:9001/update_user", user);
         response.sendRedirect("/home?updateUser=true");
+    }
+
+    private void setAttributesUser(UserBean user, HttpServletRequest request) {
+        user.setFirstName(request.getParameter("firstName"));
+        user.setLastName(request.getParameter("lastName"));
+        user.setAge(Integer.parseInt(request.getParameter("age")));
+        user.setEmail(request.getParameter("email"));
+        user.setPassword(new BCryptPasswordEncoder().encode(request.getParameter("password")));
+        user.setTown(request.getParameter("town"));
+        user.setLevelGardening(request.getParameter("level-gardening"));
+        user.setLevelElectricity(request.getParameter("level-electricity"));
+        user.setLevelPlumbing(request.getParameter("level-plumbing"));
+        user.setLevelCarpentry(request.getParameter("level-carpentry"));
+        user.setLevelPainting(request.getParameter("level-painting"));
+        user.setLevelMasonry(request.getParameter("level-masonry"));
+        user.setLevelDiy(request.getParameter("level-diy"));
+        user.setDescription(request.getParameter("description"));
+    }
+
+    @PostMapping(value = "/add_comment")
+    public void addComment() {
+
     }
 }
