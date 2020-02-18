@@ -37,6 +37,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -149,7 +150,8 @@ public class ClientController {
 
     @GetMapping(value = "/profile/{userId}")
     public String getProfilePage(@PathVariable int userId, Model model) {
-        model.addAttribute("user", new RestTemplate().getForObject("http://localhost:9001/userId/" + userId, UserBean.class));
+        UserBean user = new RestTemplate().getForObject("http://localhost:9001/userId/" + userId, UserBean.class);
+        model.addAttribute("user", user);
         catchLoggedUserIdPointsAndFirstName(model);
         for (ConventionBean convention : Arrays.asList(new RestTemplate().getForEntity("http://localhost:9002/ended_conventions_recipient/" + userId, ConventionBean[].class).getBody())) {
             if (convention.getSenderId() == (int) model.getAttribute("userId")) {
@@ -159,6 +161,7 @@ public class ClientController {
             model.addAttribute("hasConvention", false);
         }
         model.addAttribute("comments", Arrays.asList(new RestTemplate().getForEntity("http://localhost:9003/comments_user/" + userId, CommentBean[].class).getBody()));
+        model.addAttribute("titlePage", "Profil de " + user.getFirstName() + " " + user.getLastName());
         return "Profile";
     }
 
@@ -177,7 +180,10 @@ public class ClientController {
     }
 
     @GetMapping(value = "/login")
-    public String getLoginPage() {
+    public String getLoginPage(Principal user) {
+        if (user != null) {
+            return "Home";
+        }
         return "Login";
     }
 
@@ -430,11 +436,12 @@ public class ClientController {
     }
 
     @GetMapping(value = "/print_convention/{conventionId}")
-    public void generateConvention(@PathVariable int conventionId, HttpServletResponse response) throws DocumentException {
+    public void generateConvention(@PathVariable int conventionId, HttpServletResponse response) throws DocumentException, IOException {
         ConventionBean convention = new RestTemplate().getForObject("http://localhost:9002/convention/" + conventionId, ConventionBean.class);
         Document document = new Document();
+        String link = "src/main/resources/static/conventions/" + convention.getLastNameSender() + "-" + convention.getLastNameRecipient() + "-Convention.pdf";
         try {
-            PdfWriter.getInstance(document, new FileOutputStream("src/main/resources/static/conventions/" + convention.getLastNameSender() + "-" + convention.getLastNameRecipient() + "-Convention.pdf"));
+            PdfWriter.getInstance(document, new FileOutputStream(link));
         } catch (DocumentException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
@@ -446,8 +453,6 @@ public class ClientController {
         addText(document, convention);
 
         document.close();
-
-
     }
 
     private void addImage(Document document) {
@@ -481,7 +486,7 @@ public class ClientController {
         document.add(new Paragraph("Et"));
         document.add(new Paragraph(convention.getFirstNameRecipient() + " " + convention.getLastNameRecipient().toUpperCase() + " Domicilié(e) à "));
         addEmptyLine(document, 1);
-        document.add(new Paragraph("Il est conclu cette convention d'intervention basée sur une confiance mutuelle, qui est la base de la mise en relation des membres du site BRICOVOISINS."));
+        document.add(new Paragraph("Il est conclu cette convention d'intervention fondée sur une confiance mutuelle, qui est la base de la mise en relation des membres du site BRICOVOISINS."));
         addEmptyLine(document, 1);
         document.add(new Paragraph("L'aidant accomplira l'intervention décrite ci-dessous le (date) à partir de (heure) à l'adresse qui lui a été communiquée par l'aidé."));
         addEmptyLine(document, 1);
@@ -611,5 +616,13 @@ public class ClientController {
         CommentBean comment = new RestTemplate().getForObject("http://localhost:9003/comment/" + commentId, CommentBean.class);
         CommentsProxy.deleteComment(commentId);
         response.sendRedirect("/profile/" + comment.getUserId() + "?deleteComment=true");
+    }
+
+    @GetMapping(value = "/chat")
+    public String getChatPage(Model model) {
+        catchLoggedUserIdPointsAndFirstName(model);
+        UserBean user = new RestTemplate().getForObject("http://localhost:9001/user/" + SecurityContextHolder.getContext().getAuthentication().getName(), UserBean.class);
+        model.addAttribute("name", user.getFirstName() + " " + user.getLastName());
+        return "Chat";
     }
 }

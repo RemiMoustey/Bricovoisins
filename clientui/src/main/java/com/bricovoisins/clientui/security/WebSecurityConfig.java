@@ -17,8 +17,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/login", "/home").permitAll()
-                .antMatchers("/my_conventions/**", "/demands", "/send_message/**/**", "/create_convention", "/addressed_conventions/**", "/profile/**").authenticated()
+                .antMatchers("/home", "/explanations").permitAll()
+                .antMatchers("/my_conventions/**", "/demands", "/send_message/**/**", "/create_convention", "/addressed_conventions/**", "/profile/**", "/chat").authenticated()
                 .and()
                 .formLogin()
                 .defaultSuccessUrl("/home", true)

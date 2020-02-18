@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Chat Bricovoisins</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="/css/navbar.css" />
+        <link rel="stylesheet" type="text/css" href="/css/style.css" />
+
+        <!-- https://cdnjs.com/libraries/sockjs-client -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+        <!-- https://cdnjs.com/libraries/stomp.js/ -->
+        <script  src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    </head>
+    <body>
+    <!-- Source : https://o7planning.org/fr/10719/creer-une-application-chat-simple-avec-spring-boot-et-websocket -->
+        <div th:replace="Navbar :: navbar"></div>
+        <div class="container mx-auto row">
+            <div id="chat-container" class="mx-auto">
+                <div class="chat-header">
+                    <div class="user-container">
+                        Vous êtes sur le chat, <span id="username" th:text="${firstName}"></span> !
+                    </div>
+                    <h3>Chat Bricovoisins</h3>
+                </div>
+
+                <hr/>
+                <ul id="messageArea">
+                </ul>
+                <form id="messageForm" name="messageForm">
+                    <div class="input-message">
+                        <input type="text" id="message" autocomplete="off" placeholder="Écrivez un message..." />
+                        <button type="submit">Envoyer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <script src="/js/chat.js"></script>
+    </body>
+</html>
