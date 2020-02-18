@@ -36,6 +36,11 @@ public class UserBean {
 
     private String description;
 
+    private boolean isAdmin;
+
+    public UserBean() {
+    }
+
     public int getId() {
         return id;
     }
@@ -172,6 +177,14 @@ public class UserBean {
         this.description = description;
     }
 
+    public boolean getIsAdmin() {
+        return isAdmin;
+    }
+
+    public void setIsAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
+    }
+
     @Override
     public String toString() {
         return "UserBean{" +
@@ -192,6 +205,7 @@ public class UserBean {
                 ", levelMasonry='" + levelMasonry + '\'' +
                 ", levelDiy='" + levelDiy + '\'' +
                 ", description='" + description + '\'' +
+                ", isAdmin=" + isAdmin +
                 '}';
     }
 }

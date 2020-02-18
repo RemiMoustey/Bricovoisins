@@ -15,7 +15,7 @@ public class LibraryUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        List<UserBean> users = Arrays.asList(new RestTemplate().getForEntity("http://localhost:9001/utilisateurs/", UserBean[].class).getBody());
+        List<UserBean> users = Arrays.asList(new RestTemplate().getForEntity("http://localhost:9001/users", UserBean[].class).getBody());
         Optional<UserBean> user = users.stream().filter(u -> u.getEmail().equals(email)).findAny();
         if (!user.isPresent()) {
             throw new UsernameNotFoundException("User not found by email: " + email);

@@ -11,6 +11,9 @@ public class CommentBean {
 
     public int authorId;
 
+    public CommentBean() {
+    }
+
     public int getId() {
         return id;
     }

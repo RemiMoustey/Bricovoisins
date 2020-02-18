@@ -38,6 +38,19 @@ class McommentsApplicationTests {
 	}
 
 	@Test
+	void testGetComment() {
+		Comment newComment = new Comment();
+		newComment.setAuthor("Rémi Moustey");
+		newComment.setComment("Commentaire");
+		newComment.setUserId(63);
+		newComment.setAuthorId(62);
+		commentController.insertComment(newComment);
+		Comment comment = commentController.getAllCommentsByAuthor(62).get(0);
+		assertEquals("Commentaire", commentController.getComment(comment.getId()).getComment());
+		commentController.deleteComment(comment.getId());
+	}
+
+	@Test
 	void testDeleteComment() {
 		Comment newComment = new Comment();
 		newComment.setAuthor("Rémi Moustey");
@@ -50,5 +63,4 @@ class McommentsApplicationTests {
 		commentController.deleteComment(addedComment.getId());
 		assertEquals(previousSize - 1, commentController.getAllComments().size());
 	}
-
 }

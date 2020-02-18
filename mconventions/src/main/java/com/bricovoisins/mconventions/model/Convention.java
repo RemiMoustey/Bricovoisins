@@ -44,6 +44,9 @@ public class Convention {
 
     private Boolean isEndedBySender;
 
+    public Convention() {
+    }
+
     public Integer getId() {
         return id;
     }

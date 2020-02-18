@@ -4,6 +4,7 @@ target/
 !**/src/main/**
 !**/src/test/**
 src/main/resources/configuration.properties
+src/main/resources/static/conventions
 
 ### STS ###
 .apt_generated

@@ -40,6 +40,9 @@ public class ConventionBean {
 
     private boolean isEndedBySender;
 
+    public ConventionBean() {
+    }
+
     public int getId() {
         return id;
     }

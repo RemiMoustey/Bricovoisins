@@ -20,6 +20,12 @@ public interface MicroserviceUsersProxy {
     @PostMapping(value = "/musers/results")
     List<UserBean> getSearchedUsers(@RequestParam String search);
 
-    @GetMapping(value = "/musers/utilisateurId/{userId}")
+    @GetMapping(value = "/musers/userId/{userId}")
     UserBean getOneUser(@PathVariable int userId);
+
+    @GetMapping(value = "/musers/users")
+    List<UserBean> getListUsers();
+
+    @GetMapping(value = "/musers/delete_user/{id}")
+    void deleteUser(@PathVariable int id);
 }

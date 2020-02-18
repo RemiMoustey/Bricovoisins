@@ -16,6 +16,9 @@
             <div th:if="${param.addComment}" class="alert alert-success w-50 mx-auto mb-2">
                 <p>Votre commentaire a bien été ajouté !</p>
             </div>
+            <div th:if="${param.deleteComment}" class="alert alert-success w-50 mx-auto mb-2">
+                <p>Le commentaire a bien été supprimé !</p>
+            </div>
             <div id="user">
                 <div id="image">
                     <img th:src="${user.avatar}" th:alt="@{|Avatar de ${user.firstName} ${user.lastName}|}" />
@@ -39,14 +42,15 @@
                     </form>
                 </div>
             </div>
-            <div id="comments">
+            <div id="comments" class="mb-5">
                 <h2>Commentaires</h2>
                 <div th:if="${#lists.size(comments) == 0}">
                     Aucun commentaire
                 </div>
                 <div th:if="${#lists.size(comments) >= 0}" th:each="comment : ${comments}" class="mt-5">
                     <h3>Commentaire de <span th:text="${comment.author}"></span> :</h3>
-                    <p th:text="${comment.comment}"></p>
+                    <p th:text="${comment.comment}"></p><br />
+                    <a role="button" class="btn btn-danger" th:href="@{|/remove_comment/${comment.id}|}" onclick='return confirm("Êtes-vous sûr de supprimer ce commentaire ?")'>Supprimer</a>
                 </div>
             </div>
         </div>

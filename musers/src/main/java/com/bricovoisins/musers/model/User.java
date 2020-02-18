@@ -45,6 +45,8 @@ public class User {
 
     private String description;
 
+    public Boolean isAdmin;
+
     public User() {
 
     }
@@ -185,6 +187,14 @@ public class User {
         this.description = description;
     }
 
+    public Boolean getAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(Boolean admin) {
+        isAdmin = admin;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -205,6 +215,7 @@ public class User {
                 ", levelMasonry='" + levelMasonry + '\'' +
                 ", levelDiy='" + levelDiy + '\'' +
                 ", description='" + description + '\'' +
+                ", isAdmin=" + isAdmin +
                 '}';
     }
 }

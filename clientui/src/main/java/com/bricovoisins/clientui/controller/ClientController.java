@@ -61,7 +61,7 @@ public class ClientController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         RestTemplate restTemplate = new RestTemplate();
-        UserBean loggedUser = restTemplate.getForObject("http://localhost:9001/utilisateur/" + email, UserBean.class);
+        UserBean loggedUser = restTemplate.getForObject("http://localhost:9001/user/" + email, UserBean.class);
         if(loggedUser != null) {
             model.addAttribute("firstName", loggedUser.getFirstName());
             model.addAttribute("points", loggedUser.getPoints());
@@ -107,9 +107,8 @@ public class ClientController {
     }
 
     @PostMapping(value = "/validation")
-    public void insertUser(HttpServletRequest request, HttpServletResponse response, @RequestParam("avatar") MultipartFile imageFile) throws IOException {
-        UserBean newUser = new UserBean();
-        setAttributesUser(newUser, request);
+    public void insertUser(HttpServletRequest request, HttpServletResponse response, @RequestParam("avatar") MultipartFile imageFile) throws Exception {
+        UserBean newUser = initializeUser(response, request, "post");
         if (!imageFile.getOriginalFilename().equals("")) {
             try {
                 String imageName = saveImage(imageFile);
@@ -125,6 +124,20 @@ public class ClientController {
         response.sendRedirect("/home");
     }
 
+    private boolean isMailAlreadyInList(List<UserBean> users, String email) {
+        for (UserBean user : users) {
+            if (user.getEmail().equals(email)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @GetMapping(value = "/email_already")
+    public String getEmailAlreadyPage() {
+        return "EmailAlready";
+    }
+
     private String saveImage(MultipartFile imageFile) throws Exception {
         String folder = "./src/main/resources/static/avatars/";
         byte[] bytes = imageFile.getBytes();
@@ -136,7 +149,7 @@ public class ClientController {
 
     @GetMapping(value = "/profile/{userId}")
     public String getProfilePage(@PathVariable int userId, Model model) {
-        model.addAttribute("user", new RestTemplate().getForObject("http://localhost:9001/utilisateurId/" + userId, UserBean.class));
+        model.addAttribute("user", new RestTemplate().getForObject("http://localhost:9001/userId/" + userId, UserBean.class));
         catchLoggedUserIdPointsAndFirstName(model);
         for (ConventionBean convention : Arrays.asList(new RestTemplate().getForEntity("http://localhost:9002/ended_conventions_recipient/" + userId, ConventionBean[].class).getBody())) {
             if (convention.getSenderId() == (int) model.getAttribute("userId")) {
@@ -154,7 +167,7 @@ public class ClientController {
         if(request.getSession().getAttribute("search") != null) {
             model.addAttribute("users", request.getSession().getAttribute("users"));
             model.addAttribute("emailLoggedUser", ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername());
-            model.addAttribute("idLoggedUser", new RestTemplate().getForObject("http://localhost:9001/utilisateur/" + ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername(), UserBean.class).getId());
+            model.addAttribute("idLoggedUser", new RestTemplate().getForObject("http://localhost:9001/user/" + ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername(), UserBean.class).getId());
             model.addAttribute("search", request.getSession().getAttribute("search"));
             request.getSession().removeAttribute("search");
             request.getSession().removeAttribute("users");
@@ -178,8 +191,8 @@ public class ClientController {
 
     @GetMapping(value = "/send_message/{senderId}/{recipientId}")
     public String getMessagePage(@PathVariable int senderId, @PathVariable int recipientId, Model model) {
-        UserBean sender = new RestTemplate().getForObject("http://localhost:9001/utilisateurId/" + senderId, UserBean.class);
-        UserBean recipient = new RestTemplate().getForObject("http://localhost:9001/utilisateurId/" + recipientId, UserBean.class);
+        UserBean sender = new RestTemplate().getForObject("http://localhost:9001/userId/" + senderId, UserBean.class);
+        UserBean recipient = new RestTemplate().getForObject("http://localhost:9001/userId/" + recipientId, UserBean.class);
         model.addAttribute("sender", sender);
         model.addAttribute("recipient", recipient);
         catchLoggedUserIdPointsAndFirstName(model);
@@ -250,8 +263,8 @@ public class ClientController {
 
     @PostMapping(value = "/insert_message")
     public void insertMessageInConvention(HttpServletRequest request, HttpServletResponse response) throws IOException, MessagingException {
-        UserBean sender = new RestTemplate().getForObject("http://localhost:9001/utilisateurId/" + Integer.parseInt(request.getParameter("senderId")), UserBean.class);
-        UserBean recipient = new RestTemplate().getForObject("http://localhost:9001/utilisateurId/" + Integer.parseInt(request.getParameter("recipientId")), UserBean.class);
+        UserBean sender = new RestTemplate().getForObject("http://localhost:9001/userId/" + Integer.parseInt(request.getParameter("senderId")), UserBean.class);
+        UserBean recipient = new RestTemplate().getForObject("http://localhost:9001/userId/" + Integer.parseInt(request.getParameter("recipientId")), UserBean.class);
         String competences = getCompetences(sender);
         String message = request.getParameter("message") + "\n\nVous pouvez répondre à " + sender.getFirstName() + " " + sender.getLastName() + " à l'adresse email suivante : " + sender.getEmail() + ".\n" +
                 sender.getFirstName() + " " + "habite à " + sender.getTown() + ". Ses compétences sont les suivantes :\n" + competences;
@@ -310,7 +323,7 @@ public class ClientController {
 
     @PostMapping(value = "/send_convention")
     public void insertConvention(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        UserBean sender = new RestTemplate().getForObject("http://localhost:9001/utilisateur/" + SecurityContextHolder.getContext().getAuthentication().getName(), UserBean.class);
+        UserBean sender = new RestTemplate().getForObject("http://localhost:9001/user/" + SecurityContextHolder.getContext().getAuthentication().getName(), UserBean.class);
         if (sender.getPoints() - Integer.parseInt(request.getParameter("hours-intervention-time")) * 4 - Integer.parseInt(request.getParameter("minutes-intervention-time")) / 15 < 0) {
             response.sendRedirect("/not_enough_points");
             return;
@@ -319,11 +332,11 @@ public class ClientController {
         conventionBean.setSenderId(sender.getId());
         conventionBean.setFirstNameSender(sender.getFirstName());
         conventionBean.setLastNameSender(sender.getLastName());
-        if (new RestTemplate().getForObject("http://localhost:9001/utilisateur/" + request.getParameter("helperEmail"), UserBean.class) == null) {
+        if (new RestTemplate().getForObject("http://localhost:9001/user/" + request.getParameter("helperEmail"), UserBean.class) == null) {
             response.sendRedirect("/email_not_found");
             return;
         }
-        UserBean recipient = new RestTemplate().getForObject("http://localhost:9001/utilisateur/" + request.getParameter("helperEmail"), UserBean.class);
+        UserBean recipient = new RestTemplate().getForObject("http://localhost:9001/user/" + request.getParameter("helperEmail"), UserBean.class);
         conventionBean.setRecipientId(recipient.getId());
         conventionBean.setFirstNameRecipient(recipient.getFirstName());
         conventionBean.setLastNameRecipient(recipient.getLastName());
@@ -353,7 +366,7 @@ public class ClientController {
     }
 
     public boolean verifyConvention(ConventionBean convention, String typeUser) throws Exception {
-        UserBean loggedUser = new RestTemplate().getForObject("http://localhost:9001/utilisateur/" + SecurityContextHolder.getContext().getAuthentication().getName(), UserBean.class);
+        UserBean loggedUser = new RestTemplate().getForObject("http://localhost:9001/user/" + SecurityContextHolder.getContext().getAuthentication().getName(), UserBean.class);
         if (typeUser.equals("sender")) {
             List<ConventionBean> listConventionsUser = Arrays.asList(new RestTemplate().getForEntity("http://localhost:9002/validated_conventions/" + loggedUser.getId(), ConventionBean[].class).getBody());
             for (ConventionBean oneConventionOfUser : listConventionsUser) {
@@ -390,7 +403,7 @@ public class ClientController {
     @GetMapping(value = "/refuse_convention_recipient/{id}")
     public void updateIsRefusedByRecipient(@PathVariable int id, HttpServletResponse response) throws Exception {
         ConventionBean modifiedConvention = new RestTemplate().getForObject("http://localhost:9002/convention/" + id, ConventionBean.class);
-        UserBean sender = new RestTemplate().getForObject("http://localhost:9001/utilisateurId/" + modifiedConvention.getSenderId(), UserBean.class);
+        UserBean sender = new RestTemplate().getForObject("http://localhost:9001/userId/" + modifiedConvention.getSenderId(), UserBean.class);
         sender.setPoints(sender.getPoints() + (modifiedConvention.getTimeIntervention().getHour() - 1) * 4 + modifiedConvention.getTimeIntervention().getMinute() / 15);
         new RestTemplate().put("http://localhost:9001/update_user/", sender);
         if (verifyConvention(modifiedConvention, "recipient")) {
@@ -404,7 +417,7 @@ public class ClientController {
     @GetMapping(value = "/validate_convention_sender/{id}")
     public void updateIsEndedBySender(@PathVariable int id, HttpServletResponse response) throws Exception {
         ConventionBean modifiedConvention = new RestTemplate().getForObject("http://localhost:9002/convention/" + id, ConventionBean.class);
-        UserBean recipient = new RestTemplate().getForObject("http://localhost:9001/utilisateurId/" + modifiedConvention.getRecipientId(), UserBean.class);
+        UserBean recipient = new RestTemplate().getForObject("http://localhost:9001/userId/" + modifiedConvention.getRecipientId(), UserBean.class);
         recipient.setPoints(recipient.getPoints() + (modifiedConvention.getTimeIntervention().getHour() - 1) * 4 + modifiedConvention.getTimeIntervention().getMinute() / 15);
         new RestTemplate().put("http://localhost:9001/update_user/", recipient);
         if (verifyConvention(modifiedConvention, "sender")) {
@@ -495,7 +508,7 @@ public class ClientController {
     @GetMapping(value = "/update_profile/{userId}")
     public String updateProfile(@PathVariable int userId, Model model) {
         catchLoggedUserIdPointsAndFirstName(model);
-        if (userId == new RestTemplate().getForObject("http://localhost:9001/utilisateur/" + SecurityContextHolder.getContext().getAuthentication().getName(), UserBean.class).getId()) {
+        if (userId == new RestTemplate().getForObject("http://localhost:9001/user/" + SecurityContextHolder.getContext().getAuthentication().getName(), UserBean.class).getId()) {
             model.addAttribute("user", UsersProxy.getOneUser(userId));
             return "Register";
         } else {
@@ -503,11 +516,21 @@ public class ClientController {
         }
     }
 
+    public UserBean initializeUser(HttpServletResponse response, HttpServletRequest request, String method) throws Exception {
+        List<UserBean> users = Arrays.asList(new RestTemplate().getForEntity("http://localhost:9001/users", UserBean[].class).getBody());
+        if (isMailAlreadyInList(users, request.getParameter("email")) && method.equals("post")) {
+            response.sendRedirect("/email_already");
+            return null;
+        } else {
+            UserBean user = setAttributesUser(request);
+            return user;
+        }
+    }
+
     @PostMapping(value = "/update_user")
-    public void updateUser(HttpServletRequest request, HttpServletResponse response, @RequestParam("avatar") MultipartFile imageFile) throws IOException {
-        UserBean user = new UserBean();
-        setAttributesUser(user, request);
-        UserBean existedUser = new RestTemplate().getForObject("http://localhost:9001/utilisateur/" + request.getParameter("email"), UserBean.class);
+    public void updateUser(HttpServletRequest request, HttpServletResponse response, @RequestParam("avatar") MultipartFile imageFile) throws Exception {
+        UserBean user = initializeUser(response, request, "put");
+        UserBean existedUser = new RestTemplate().getForObject("http://localhost:9001/user/" + request.getParameter("email"), UserBean.class);
         user.setId(existedUser.getId());
         user.setPoints(existedUser.getPoints());
         if (!imageFile.getOriginalFilename().equals("")) {
@@ -524,7 +547,8 @@ public class ClientController {
         response.sendRedirect("/home?updateUser=true");
     }
 
-    private void setAttributesUser(UserBean user, HttpServletRequest request) {
+    private UserBean setAttributesUser(HttpServletRequest request) {
+        UserBean user = new UserBean();
         user.setFirstName(request.getParameter("firstName"));
         user.setLastName(request.getParameter("lastName"));
         user.setAge(Integer.parseInt(request.getParameter("age")));
@@ -539,12 +563,13 @@ public class ClientController {
         user.setLevelMasonry(request.getParameter("level-masonry"));
         user.setLevelDiy(request.getParameter("level-diy"));
         user.setDescription(request.getParameter("description"));
+        return user;
     }
 
     @PostMapping(value = "/add_comment")
     public void addComment(HttpServletRequest request, HttpServletResponse response) throws Exception {
         CommentBean newComment = new CommentBean();
-        UserBean author = new RestTemplate().getForObject("http://localhost:9001/utilisateur/" + SecurityContextHolder.getContext().getAuthentication().getName(), UserBean.class);
+        UserBean author = new RestTemplate().getForObject("http://localhost:9001/user/" + SecurityContextHolder.getContext().getAuthentication().getName(), UserBean.class);
         newComment.setAuthor(author.getFirstName() + " " + author.getLastName());
         newComment.setComment(request.getParameter("comment"));
         newComment.setUserId(Integer.parseInt(request.getParameter("userId")));
@@ -557,5 +582,34 @@ public class ClientController {
             }
         }
         throw new Exception("Vous n'avez pas les droits pour ajouter ce commentaire");
+    }
+
+    @GetMapping(value = "/users")
+    public String getListUsers(Model model) {
+        catchLoggedUserIdPointsAndFirstName(model);
+        if (new RestTemplate().getForObject("http://localhost:9001/user/" + SecurityContextHolder.getContext().getAuthentication().getName(), UserBean.class).getIsAdmin()) {
+            List<UserBean> listUsers = UsersProxy.getListUsers();
+            model.addAttribute("listUsers", listUsers);
+            return "ListUsers";
+        } else {
+            return "AccessDenied";
+        }
+    }
+
+    @GetMapping(value = "/delete_user/{id}")
+    public void deleteUser(@PathVariable int id, HttpServletResponse response) throws IOException {
+        if (new RestTemplate().getForObject("http://localhost:9001/user/" + SecurityContextHolder.getContext().getAuthentication().getName(), UserBean.class).getIsAdmin()) {
+            UsersProxy.deleteUser(id);
+            response.sendRedirect("/users?deletedUser=true");
+        } else {
+            response.sendRedirect("/access_denied");
+        }
+    }
+
+    @GetMapping(value = "/remove_comment/{commentId}")
+    public void deleteComment(@PathVariable int commentId, HttpServletResponse response) throws IOException {
+        CommentBean comment = new RestTemplate().getForObject("http://localhost:9003/comment/" + commentId, CommentBean.class);
+        CommentsProxy.deleteComment(commentId);
+        response.sendRedirect("/profile/" + comment.getUserId() + "?deleteComment=true");
     }
 }

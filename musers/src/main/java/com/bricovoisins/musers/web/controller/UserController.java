@@ -34,22 +34,22 @@ public class UserController {
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping(value = "/utilisateurs")
+    @GetMapping(value = "/users")
     public List<User> getAllUsers() {
         return userDao.findAll();
     }
 
-    @GetMapping(value = "/utilisateurId/{userId}")
+    @GetMapping(value = "/userId/{userId}")
     public User getOneUser(@PathVariable int userId) {
         return userDao.findById(userId);
     }
 
-    @GetMapping(value = "/supprimer_utilisateur/{id}")
+    @GetMapping(value = "/delete_user/{id}")
     public void deleteUser(@PathVariable int id) {
         userDao.deleteById(id);
     }
 
-    @GetMapping(value = "/utilisateur/{email}")
+    @GetMapping(value = "/user/{email}")
     public User getUserByEmail(@PathVariable String email) {
         return userDao.findByEmail(email);
     }

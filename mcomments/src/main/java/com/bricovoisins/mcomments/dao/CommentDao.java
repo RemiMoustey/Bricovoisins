@@ -8,6 +8,7 @@ import java.util.List;
 
 @Repository
 public interface CommentDao extends JpaRepository<Comment, Integer> {
+    Comment findById(int id);
     List<Comment> findAllByAuthorId(int authorId);
     List<Comment> findAllByUserIdOrderByIdDesc(int userId);
     void deleteById(int id);

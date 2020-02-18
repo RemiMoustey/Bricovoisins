@@ -18,6 +18,9 @@ public class Comment {
 
     private Integer authorId;
 
+    public Comment() {
+    }
+
     public Integer getId() {
         return id;
     }

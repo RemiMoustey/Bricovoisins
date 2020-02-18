@@ -47,8 +47,13 @@ public class CommentController {
         return commentDao.findAllByUserIdOrderByIdDesc(userId);
     }
 
-    @DeleteMapping(value = "/remove_comment/{commentId}")
-    public void deleteComment(@PathVariable int commentId) {
-        commentDao.deleteById(commentId);
+    @GetMapping(value = "/comment/{id}")
+    public Comment getComment(@PathVariable int id) {
+        return commentDao.findById(id);
+    }
+
+    @GetMapping(value = "/remove_comment/{id}")
+    public void deleteComment(@PathVariable int id) {
+        commentDao.deleteById(id);
     }
 }
