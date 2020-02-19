@@ -210,65 +210,98 @@ public class ClientController {
         return "SendMessage";
     }
 
-    public String getCompetences(UserBean sender) {
-        String competences = "";
+    private String getGardening(UserBean sender) {
+        String competence = "";
         if (sender.getLevelGardening() != null) {
             if (sender.getLevelGardening().equals("little-works-gardening")) {
-                competences += "Jardinier petits travaux\n";
+                competence += "Jardinier petits travaux\n";
             } else if (sender.getLevelGardening().equals("connoisseur-gardening")) {
-                competences += "Jardinier confirmé\n";
+                competence += "Jardinier confirmé\n";
             } else if (sender.getLevelGardening().equals("expert-gardening")) {
-                competences += "Jardinier expert\n";
-            }
-        } if (sender.getLevelElectricity() != null) {
-            if (sender.getLevelElectricity().equals("little-works-electricity")) {
-                competences += "Électricien petits travaux\n";
-            } else if (sender.getLevelElectricity().equals("connoisseur-electricity")) {
-                competences += "Électricien confirmé\n";
-            } else if (sender.getLevelElectricity().equals("expert-electricity")) {
-                competences += "Électricien expert\n";
-            }
-        } if (sender.getLevelPlumbing() != null) {
-            if (sender.getLevelPlumbing().equals("little-works-plumbing")) {
-                competences += "Plombier petits travaux\n";
-            } else if (sender.getLevelPlumbing().equals("connoisseur-plumbing")) {
-                competences += "Plombier confirmé\n";
-            } else if (sender.getLevelPlumbing().equals("expert-plumbing")) {
-                competences += "Plombier expert\n";
-            }
-        } if (sender.getLevelCarpentry() != null) {
-            if (sender.getLevelCarpentry().equals("little-works-carpentry")) {
-                competences += "Menuisier petits travaux\n";
-            } else if (sender.getLevelCarpentry().equals("connoisseur-carpentry")) {
-                competences += "Menuisier confirmé\n";
-            } else if (sender.getLevelCarpentry().equals("expert-carpentry")) {
-                competences += "Menuisier expert\n";
-            }
-        } if (sender.getLevelPainting() != null) {
-            if (sender.getLevelPainting().equals("little-works-painting")) {
-                competences += "Peintre petits travaux\n";
-            } else if (sender.getLevelPainting().equals("connoisseur-painting")) {
-                competences += "Peintre confirmé\n";
-            } else if (sender.getLevelPainting().equals("expert-painting")) {
-                competences += "Peintre expert\n";
-            }
-        } if (sender.getLevelMasonry() != null) {
-            if (sender.getLevelMasonry().equals("little-works-masonry")) {
-                competences += "Maçon petits travaux\n";
-            } else if (sender.getLevelMasonry().equals("connoisseur-masonry")) {
-                competences += "Maçon confirmé\n";
-            } else if (sender.getLevelMasonry().equals("expert-masonry")) {
-                competences += "Maçon expert\n";
-            }
-        } if (sender.getLevelDiy() != null) {
-            if (sender.getLevelDiy().equals("little-works-diy")) {
-                competences += "Bricoleur petits travaux\n";
-            } else if (sender.getLevelDiy().equals("connoisseur-diy")) {
-                competences += "Bricoleur confirmé\n";
-            } else if (sender.getLevelDiy().equals("expert-diy")) {
-                competences += "Bricoleur expert\n";
+                competence += "Jardinier expert\n";
             }
         }
+        return competence;
+    }
+
+    private String getPlumbing(UserBean sender) {
+        String competence = "";
+        if (sender.getLevelPlumbing() != null) {
+            if (sender.getLevelPlumbing().equals("little-works-plumbing")) {
+                competence += "Plombier petits travaux\n";
+            } else if (sender.getLevelPlumbing().equals("connoisseur-plumbing")) {
+                competence += "Plombier confirmé\n";
+            } else if (sender.getLevelPlumbing().equals("expert-plumbing")) {
+                competence += "Plombier expert\n";
+            }
+        }
+        return competence;
+    }
+
+    private String getCarpentry(UserBean sender) {
+        String competence = "";
+        if (sender.getLevelCarpentry() != null) {
+            if (sender.getLevelCarpentry().equals("little-works-carpentry")) {
+                competence += "Menuisier petits travaux\n";
+            } else if (sender.getLevelCarpentry().equals("connoisseur-carpentry")) {
+                competence += "Menuisier confirmé\n";
+            } else if (sender.getLevelCarpentry().equals("expert-carpentry")) {
+                competence += "Menuisier expert\n";
+            }
+        }
+        return competence;
+    }
+
+    private String getPainting(UserBean sender) {
+        String competence = "";
+        if (sender.getLevelPainting() != null) {
+            if (sender.getLevelPainting().equals("little-works-painting")) {
+                competence += "Peintre petits travaux\n";
+            } else if (sender.getLevelPainting().equals("connoisseur-painting")) {
+                competence += "Peintre confirmé\n";
+            } else if (sender.getLevelPainting().equals("expert-painting")) {
+                competence += "Peintre expert\n";
+            }
+        }
+        return competence;
+    }
+
+    private String getMasonry(UserBean sender) {
+        String competence = "";
+        if (sender.getLevelMasonry() != null) {
+            if (sender.getLevelMasonry().equals("little-works-masonry")) {
+                competence += "Maçon petits travaux\n";
+            } else if (sender.getLevelMasonry().equals("connoisseur-masonry")) {
+                competence += "Maçon confirmé\n";
+            } else if (sender.getLevelMasonry().equals("expert-masonry")) {
+                competence += "Maçon expert\n";
+            }
+        }
+        return competence;
+    }
+
+    private String getDiy(UserBean sender) {
+        String competence = "";
+        if (sender.getLevelDiy() != null) {
+            if (sender.getLevelDiy().equals("little-works-diy")) {
+                competence += "Bricoleur petits travaux\n";
+            } else if (sender.getLevelDiy().equals("connoisseur-diy")) {
+                competence += "Bricoleur confirmé\n";
+            } else if (sender.getLevelDiy().equals("expert-diy")) {
+                competence += "Bricoleur expert\n";
+            }
+        }
+        return competence;
+    }
+
+    private String getCompetences(UserBean sender) {
+        String competences = "";
+        competences += getGardening(sender);
+        competences += getPlumbing(sender);
+        competences += getCarpentry(sender);
+        competences += getPainting(sender);
+        competences += getMasonry(sender);
+        competences += getDiy(sender);
         return competences;
     }
 
@@ -335,24 +368,11 @@ public class ClientController {
         return "NotEnoughPoints";
     }
 
-    @PostMapping(value = "/send_convention")
-    public void insertConvention(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        if (request.getParameter("convention").length() > 200) {
-            throw new Exception("Message trop longue");
-        }
-        UserBean sender = new RestTemplate().getForObject("http://localhost:9001/user/" + SecurityContextHolder.getContext().getAuthentication().getName(), UserBean.class);
-        if (sender.getPoints() - Integer.parseInt(request.getParameter("hours-intervention-time")) * 4 - Integer.parseInt(request.getParameter("minutes-intervention-time")) / 15 < 0) {
-            response.sendRedirect("/not_enough_points");
-            return;
-        }
+    private ConventionBean buildConvention(UserBean sender, HttpServletRequest request) {
         ConventionBean conventionBean = new ConventionBean();
         conventionBean.setSenderId(sender.getId());
         conventionBean.setFirstNameSender(sender.getFirstName());
         conventionBean.setLastNameSender(sender.getLastName());
-        if (new RestTemplate().getForObject("http://localhost:9001/user/" + request.getParameter("helperEmail"), UserBean.class) == null) {
-            response.sendRedirect("/email_not_found");
-            return;
-        }
         UserBean recipient = new RestTemplate().getForObject("http://localhost:9001/user/" + request.getParameter("helperEmail"), UserBean.class);
         conventionBean.setRecipientId(recipient.getId());
         conventionBean.setFirstNameRecipient(recipient.getFirstName());
@@ -364,10 +384,32 @@ public class ClientController {
         conventionBean.setPlace(request.getParameter("place"));
         conventionBean.setPhoneNumberHelped(request.getParameter("phone_number"));
         conventionBean.setMessage(request.getParameter("convention"));
+        return conventionBean;
+    }
+
+    private void createConvention(UserBean sender, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        if (new RestTemplate().getForObject("http://localhost:9001/user/" + request.getParameter("helperEmail"), UserBean.class) == null) {
+            response.sendRedirect("/email_not_found");
+            return;
+        }
+        ConventionBean conventionBean = buildConvention(sender, request);
         ConventionsProxy.insertConvention(conventionBean);
         sender.setPoints(sender.getPoints() - ((conventionBean.getTimeIntervention().getHour() - 1) * 4) - conventionBean.getTimeIntervention().getMinute() / 15);
         new RestTemplate().put("http://localhost:9001/update_user/", sender);
         response.sendRedirect("/my_conventions/" + conventionBean.getSenderId() + "?sendConvention=true");
+    }
+
+    @PostMapping(value = "/send_convention")
+    public void insertConvention(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        if (request.getParameter("convention").length() > 200) {
+            throw new Exception("Message trop longue");
+        }
+        UserBean sender = new RestTemplate().getForObject("http://localhost:9001/user/" + SecurityContextHolder.getContext().getAuthentication().getName(), UserBean.class);
+        if (sender.getPoints() - Integer.parseInt(request.getParameter("hours-intervention-time")) * 4 - Integer.parseInt(request.getParameter("minutes-intervention-time")) / 15 < 0) {
+            response.sendRedirect("/not_enough_points");
+            return;
+        }
+        createConvention(sender, request, response);
     }
 
     @GetMapping(value = "/addressed_conventions/{recipientId}")
