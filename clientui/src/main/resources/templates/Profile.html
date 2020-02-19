@@ -13,12 +13,13 @@
     <body>
         <div th:replace="Navbar :: navbar"></div>
         <div class="container mx-auto">
-            <div th:if="${param.addComment}" class="alert alert-success w-50 mx-auto mb-2">
-                <p>Votre commentaire a bien été ajouté !</p>
+            <div th:if="${param.addOpinion}" class="alert alert-success w-50 mx-auto mb-2">
+                <p>Votre avis a bien été ajouté !</p>
             </div>
-            <div th:if="${param.deleteComment}" class="alert alert-success w-50 mx-auto mb-2">
-                <p>Le commentaire a bien été supprimé !</p>
+            <div th:if="${param.deleteOpinion}" class="alert alert-success w-50 mx-auto mb-2">
+                <p>L'avis a bien été supprimé !</p>
             </div>
+            <h1>Profil de <span th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span></h1>
             <div id="user">
                 <div id="image">
                     <img th:src="${user.avatar}" th:alt="@{|Avatar de ${user.firstName} ${user.lastName}|}" />
@@ -32,25 +33,25 @@
                     <p th:text="${user.description}"></p>
                     <a th:if="${userId == user.id}" role="button" th:href="@{|/update_profile/${user.id}|}">Modifier</a>
                 </div>
-                <div th:if="${userId != user.id && hasConvention == true}" id="bloc-comment">
-                    <h2>Ajouter un commentaire</h2>
-                    <form method="post" action="/add_comment">
-                        <label for="comment">Commentaire</label><br />
-                        <textarea name="comment" id="comment"></textarea>
+                <div th:if="${userId != user.id && hasConvention == true}" id="bloc-opinion">
+                    <h2>Ajouter un avis</h2>
+                    <form method="post" action="/add_opinion">
+                        <label for="opinion">Avis</label><br />
+                        <textarea name="opinion" id="opinion"></textarea>
                         <input type="hidden" name="userId" id="userId" th:value="${user.id}" /><br />
                         <button type="submit" class="pointer">Envoyer</button>
                     </form>
                 </div>
             </div>
-            <div id="comments" class="mb-5">
-                <h2>Commentaires</h2>
-                <div th:if="${#lists.size(comments) == 0}">
-                    Aucun commentaire
+            <div id="opinions" class="mb-5">
+                <h2>Avis</h2>
+                <div th:if="${#lists.size(opinions) == 0}">
+                    Aucun avis
                 </div>
-                <div th:if="${#lists.size(comments) >= 0}" th:each="comment : ${comments}" class="mt-5">
-                    <h3>Commentaire de <span th:text="${comment.author}"></span> :</h3>
-                    <p th:text="${comment.comment}"></p><br />
-                    <a role="button" class="btn btn-danger" th:href="@{|/remove_comment/${comment.id}|}" onclick='return confirm("Êtes-vous sûr de supprimer ce commentaire ?")'>Supprimer</a>
+                <div th:if="${#lists.size(opinions) >= 0}" th:each="opinion : ${opinions}" class="mt-5">
+                    <h3>Avis de <span th:text="${opinion.author}"></span> :</h3>
+                    <p th:text="${opinion.opinion}"></p><br />
+                    <a role="button" class="btn btn-danger" th:href="@{|/remove_opinion/${opinion.id}|}" onclick='return confirm("Êtes-vous sûr de supprimer cet avis ?")'>Supprimer</a>
                 </div>
             </div>
         </div>

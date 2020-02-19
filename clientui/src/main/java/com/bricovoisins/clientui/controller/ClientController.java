@@ -1,9 +1,9 @@
 package com.bricovoisins.clientui.controller;
 
-import com.bricovoisins.clientui.beans.CommentBean;
+import com.bricovoisins.clientui.beans.OpinionBean;
 import com.bricovoisins.clientui.beans.ConventionBean;
 import com.bricovoisins.clientui.beans.UserBean;
-import com.bricovoisins.clientui.proxies.MicroserviceCommentsProxy;
+import com.bricovoisins.clientui.proxies.MicroserviceOpinionsProxy;
 import com.bricovoisins.clientui.proxies.MicroserviceConventionsProxy;
 import com.bricovoisins.clientui.proxies.MicroserviceUsersProxy;
 import com.itextpdf.text.*;
@@ -41,10 +41,10 @@ import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Arrays;
-import java.util.Date;
+import java.util.*;
+
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Properties;
 
 @Controller
 public class ClientController {
@@ -56,7 +56,7 @@ public class ClientController {
     private MicroserviceConventionsProxy ConventionsProxy;
 
     @Autowired
-    private MicroserviceCommentsProxy CommentsProxy;
+    private MicroserviceOpinionsProxy OpinionsProxy;
 
     public void catchLoggedUserIdPointsAndFirstName(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -109,6 +109,9 @@ public class ClientController {
 
     @PostMapping(value = "/validation")
     public void insertUser(HttpServletRequest request, HttpServletResponse response, @RequestParam("avatar") MultipartFile imageFile) throws Exception {
+        if (request.getParameter("description").length() > 200) {
+            throw new Exception("Description trop longue");
+        }
         UserBean newUser = initializeUser(response, request, "post");
         if (!imageFile.getOriginalFilename().equals("")) {
             try {
@@ -160,7 +163,7 @@ public class ClientController {
             }
             model.addAttribute("hasConvention", false);
         }
-        model.addAttribute("comments", Arrays.asList(new RestTemplate().getForEntity("http://localhost:9003/comments_user/" + userId, CommentBean[].class).getBody()));
+        model.addAttribute("opinions", Arrays.asList(new RestTemplate().getForEntity("http://localhost:9003/opinions_user/" + userId, OpinionBean[].class).getBody()));
         model.addAttribute("titlePage", "Profil de " + user.getFirstName() + " " + user.getLastName());
         return "Profile";
     }
@@ -328,7 +331,10 @@ public class ClientController {
     }
 
     @PostMapping(value = "/send_convention")
-    public void insertConvention(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void insertConvention(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        if (request.getParameter("message").length() > 200) {
+            throw new Exception("Message trop longue");
+        }
         UserBean sender = new RestTemplate().getForObject("http://localhost:9001/user/" + SecurityContextHolder.getContext().getAuthentication().getName(), UserBean.class);
         if (sender.getPoints() - Integer.parseInt(request.getParameter("hours-intervention-time")) * 4 - Integer.parseInt(request.getParameter("minutes-intervention-time")) / 15 < 0) {
             response.sendRedirect("/not_enough_points");
@@ -436,10 +442,10 @@ public class ClientController {
     }
 
     @GetMapping(value = "/print_convention/{conventionId}")
-    public void generateConvention(@PathVariable int conventionId, HttpServletResponse response) throws DocumentException, IOException {
+    public void generateConvention(@PathVariable int conventionId) throws DocumentException, IOException {
         ConventionBean convention = new RestTemplate().getForObject("http://localhost:9002/convention/" + conventionId, ConventionBean.class);
         Document document = new Document();
-        String link = "src/main/resources/static/conventions/" + convention.getLastNameSender() + "-" + convention.getLastNameRecipient() + "-Convention.pdf";
+        String link = "src/main/resources/static/conventions/" + convention.getLastNameSender() + "-" + convention.getLastNameRecipient() + "-" + convention.getDateBeginning().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) +"-Convention.pdf";
         try {
             PdfWriter.getInstance(document, new FileOutputStream(link));
         } catch (DocumentException e) {
@@ -476,21 +482,23 @@ public class ClientController {
     }
 
     private void addText(Document document, ConventionBean convention) throws DocumentException {
+        UserBean sender = new RestTemplate().getForObject("http://localhost:9001/userId/" + convention.getSenderId(), UserBean.class);
+        UserBean recipient = new RestTemplate().getForObject("http://localhost:9001/userId/" + convention.getRecipientId(), UserBean.class);
         Paragraph title = new Paragraph("CONVENTION D'INTERVENTION");
         title.setAlignment(Element.ALIGN_CENTER);
         document.add(title);
         addEmptyLine(document, 2);
         document.add(new Paragraph("ENTRE LES SOUSSIGNÉS :"));
         addEmptyLine(document, 1);
-        document.add(new Paragraph(convention.getFirstNameSender() + " " + convention.getLastNameSender().toUpperCase() + " Domicilié(e) à "));
+        document.add(new Paragraph(sender.getFirstName() + " " + sender.getLastName().toUpperCase() + " Domicilié(e) à " + sender.getTown()));
         document.add(new Paragraph("Et"));
-        document.add(new Paragraph(convention.getFirstNameRecipient() + " " + convention.getLastNameRecipient().toUpperCase() + " Domicilié(e) à "));
+        document.add(new Paragraph(recipient.getFirstName() + " " + recipient.getLastName().toUpperCase() + " Domicilié(e) à " + recipient.getTown()));
         addEmptyLine(document, 1);
         document.add(new Paragraph("Il est conclu cette convention d'intervention fondée sur une confiance mutuelle, qui est la base de la mise en relation des membres du site BRICOVOISINS."));
         addEmptyLine(document, 1);
-        document.add(new Paragraph("L'aidant accomplira l'intervention décrite ci-dessous le (date) à partir de (heure) à l'adresse qui lui a été communiquée par l'aidé."));
+        document.add(new Paragraph("L'aidant accomplira l'intervention décrite ci-dessous le " + convention.getDateBeginning().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + " à partir de " + "à l'adresse qui lui a été communiquée par l'aidé."));
         addEmptyLine(document, 1);
-        document.add(new Paragraph("La signature des 2 membres vaut acceptation de la description ci-dessous, qu'ils ont préalablement mise au point. A l'issue de l'intervention, il est convenu que l'aidé en validera l'achèvement sur le site BRICOVOISINS."));
+        document.add(new Paragraph("La signature de chacun des deux membres vaut acceptation de la description ci-dessous, qu'ils ont préalablement mise au point. A l'issue de l'intervention, il est convenu que l'aidé en validera l'achèvement sur le site BRICOVOISINS."));
         addEmptyLine(document, 2);
         Paragraph description = new Paragraph("DESCRIPTION DE L'INTERVENTION");
         description.setAlignment(Element.ALIGN_CENTER);
@@ -498,9 +506,10 @@ public class ClientController {
         addEmptyLine(document, 1);
         document.add(new Paragraph(convention.getMessage()));
         addEmptyLine(document, 1);
-        document.add(new Paragraph("Signatures"));
+        Paragraph signature = new Paragraph("Signatures");
+        signature.setAlignment(Element.ALIGN_CENTER);
+        document.add(signature);
         Paragraph actors = new Paragraph("L'aidant,            L'aidé,");
-        actors.setAlignment(Element.ALIGN_CENTER);
         document.add(actors);
     }
 
@@ -534,6 +543,9 @@ public class ClientController {
 
     @PostMapping(value = "/update_user")
     public void updateUser(HttpServletRequest request, HttpServletResponse response, @RequestParam("avatar") MultipartFile imageFile) throws Exception {
+        if (request.getParameter("description").length() > 200) {
+            throw new Exception("Description trop longue");
+        }
         UserBean user = initializeUser(response, request, "put");
         UserBean existedUser = new RestTemplate().getForObject("http://localhost:9001/user/" + request.getParameter("email"), UserBean.class);
         user.setId(existedUser.getId());
@@ -571,22 +583,22 @@ public class ClientController {
         return user;
     }
 
-    @PostMapping(value = "/add_comment")
-    public void addComment(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        CommentBean newComment = new CommentBean();
+    @PostMapping(value = "/add_opinion")
+    public void addOpinion(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        OpinionBean newOpinion = new OpinionBean();
         UserBean author = new RestTemplate().getForObject("http://localhost:9001/user/" + SecurityContextHolder.getContext().getAuthentication().getName(), UserBean.class);
-        newComment.setAuthor(author.getFirstName() + " " + author.getLastName());
-        newComment.setComment(request.getParameter("comment"));
-        newComment.setUserId(Integer.parseInt(request.getParameter("userId")));
-        newComment.setAuthorId(author.getId());
-        for (ConventionBean convention : Arrays.asList(new RestTemplate().getForEntity("http://localhost:9002/ended_conventions_recipient/" + newComment.getUserId(), ConventionBean[].class).getBody())) {
-            if (convention.getSenderId() == newComment.getAuthorId()) {
-                CommentsProxy.insertComment(newComment);
-                response.sendRedirect("/profile/" + newComment.getUserId() + "?addComment=true");
+        newOpinion.setAuthor(author.getFirstName() + " " + author.getLastName());
+        newOpinion.setOpinion(request.getParameter("opinion"));
+        newOpinion.setUserId(Integer.parseInt(request.getParameter("userId")));
+        newOpinion.setAuthorId(author.getId());
+        for (ConventionBean convention : Arrays.asList(new RestTemplate().getForEntity("http://localhost:9002/ended_conventions_recipient/" + newOpinion.getUserId(), ConventionBean[].class).getBody())) {
+            if (convention.getSenderId() == newOpinion.getAuthorId()) {
+                OpinionsProxy.insertOpinion(newOpinion);
+                response.sendRedirect("/profile/" + newOpinion.getUserId() + "?addOpinion=true");
                 return;
             }
         }
-        throw new Exception("Vous n'avez pas les droits pour ajouter ce commentaire");
+        throw new Exception("Vous n'avez pas les droits pour ajouter cette opinion");
     }
 
     @GetMapping(value = "/users")
@@ -611,11 +623,11 @@ public class ClientController {
         }
     }
 
-    @GetMapping(value = "/remove_comment/{commentId}")
-    public void deleteComment(@PathVariable int commentId, HttpServletResponse response) throws IOException {
-        CommentBean comment = new RestTemplate().getForObject("http://localhost:9003/comment/" + commentId, CommentBean.class);
-        CommentsProxy.deleteComment(commentId);
-        response.sendRedirect("/profile/" + comment.getUserId() + "?deleteComment=true");
+    @GetMapping(value = "/remove_opinion/{opinionId}")
+    public void deleteOpinion(@PathVariable int opinionId, HttpServletResponse response) throws IOException {
+        OpinionBean opinion = new RestTemplate().getForObject("http://localhost:9003/opinion/" + opinionId, OpinionBean.class);
+        OpinionsProxy.deleteOpinion(opinionId);
+        response.sendRedirect("/profile/" + opinion.getUserId() + "?deleteOpinion=true");
     }
 
     @GetMapping(value = "/chat")

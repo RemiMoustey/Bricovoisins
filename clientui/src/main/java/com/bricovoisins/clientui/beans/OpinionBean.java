@@ -1,17 +1,17 @@
 package com.bricovoisins.clientui.beans;
 
-public class CommentBean {
+public class OpinionBean {
     private int id;
 
     public String author;
 
-    public String comment;
+    public String opinion;
 
     public int userId;
 
     public int authorId;
 
-    public CommentBean() {
+    public OpinionBean() {
     }
 
     public int getId() {
@@ -30,12 +30,12 @@ public class CommentBean {
         this.author = author;
     }
 
-    public String getComment() {
-        return comment;
+    public String getOpinion() {
+        return opinion;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void setOpinion(String opinion) {
+        this.opinion = opinion;
     }
 
     public int getUserId() {
@@ -56,10 +56,10 @@ public class CommentBean {
 
     @Override
     public String toString() {
-        return "CommentBean{" +
+        return "OpinionBean{" +
                 "id=" + id +
                 ", author='" + author + '\'' +
-                ", comment='" + comment + '\'' +
+                ", opinion='" + opinion + '\'' +
                 ", userId=" + userId +
                 ", authorId=" + authorId +
                 '}';

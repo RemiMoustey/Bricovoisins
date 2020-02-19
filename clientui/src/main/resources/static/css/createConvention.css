@@ -1,3 +1,11 @@
 form p {
     margin-bottom: .5rem;
 }
+
+.bloc-create-convention {
+     text-align: justify;
+ }
+
+.bloc-create-convention p, .bloc-create-convention label {
+    margin-top: 8px;
+}

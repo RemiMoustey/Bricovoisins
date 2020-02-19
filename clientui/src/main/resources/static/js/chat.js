@@ -63,9 +63,11 @@ class Chat {
         if (message.type === 'JOIN') {
             messageElement.classList.add('event-message');
             message.content = message.sender + ' a rejoint le chat.';
+            messageElement.style.color = '#0c991a';
         } else if (message.type === 'LEAVE') {
             messageElement.classList.add('event-message');
             message.content = message.sender + ' a quitté le chat.';
+            messageElement.style.color = '#0c991a';
         } else {
             messageElement.classList.add('chat-message');
             let usernameElement = document.createElement('strong');

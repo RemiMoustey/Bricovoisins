@@ -1,9 +1,9 @@
-#conventions h1 {
-    font-size: 30px;
-}
-
 #conventions h2 {
     font-size: 24px;
+}
+
+.bloc-conventions, .click-header {
+    margin-bottom: 40px;
 }
 
 summary {
@@ -19,4 +19,17 @@ summary {
 
 summary p {
     margin-bottom: 0;
+}
+
+.title-convention {
+    margin-bottom: 0;
+}
+
+.click-header {
+    font-size: 18px;
+    font-style: italic;
+}
+
+summary a * {
+    pointer-events: none;
 }

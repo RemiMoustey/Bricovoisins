@@ -51,21 +51,21 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="avatar">Choisissez une photo de profil</label>
-                <input type="file" name="avatar" id="avatar" class="form-control" accept="image/png, image/jpeg" />
+                <label for="avatar">Photo de profil</label>
+                <input type="file" name="avatar" id="avatar" class="button-file form-control" accept="image/png, image/jpeg" />
             </div>
         </fieldset>
 
         <fieldset id="competences">
             <legend>Sélectionnez vos compétences</legend>
-            <p>Exemples de compétences : cliquez sur l'ouvrier !</p>
+            <p>Exemples de compétences : cliquez sur un artisan !</p>
             <div class="text-center">
                 <div class="d-flex justify-content-center">
                     <figure>
                         <figcaption class="legend-profession">Jardinage</figcaption>
                         <img src="/img/jardinier.jpg" alt="Un jardinier" id="img-gardener" />
                     </figure>
-                    <p>
+                    <p class="input-competences">
                         <input type="radio" name="level-gardening" value="little-works-gardening" id="little-works-gardening" th:checked="${user?.levelGardening == 'little-works-gardening'}" />
                         <label for="little-works-gardening">Petits travaux</label><br />
                         <input type="radio" name="level-gardening" value="connoisseur-gardening" id="connoisseur-gardening" th:checked="${user?.levelGardening == 'connoisseur-gardening'}" />
@@ -76,6 +76,7 @@
                 </div>
                 <p class="link-js-competences text-center" id="remove-competence--gardening">Annuler la compétence</p>
                 <div class="examples" id="examples-gardening">
+                    <p>Exemple de compétences jardinage :</p>
                     <p><span class="bold">Petits travaux :</span> Tondre une pelouse. Ratisser les feuilles.
                         Manier la brouette…</p>
                     <p><span class="bold">Connaisseur :</span> Tailler une grande haie. Élaguer les branches.
@@ -91,7 +92,7 @@
                         <figcaption class="legend-profession">Électricité</figcaption>
                         <img src="/img/electricien.jpg" alt="Un électricien" id="img-electrician" />
                     </figure>
-                    <p>
+                    <p class="input-competences">
                         <input type="radio" name="level-electricity" value="little-works-electricity" id="little-works-electricity" th:checked="${user?.levelElectricity == 'little-works-electricity'}" />
                         <label for="little-works-electricity">Petits travaux</label><br />
                         <input type="radio" name="level-electricity" value="connoisseur-electricity" id="connoisseur-electricity" th:checked="${user?.levelElectricity == 'connoisseur-electricity'}" />
@@ -102,6 +103,7 @@
                 </div>
                 <p class="link-js-competences text-center" id="remove-competence--electricity">Annuler la compétence</p>
                 <div class="examples" id="examples-electricity">
+                    <p>Exemple de compétences électricité :</p>
                     <p><span class="bold">Petits travaux :</span> Changement interrupteur ou prise de courant.
                         Petites réparations.</p>
                     <p><span class="bold">Connaisseur :</span> Installation d'une nouvelle ligne, départ compteur.
@@ -117,7 +119,7 @@
                         <figcaption class="legend-profession">Plomberie</figcaption>
                         <img src="/img/plombier.jpg" alt="Un plombier" id="img-plumber" />
                     </figure>
-                    <p>
+                    <p class="input-competences">
                         <input type="radio" name="level-plumbing" value="little-works-plumbing" id="little-works-plumbing" th:checked="${user?.levelPlumbing == 'little-works-plumbing'}" />
                         <label for="little-works-plumbing">Petits travaux</label><br />
                         <input type="radio" name="level-plumbing" value="connoisseur-plumbing" id="connoisseur-plumbing" th:checked="${user?.levelPlumbing == 'connoisseur-plumbing'}" />
@@ -128,6 +130,7 @@
                 </div>
                 <p class="link-js-competences text-center" id="remove-competence--plumbing">Annuler la compétence</p>
                 <div class="examples" id="examples-plumbing">
+                    <p>Exemple de compétences plomberie :</p>
                     <p><span class="bold">Petits travaux :</span> Réparer une fuite d'eau. Déboucher une canalisation.
                         Changer un robinet. Changer un joint.</p>
                     <p><span class="bold">Connaisseur :</span> Installer un bac douche. Raccorder un lavabo.
@@ -143,7 +146,7 @@
                         <figcaption class="legend-profession">Menuiserie</figcaption>
                         <img src="/img/menuisier.jpg" alt="Un menuisier" id="img-carpenter" />
                     </figure>
-                    <p>
+                    <p class="input-competences">
                         <input type="radio" name="level-carpentry" value="little-works-carpentry" id="little-works-carpentry" th:checked="${user?.levelCarpentry == 'little-works-carpentry'}" />
                         <label for="little-works-carpentry">Petits travaux</label><br />
                         <input type="radio" name="level-carpentry" value="connoisseur-carpentry" id="connoisseur-carpentry" th:checked="${user?.levelCarpentry == 'connoisseur-carpentry'}" />
@@ -154,6 +157,7 @@
                 </div>
                 <p class="link-js-competences text-center" id="remove-competence--carpentry">Annuler la compétence</p>
                 <div class="examples" id="examples-carpentry">
+                    <p>Exemple de compétences menuiserie :</p>
                     <p><span class="bold">Petits travaux :</span> Montage d'un meuble IKEA.
                         Pose d'étagères. Rabotage de porte.</p>
                     <p><span class="bold">Connaisseur :</span> Agencement de placards. Découpe de panneaux.
@@ -169,7 +173,7 @@
                         <figcaption class="legend-profession">Peinture</figcaption>
                         <img src="/img/peintre.jpg" alt="Un peintre" id="img-painter" />
                     </figure>
-                    <p>
+                    <p class="input-competences">
                         <input type="radio" name="level-painting" value="little-works-painting" id="little-works-painting" th:checked="${user?.levelPainting == 'little-works-painting'}" />
                         <label for="little-works-painting">Petits travaux</label><br />
                         <input type="radio" name="level-painting" value="connoisseur-painting" id="connoisseur-painting" th:checked="${user?.levelPainting == 'connoisseur-painting'}" />
@@ -180,6 +184,7 @@
                 </div>
                 <p class="link-js-competences text-center" id="remove-competence--painting">Annuler la compétence</p>
                 <div class="examples" id="examples-painting">
+                    <p>Exemple de compétences peinture :</p>
                     <p><span class="bold">Petits travaux :</span> Remise à neuf d'un portail.
                         Poncer et vernir un meuble.</p>
                     <p><span class="bold">Connaisseur :</span> Pose de papier peint. Boucher une saignée.
@@ -195,7 +200,7 @@
                         <figcaption class="legend-profession">Maçonnerie</figcaption>
                         <img src="/img/macon.jpg" alt="Un maçon" id="img-builder" />
                     </figure>
-                    <p>
+                    <p class="input-competences">
                         <input type="radio" name="level-masonry" value="little-works-masonry" id="little-works-masonry" th:checked="${user?.levelMasonry == 'little-works-masonry'}" />
                         <label for="little-works-masonry">Petits travaux</label><br />
                         <input type="radio" name="level-masonry" value="connoisseur-masonry" id="connoisseur-masonry" th:checked="${user?.levelMasonry == 'connoisseur-masonry'}" />
@@ -206,6 +211,7 @@
                 </div>
                 <p class="link-js-competences text-center" id="remove-competence--masonry">Annuler la compétence</p>
                 <div class="examples" id="examples-masonry">
+                    <p>Exemple de compétences maçonnerie :</p>
                     <p><span class="bold">Petits travaux :</span> Maçonner un regard. Monter un muret.
                         Plots en béton pour une terrasse.</p>
                     <p><span class="bold">Connaisseur :</span> Maçonner les piliers d'un portail.
@@ -221,7 +227,7 @@
                         <figcaption class="legend-profession">Tout<br /> bricolage</figcaption>
                         <img src="/img/bricoleur.jpg" alt="Un bricoleur" id="img-handyman" />
                     </figure>
-                    <p>
+                    <p class="input-competences">
                         <input type="radio" name="level-diy" value="little-works-diy" id="little-works-diy" th:checked="${user?.levelDiy == 'little-works-diy'}" />
                         <label for="little-works-diy">Petits travaux</label><br />
                         <input type="radio" name="level-diy" value="connoisseur-diy" id="connoisseur-diy" th:checked="${user?.levelDiy == 'connoisseur-diy'}" />
@@ -232,13 +238,14 @@
                 </div>
                 <p class="link-js-competences text-center" id="remove-competence--diy">Annuler la compétence</p>
                 <div class="examples" id="examples-diy">
+                    <p>Exemple de compétences tout bricolage :</p>
                     <p>L'aidant "tout bricolage" est capable de répondre aux compétences des six catégories de métiers selon tous les critères du niveau (petits travaux ou connaisseur ou expert).</p>
                     <p class="link-js-competences" id="close-link--examples-diy">Fermer</p>
                 </div>
             </div>
             <div class="text-center">
-                <label for="description">Précisez votre profil<span class="input-required">*</span></label><br />
-                <textarea name="description" id="description" rows="4" cols="40" th:text="${user?.description}" required></textarea>
+                <label for="description">Précisez votre profil (200 caractères maximum)<span class="input-required">*</span></label><br />
+                <textarea name="description" id="description" rows="4" cols="35" maxlength="200" th:text="${user?.description}" required></textarea>
             </div>
         </fieldset>
 

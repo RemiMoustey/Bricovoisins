@@ -1,24 +1,24 @@
-package com.bricovoisins.mcomments.model;
+package com.bricovoisins.mopinions.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class Comment {
+public class Opinion {
     @Id
     @GeneratedValue
     private Integer id;
 
     private String author;
     
-    private String comment;
+    private String opinion;
 
     private Integer userId;
 
     private Integer authorId;
 
-    public Comment() {
+    public Opinion() {
     }
 
     public Integer getId() {
@@ -37,12 +37,12 @@ public class Comment {
         this.author = author;
     }
 
-    public String getComment() {
-        return comment;
+    public String getOpinion() {
+        return opinion;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void setOpinion(String opinion) {
+        this.opinion = opinion;
     }
 
     public Integer getUserId() {
@@ -63,10 +63,10 @@ public class Comment {
 
     @Override
     public String toString() {
-        return "Comment{" +
+        return "Opinion{" +
                 "id=" + id +
                 ", author='" + author + '\'' +
-                ", comment='" + comment + '\'' +
+                ", opinion='" + opinion + '\'' +
                 ", userId=" + userId +
                 ", authorId=" + authorId +
                 '}';

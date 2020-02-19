@@ -19,7 +19,6 @@ class Register {
     printAndCloseExamples(idImage, comptence) {
         $("#" + idImage).on('click', function() {
             $("#examples-" + comptence).css("display", "block");
-            $("#remove-competence--" + comptence).css("margin-bottom", "10px");
         }.bind(this));
         $("#close-link--examples-" + comptence).on('click', function() {
             $("#examples-" + comptence).css("display", "none");

@@ -12,17 +12,19 @@
     <body>
         <div th:replace="Navbar :: navbar"></div>
         <div class="container">
-            <h1 class="text-center" th:if="${user == null}">S'enregistrer</h1>
-            <h1 class="text-center" th:if="${user != null}">Modifier son profil <span class="red">(resaisissez votre mot de passe)</span></h1>
-            <form th:if="${user == null}" method="post" th:action="@{/validation}" class="w-50 m-auto" enctype="multipart/form-data">
+            <h1 class="text-center" th:if="${user == null}">Inscription</h1>
+            <h1 class="text-center" th:if="${user != null}">Modifier son profil</h1>
+            <p class="text-center password-warning">(saisissez à nouveau votre mot de passe)</p>
+            <form th:if="${user == null}" method="post" th:action="@{/validation}" class="form-inscription m-auto" enctype="multipart/form-data">
                 <div th:replace="Form :: form"></div>
             </form>
 
-            <form th:if="${user != null}" method="post" th:action="@{/update_user}" class="w-50 m-auto" enctype="multipart/form-data">
+            <form th:if="${user != null}" method="post" th:action="@{/update_user}" class="form-inscription m-auto" enctype="multipart/form-data">
                 <div th:replace="Form :: form"></div>
             </form>
         </div>
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
         <script src="/js/register.js"></script>
+        <script src="/js/maxlength.js"></script>
     </body>
 </html>

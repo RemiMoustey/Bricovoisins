@@ -12,13 +12,13 @@
 </head>
     <body>
         <div th:replace="Navbar :: navbar"></div>
-        <div class="container mx-auto row">
+        <div class="container mx-auto bloc-create-convention">
             <h1 class="text-center mb-3">Créer une convention</h1>
-            <p>Mettez-vous bien d'accord au préalable sur les détails de l'intervention. Si ce n'est pas le cas, votre convention peut être refusée par l'aidant. Si vous ne l'avez pas faire, contactez-le avant d'envoyer votre convention.</p>
+            <p>Mettez-vous bien d'accord au préalable sur les détails de l'intervention. Si ce n'est pas le cas, votre convention peut être refusée par l'aidant. Si vous ne l'avez pas fait, contactez-le avant d'envoyer votre convention.</p>
             <form method="post" action="/send_convention" class="mx-auto">
                 <label for="helperEmail">Adresse email de l'aidant<span class="input-required">*</span>:</label>
                 <input type="text" name="helperEmail" id="helperEmail" class="form-control" required />
-                <div class="mb-2">
+                <div>
                     <p>Date du rendez-vous<span class="input-required">*</span>:</p>
                     <select name="day" id="day" required>
                         <option value="1">1</option>
@@ -73,9 +73,10 @@
                         <option value="2022">2022</option>
                     </select>
                 </div>
-                <div class="mb-2">
+                <div>
                     <p>Heure de début<span class="input-required">*</span>:</p>
                     <select name="hour" id="hour" required>
+                        <option value="0">0</option>
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -101,7 +102,7 @@
                         <option value="23">23</option>
                     </select>
                 </div>
-                <div class="mb-2">
+                <div>
                     <p>Temps pour l'intervention<span class="input-required">*</span>:</p>
                     <label for="hours-intervention-time">Heures :</label>
                     <select name="hours-intervention-time" id="hours-intervention-time" required>
@@ -128,11 +129,11 @@
                 <input type="text" name="place" id="place" class="form-control" />
                 <label for="phone_number">Téléphone:</label>
                 <input type="text" name="phone_number" id="phone_number" class="form-control" />
-                <label for="convention">Convention<span class="input-required">*</span>:</label><br />
-                <textarea name="convention" id="convention" required></textarea><br />
+                <label for="convention">Convention (200 caractères maximum)<span class="input-required">*</span>:</label><br />
+                <textarea name="convention" id="convention" cols="35" rows="4" maxlength="200" required></textarea><br />
                 <button type="submit" class="mt-3 mb-5" onclick='return confirm("Êtes-vous sûr de vouloir créer cette convention ?")'>Envoyer</button>
             </form>
         </div>
-
+        <script src="/js/maxlength.js"></script>
     </body>
 </html>

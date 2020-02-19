@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.bricovoisins</groupId>
-	<artifactId>mcomments</artifactId>
+	<artifactId>mopinions</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>mcomments</name>
-	<description>Microservice comments for Bricovoisins</description>
+	<name>mopinions</name>
+	<description>Microservice opinions for Bricovoisins</description>
 
 	<properties>
 		<java.version>1.8</java.version>
