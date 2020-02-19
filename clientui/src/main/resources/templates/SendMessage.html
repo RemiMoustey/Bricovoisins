@@ -19,7 +19,7 @@
                     <input type="hidden" name="senderId" id="senderId" th:value="${sender.id}" />
                     <input type="hidden" name="recipientId" id="recipientId" th:value="${recipient.id}" />
                     <div>
-                        <input type="submit" value="Envoyer le message" />
+                        <input type="submit" value="Envoyer le message" onclick='return confirm("Êtes-vous sûr d&apos;envoyer ce message ?")' />
                     </div>
                 </div>
             </form>

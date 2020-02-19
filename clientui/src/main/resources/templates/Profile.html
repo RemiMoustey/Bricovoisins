@@ -6,7 +6,6 @@
         <title th:text="${titlePage}"></title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" href="/css/navbar.css" />
-        <link rel="stylesheet" type="text/css" href="/css/dashboard.css" />
         <link rel="stylesheet" type="text/css" href="/css/style.css" />
         <link rel="stylesheet" type="text/css" href="/css/profile.css" />
     </head>
@@ -51,7 +50,7 @@
                 <div th:if="${#lists.size(opinions) >= 0}" th:each="opinion : ${opinions}" class="mt-5">
                     <h3>Avis de <span th:text="${opinion.author}"></span> :</h3>
                     <p th:text="${opinion.opinion}"></p><br />
-                    <a role="button" class="btn btn-danger" th:href="@{|/remove_opinion/${opinion.id}|}" onclick='return confirm("Êtes-vous sûr de supprimer cet avis ?")'>Supprimer</a>
+                    <a role="button" class="btn btn-danger" th:if="${visitorIsAdmin}" th:href="@{|/remove_opinion/${opinion.id}|}" onclick='return confirm("Êtes-vous sûr de supprimer cet avis ?")'>Supprimer</a>
                 </div>
             </div>
         </div>

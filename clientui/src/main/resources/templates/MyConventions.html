@@ -6,7 +6,6 @@
     <title>Mes conventions</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="/css/navbar.css" />
-    <link rel="stylesheet" type="text/css" href="/css/dashboard.css" />
     <link rel="stylesheet" type="text/css" href="/css/style.css" />
     <link rel="stylesheet" type="text/css" href="/css/conventions.css" />
 </head>
@@ -28,6 +27,7 @@
                         <summary><p>Classée le <span th:text="${#temporals.format(convention.dateConvention, 'dd/MM/yyyy')}"></span> avec <a th:href="@{|/profile/${convention.recipientId}|}"><span th:text="${convention.firstNameRecipient}"></span> <span th:text="${convention.lastNameRecipient}"></span></a>.</p></summary>
                         <p th:text="${convention.message}"></p>
                     </details>
+                    <p><a th:href="@{|/conventions/${convention.lastNameSender}-${convention.lastNameRecipient}-${#temporals.format(convention.dateBeginning, 'dd-MM-yyyy')}-${#temporals.format(convention.beginningHour, 'hh-mm')}-Convention.pdf|}">Télécharger la convention</a></p>
                 </div>
             </div>
             <div class="bloc-conventions">
@@ -53,6 +53,7 @@
                         <p th:text="${convention.message}"></p>
                     </details>
                     <a role="button" th:href="@{|/validate_convention_sender/${convention.id}|}" class="btn btn-success" onclick='return confirm("Êtes-vous sûr de valider cette convention ?")'>Valider (intervention terminée)</a>
+                    <p><a th:href="@{|/conventions/${convention.lastNameSender}-${convention.lastNameRecipient}-${#temporals.format(convention.dateBeginning, 'dd-MM-yyyy')}-${#temporals.format(convention.beginningHour, 'hh-mm')}-Convention.pdf|}">Télécharger la convention</a></p>
                 </div>
             </div>
         </div>

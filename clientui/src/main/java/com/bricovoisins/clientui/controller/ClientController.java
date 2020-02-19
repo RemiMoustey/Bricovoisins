@@ -156,6 +156,8 @@ public class ClientController {
         UserBean user = new RestTemplate().getForObject("http://localhost:9001/userId/" + userId, UserBean.class);
         model.addAttribute("user", user);
         catchLoggedUserIdPointsAndFirstName(model);
+        UserBean visitor = new RestTemplate().getForObject("http://localhost:9001/user/" + SecurityContextHolder.getContext().getAuthentication().getName(), UserBean.class);
+        model.addAttribute("visitorIsAdmin", visitor.getIsAdmin());
         for (ConventionBean convention : Arrays.asList(new RestTemplate().getForEntity("http://localhost:9002/ended_conventions_recipient/" + userId, ConventionBean[].class).getBody())) {
             if (convention.getSenderId() == (int) model.getAttribute("userId")) {
                 model.addAttribute("hasConvention", true);
@@ -312,13 +314,16 @@ public class ClientController {
 
     @GetMapping(value = "/my_conventions/{userId}")
     public String getListConventionsUser(@PathVariable int userId, Model model) {
+        catchLoggedUserIdPointsAndFirstName(model);
+        if ((int) model.getAttribute("userId") != userId) {
+            return "AccessDenied";
+        }
         List<ConventionBean> allCurrentConventionsUser = Arrays.asList(new RestTemplate().getForEntity("http://localhost:9002/conventions/" + userId, ConventionBean[].class).getBody());
         model.addAttribute("conventions", allCurrentConventionsUser);
         List<ConventionBean> allValidatedConventionUser = Arrays.asList(new RestTemplate().getForEntity("http://localhost:9002/validated_conventions/" + userId, ConventionBean[].class).getBody());
         model.addAttribute("validatedConventions", allValidatedConventionUser);
         List<ConventionBean> allFinishedConventions = Arrays.asList(new RestTemplate().getForEntity("http://localhost:9002/ended_conventions/" + userId, ConventionBean[].class).getBody());
         model.addAttribute("finishedConventions", allFinishedConventions);
-        catchLoggedUserIdPointsAndFirstName(model);
         return "MyConventions";
     }
 
@@ -332,7 +337,7 @@ public class ClientController {
 
     @PostMapping(value = "/send_convention")
     public void insertConvention(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        if (request.getParameter("message").length() > 200) {
+        if (request.getParameter("convention").length() > 200) {
             throw new Exception("Message trop longue");
         }
         UserBean sender = new RestTemplate().getForObject("http://localhost:9001/user/" + SecurityContextHolder.getContext().getAuthentication().getName(), UserBean.class);
@@ -353,7 +358,7 @@ public class ClientController {
         conventionBean.setFirstNameRecipient(recipient.getFirstName());
         conventionBean.setLastNameRecipient(recipient.getLastName());
         conventionBean.setDateConvention(LocalDate.now().plusDays(1));
-        conventionBean.setDateBeginning(LocalDate.of(Integer.parseInt(request.getParameter("year")), Integer.parseInt(request.getParameter("month")), Integer.parseInt(request.getParameter("day"))));
+        conventionBean.setDateBeginning(LocalDate.of(Integer.parseInt(request.getParameter("year")), Integer.parseInt(request.getParameter("month")), Integer.parseInt(request.getParameter("day")) + 1));
         conventionBean.setBeginningHour(LocalTime.of(Integer.parseInt(request.getParameter("hour")) + 1, 0));
         conventionBean.setTimeIntervention(LocalTime.of(Integer.parseInt(request.getParameter("hours-intervention-time")) + 1, Integer.parseInt(request.getParameter("minutes-intervention-time"))));
         conventionBean.setPlace(request.getParameter("place"));
@@ -367,13 +372,16 @@ public class ClientController {
 
     @GetMapping(value = "/addressed_conventions/{recipientId}")
     public String getListAddressedConventions(@PathVariable int recipientId, Model model) {
+        catchLoggedUserIdPointsAndFirstName(model);
+        if ((int) model.getAttribute("userId") != recipientId) {
+            return "AccessDenied";
+        }
         List<ConventionBean> allNoValidatedConventionsUser = Arrays.asList(new RestTemplate().getForEntity("http://localhost:9002/conventions_recipient/" + recipientId, ConventionBean[].class).getBody());
         model.addAttribute("noValidatedConventions", allNoValidatedConventionsUser);
         List<ConventionBean> allValidatedConventionsUser = Arrays.asList(new RestTemplate().getForEntity("http://localhost:9002/validated_conventions_recipient/" + recipientId, ConventionBean[].class).getBody());
         model.addAttribute("validatedConventions", allValidatedConventionsUser);
         List<ConventionBean> allFinishedConventions = Arrays.asList(new RestTemplate().getForEntity("http://localhost:9002/ended_conventions_recipient/" + recipientId, ConventionBean[].class).getBody());
         model.addAttribute("finishedConventions", allFinishedConventions);
-        catchLoggedUserIdPointsAndFirstName(model);
         return "AddressedConventions";
     }
 
@@ -405,7 +413,10 @@ public class ClientController {
         ConventionBean modifiedConvention = new RestTemplate().getForObject("http://localhost:9002/convention/" + id, ConventionBean.class);
         if (verifyConvention(modifiedConvention, "recipient")) {
             modifiedConvention.setValidatedByRecipient(true);
+            modifiedConvention.setDateConvention(modifiedConvention.getDateConvention().plusDays(1));
+            modifiedConvention.setDateBeginning(modifiedConvention.getDateBeginning().plusDays(1));
             new RestTemplate().put("http://localhost:9002/update_convention", modifiedConvention);
+            generateConvention(modifiedConvention.getId());
             response.sendRedirect("/addressed_conventions/" + modifiedConvention.getRecipientId() + "?acceptedConvention=true");
         } else {
             response.sendRedirect("/access_denied");
@@ -434,18 +445,19 @@ public class ClientController {
         new RestTemplate().put("http://localhost:9001/update_user/", recipient);
         if (verifyConvention(modifiedConvention, "sender")) {
             modifiedConvention.setEndedBySender(true);
+            modifiedConvention.setDateConvention(modifiedConvention.getDateConvention().plusDays(1));
+            modifiedConvention.setDateBeginning(modifiedConvention.getDateBeginning().plusDays(1));
             new RestTemplate().put("http://localhost:9002/update_convention", modifiedConvention);
-            response.sendRedirect("/addressed_conventions/" + modifiedConvention.getRecipientId() + "?acceptedConvention=true");
+            response.sendRedirect("/my_conventions/" + modifiedConvention.getSenderId() + "?acceptedConvention=true");
         } else {
             response.sendRedirect("/access_denied");
         }
     }
 
-    @GetMapping(value = "/print_convention/{conventionId}")
-    public void generateConvention(@PathVariable int conventionId) throws DocumentException, IOException {
+    private void generateConvention(int conventionId) throws DocumentException {
         ConventionBean convention = new RestTemplate().getForObject("http://localhost:9002/convention/" + conventionId, ConventionBean.class);
         Document document = new Document();
-        String link = "src/main/resources/static/conventions/" + convention.getLastNameSender() + "-" + convention.getLastNameRecipient() + "-" + convention.getDateBeginning().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) +"-Convention.pdf";
+        String link = "src/main/resources/static/conventions/" + convention.getLastNameSender() + "-" + convention.getLastNameRecipient() + "-" + DateTimeFormatter.ofPattern("dd-MM-yyyy").format(convention.getDateBeginning()) + "-" + DateTimeFormatter.ofPattern("hh-mm").format(convention.getBeginningHour()) + "-Convention.pdf";
         try {
             PdfWriter.getInstance(document, new FileOutputStream(link));
         } catch (DocumentException e) {
@@ -481,7 +493,13 @@ public class ClientController {
         }
     }
 
-    private void addText(Document document, ConventionBean convention) throws DocumentException {
+    private Paragraph writeParagraph(String text) {
+        Paragraph paragraph = new Paragraph(text);
+        paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+        return paragraph;
+    }
+
+    private void writeHeader(Document document, ConventionBean convention) throws DocumentException {
         UserBean sender = new RestTemplate().getForObject("http://localhost:9001/userId/" + convention.getSenderId(), UserBean.class);
         UserBean recipient = new RestTemplate().getForObject("http://localhost:9001/userId/" + convention.getRecipientId(), UserBean.class);
         Paragraph title = new Paragraph("CONVENTION D'INTERVENTION");
@@ -494,23 +512,39 @@ public class ClientController {
         document.add(new Paragraph("Et"));
         document.add(new Paragraph(recipient.getFirstName() + " " + recipient.getLastName().toUpperCase() + " Domicilié(e) à " + recipient.getTown()));
         addEmptyLine(document, 1);
-        document.add(new Paragraph("Il est conclu cette convention d'intervention fondée sur une confiance mutuelle, qui est la base de la mise en relation des membres du site BRICOVOISINS."));
+    }
+
+    private void writeBody(Document document, ConventionBean convention) throws DocumentException {
+        document.add(writeParagraph("Il est conclu cette convention d'intervention fondée sur une confiance mutuelle, qui est la base de la mise en relation des membres du site BRICOVOISINS."));
+        document.add(writeParagraph("L'aidant accomplira l'intervention décrite ci-dessous le " + DateTimeFormatter.ofPattern("dd/MM/yyyy").format(convention.getDateBeginning()) + " à partir de " + DateTimeFormatter.ofPattern("hh:mm").format(convention.getBeginningHour().minusHours(1)) + " à l'adresse qui lui a été communiquée par l'aidé."));
+        document.add(writeParagraph("La signature de chacun des deux membres vaut acceptation de la description ci-dessous, qu'ils ont préalablement mise au point. À l'issue de l'intervention, il est convenu que l'aidé en validera l'achèvement sur le site BRICOVOISINS."));
+        document.add(writeParagraph("Durée prévue de l'intervention : " + DateTimeFormatter.ofPattern("hh").format(convention.getTimeIntervention().minusHours(1)) + " h " + DateTimeFormatter.ofPattern("mm").format(convention.getTimeIntervention()) + " min."));
+        document.add(writeParagraph("Valeur de l'intervention : " + ((convention.getTimeIntervention().getHour() - 1) * 4 + convention.getTimeIntervention().getMinute() / 15) + " points d'entraide." ));
         addEmptyLine(document, 1);
-        document.add(new Paragraph("L'aidant accomplira l'intervention décrite ci-dessous le " + convention.getDateBeginning().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + " à partir de " + "à l'adresse qui lui a été communiquée par l'aidé."));
-        addEmptyLine(document, 1);
-        document.add(new Paragraph("La signature de chacun des deux membres vaut acceptation de la description ci-dessous, qu'ils ont préalablement mise au point. A l'issue de l'intervention, il est convenu que l'aidé en validera l'achèvement sur le site BRICOVOISINS."));
-        addEmptyLine(document, 2);
         Paragraph description = new Paragraph("DESCRIPTION DE L'INTERVENTION");
         description.setAlignment(Element.ALIGN_CENTER);
         document.add(description);
         addEmptyLine(document, 1);
-        document.add(new Paragraph(convention.getMessage()));
+        Paragraph message = new Paragraph(convention.getMessage());
+        message.setAlignment(Element.ALIGN_JUSTIFIED);
+        document.add(message);
         addEmptyLine(document, 1);
+    }
+
+    private void writeFooter(Document document) throws DocumentException {
         Paragraph signature = new Paragraph("Signatures");
         signature.setAlignment(Element.ALIGN_CENTER);
         document.add(signature);
-        Paragraph actors = new Paragraph("L'aidant,            L'aidé,");
+        addEmptyLine(document, 1);
+        Paragraph actors = new Paragraph("L'aidant,                                    L'aidé,");
+        actors.setAlignment(Element.ALIGN_CENTER);
         document.add(actors);
+    }
+
+    private void addText(Document document, ConventionBean convention) throws DocumentException {
+        writeHeader(document, convention);
+        writeBody(document, convention);
+        writeFooter(document);
     }
 
     private void addEmptyLine(Document document, int number) throws DocumentException {
@@ -636,5 +670,10 @@ public class ClientController {
         UserBean user = new RestTemplate().getForObject("http://localhost:9001/user/" + SecurityContextHolder.getContext().getAuthentication().getName(), UserBean.class);
         model.addAttribute("name", user.getFirstName() + " " + user.getLastName());
         return "Chat";
+    }
+
+    @GetMapping(value = "/error")
+    public String getErrorPage() {
+        return "Error";
     }
 }

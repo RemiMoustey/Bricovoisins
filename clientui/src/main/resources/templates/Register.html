@@ -14,7 +14,7 @@
         <div class="container">
             <h1 class="text-center" th:if="${user == null}">Inscription</h1>
             <h1 class="text-center" th:if="${user != null}">Modifier son profil</h1>
-            <p class="text-center password-warning">(saisissez à nouveau votre mot de passe)</p>
+            <p class="text-center password-warning" th:if="${user != null}">(saisissez à nouveau votre mot de passe)</p>
             <form th:if="${user == null}" method="post" th:action="@{/validation}" class="form-inscription m-auto" enctype="multipart/form-data">
                 <div th:replace="Form :: form"></div>
             </form>

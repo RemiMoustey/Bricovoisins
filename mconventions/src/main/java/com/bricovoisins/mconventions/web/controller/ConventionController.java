@@ -53,7 +53,7 @@ public class ConventionController {
     }
 
     @GetMapping(value = "/conventions/{userId}")
-    public List<Convention> getListCurrentConventionsUser(@PathVariable int userId) {
+    public List<Convention> getListCurrentConventionsSender(@PathVariable int userId) {
         return conventionDao.findBySenderIdAndIsValidatedByRecipientIsFalse(userId);
     }
 
@@ -63,7 +63,7 @@ public class ConventionController {
     }
 
     @GetMapping(value = "/validated_conventions/{userId}")
-    public List<Convention> getListValidatedConventionsUser(@PathVariable int userId) {
+    public List<Convention> getListValidatedConventionsSender(@PathVariable int userId) {
         return conventionDao.findBySenderIdAndIsValidatedByRecipientIsTrueAndIsEndedBySenderIsFalse(userId);
     }
 

@@ -6,7 +6,6 @@
         <title>Mes conventions d'aidant</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" href="/css/navbar.css" />
-        <link rel="stylesheet" type="text/css" href="/css/dashboard.css" />
         <link rel="stylesheet" type="text/css" href="/css/style.css" />
         <link rel="stylesheet" type="text/css" href="/css/conventions.css">
     </head>
@@ -30,6 +29,7 @@
                     <summary><p>Classée le <span th:text="${#temporals.format(convention.dateConvention, 'dd/MM/yyyy')}"></span> par <a th:href="@{|/profile/${convention.senderId}|}"><span th:text="${convention.firstNameSender}"></span> <span th:text="${convention.lastNameSender}"></span></a>.</p></summary>
                     <p th:text="${convention.message}"></p>
                 </details>
+                <p><a th:href="@{|/conventions/${convention.lastNameSender}-${convention.lastNameRecipient}-${#temporals.format(convention.dateBeginning, 'dd-MM-yyyy')}-${#temporals.format(convention.beginningHour, 'hh-mm')}-Convention.pdf|}">Télécharger la convention</a></p>
             </div>
             <h2>Conventions à valider</h2>
             <p th:if="${#lists.size(noValidatedConventions) == 0}">
@@ -41,7 +41,7 @@
                     <p th:text="${convention.message}"></p>
                 </details>
                 <a role="button" th:href="@{|/validate_convention_recipient/${convention.id}|}" class="btn btn-success" onclick='return confirm("Êtes-vous sûr de valider cette convention ?")'>Valider</a>
-                <a role="button" th:href="@{|/refuse_convention_recipient/${convention.id}|}" class="btn btn-danger" onclick='return confirm("Êtes-vous sûr de valider cette convention ?")'>Annuler</a>
+                <a role="button" th:href="@{|/refuse_convention_recipient/${convention.id}|}" class="btn btn-danger" onclick='return confirm("Êtes-vous sûr d&apos;annuler cette convention ?")'>Annuler</a>
             </div>
             <h2>Conventions en cours</h2>
             <p th:if="${#lists.size(validatedConventions) == 0}">
@@ -52,7 +52,7 @@
                     <summary><p>Rédigée le <span th:text="${#temporals.format(convention.dateConvention, 'dd/MM/yyyy')}"></span> par <a th:href="@{|/profile/${convention.senderId}|}"><span th:text="${convention.firstNameSender}"></span> <span th:text="${convention.lastNameSender}"></span></a>.</p></summary>
                     <p th:text="${convention.message}"></p>
                 </details>
-                <p><a th:href="@{|/print_convention/${convention.id}|}">Télécharger la convention</a></p>
+                <p><a th:href="@{|/conventions/${convention.lastNameSender}-${convention.lastNameRecipient}-${#temporals.format(convention.dateBeginning, 'dd-MM-yyyy')}-${#temporals.format(convention.beginningHour, 'hh-mm')}-Convention.pdf|}">Télécharger la convention</a></p>
             </div>
         </div>
     </body>

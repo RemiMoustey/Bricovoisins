@@ -24,13 +24,13 @@ class MopinionsApplicationTests {
 		newOpinion.setAuthorId(62);
 		opinionController.insertOpinion(newOpinion);
 		assertEquals(previousSize + 1, opinionController.getAllOpinions().size());
-		Opinion addedOpinion = opinionController.getAllOpinionsByAuthor(62).get(1);
+		Opinion addedOpinion = opinionController.getAllOpinionsByAuthor(62).get(0);
 		opinionController.deleteOpinion(addedOpinion.getId());
 	}
 
 	@Test
 	void testGetAllOpinionsByUser() {
-		assertEquals(1, opinionController.getAllOpinionsByAuthor(62).size());
+		assertEquals(0, opinionController.getAllOpinionsByAuthor(62).size());
 	}
 
 	@Test
@@ -54,7 +54,7 @@ class MopinionsApplicationTests {
 		newOpinion.setUserId(63);
 		newOpinion.setAuthorId(62);
 		opinionController.insertOpinion(newOpinion);
-		Opinion addedOpinion = opinionController.getAllOpinionsByAuthor(62).get(1);
+		Opinion addedOpinion = opinionController.getAllOpinionsByAuthor(62).get(0);
 		int previousSize = opinionController.getAllOpinions().size();
 		opinionController.deleteOpinion(addedOpinion.getId());
 		assertEquals(previousSize - 1, opinionController.getAllOpinions().size());

@@ -24,26 +24,28 @@ class MconventionsApplicationTests {
 	@Autowired
 	ConventionController conventionController;
 
-//	@Test
-//	void testGetAllConventions() {
-//		assertEquals(3, conventionController.getAllConventions().size());
-//	}
+	@Test
+	void testGetAllConventions() {
+		assertEquals(1, conventionController.getAllConventions().size());
+	}
 
-//	@Test
-//	void testGetOneConvention() {
-//		assertEquals(70, conventionController.getOneConventionById(70).getId());
-//	}
+	@Test
+	void testGetOneConvention() {
+		assertEquals(49, conventionController.getOneConventionById(49).getId());
+	}
 
-//	@Test
-//	void testGetAllConventionsOfSender() {
-//		assertEquals(1, conventionController.getAllConventionsOfSender().size());
-//	}
+	@Test
+	void testGetAllConventionsOfSender() {
+		assertEquals(1, conventionController.getAllConventionsOfSender(63).size());
+	}
 
 	@Test
 	void testDeleteConvention() {
 		Convention convention = new Convention();
 		convention.setSenderId(62);
 		convention.setRecipientId(63);
+		convention.setFirstNameSender("Rémi");
+		convention.setLastNameSender("Moustey");
 		convention.setFirstNameRecipient("Jean");
 		convention.setLastNameRecipient("J.");
 		convention.setDateConvention(LocalDate.of(2020, 3, 1));
@@ -66,6 +68,8 @@ class MconventionsApplicationTests {
 		Convention convention = new Convention();
 		convention.setSenderId(62);
 		convention.setRecipientId(63);
+		convention.setFirstNameSender("Rémi");
+		convention.setLastNameSender("Moustey");
 		convention.setFirstNameRecipient("Jean");
 		convention.setLastNameRecipient("J.");
 		convention.setDateConvention(LocalDate.of(2020, 3, 1));
@@ -81,30 +85,30 @@ class MconventionsApplicationTests {
 		conventionController.deleteConvention(addedConvention.getId());
 	}
 
-//	@Test
-//	void testGetListCurrentConventionsUser() {
-//		assertEquals(1, conventionController.getListCurrentConventionsUser(62).size());
-//	}
-//
-//	@Test
-//	void testGetListValidatedConventionsUser() {
-//		assertEquals(1, conventionController.getListValidatedConventionsUser(62).size());
-//	}
-//
-//	@Test
-//	void testGetListEndedConventionsUser() {
-//		assertEquals(1, conventionController.getListEndedConventionsUser(62).size());
-//	}
+	@Test
+	void testGetListCurrentConventionsSender() {
+		assertEquals(0, conventionController.getListCurrentConventionsSender(63).size());
+	}
 
-//	@Test
-//	void testGetListNoValidatedConventionsHelper() {
-//		assertEquals(1, conventionController.getListNoValidatedConventionsHelper(63));
-//	}
-//
-//	@Test
-//	void testGetListValidatedConventionsHelper() {
-//		assertEquals(1, conventionController.getListValidatedConventionsUser(63));
-//	}
+	@Test
+	void testGetListValidatedConventionsSender() {
+		assertEquals(0, conventionController.getListValidatedConventionsSender(63).size());
+	}
+
+	@Test
+	void testGetListEndedConventionsSender() {
+		assertEquals(1, conventionController.getListEndedConventionsSender(63).size());
+	}
+
+	@Test
+	void testGetListNoValidatedConventionsHelper() {
+		assertEquals(0, conventionController.getListNoValidatedConventionsHelper(62).size());
+	}
+
+	@Test
+	void testGetListValidatedConventionsHelper() {
+		assertEquals(0, conventionController.getListValidatedConventionsHelper(62).size());
+	}
 
 	@Test
 	void testUpdateReservation() {
