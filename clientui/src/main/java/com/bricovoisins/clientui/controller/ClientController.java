@@ -153,21 +153,25 @@ public class ClientController {
 
     @GetMapping(value = "/profile/{userId}")
     public String getProfilePage(@PathVariable int userId, Model model) {
-        UserBean user = new RestTemplate().getForObject("http://localhost:9001/userId/" + userId, UserBean.class);
-        model.addAttribute("user", user);
         catchLoggedUserIdPointsAndFirstName(model);
-        UserBean visitor = new RestTemplate().getForObject("http://localhost:9001/user/" + SecurityContextHolder.getContext().getAuthentication().getName(), UserBean.class);
-        model.addAttribute("visitorIsAdmin", visitor.getIsAdmin());
-        for (ConventionBean convention : Arrays.asList(new RestTemplate().getForEntity("http://localhost:9002/ended_conventions_recipient/" + userId, ConventionBean[].class).getBody())) {
-            if (convention.getSenderId() == (int) model.getAttribute("userId")) {
-                model.addAttribute("hasConvention", true);
-                break;
+        UserBean user = new RestTemplate().getForObject("http://localhost:9001/userId/" + userId, UserBean.class);
+        if (user != null) {
+            model.addAttribute("user", user);
+            UserBean visitor = new RestTemplate().getForObject("http://localhost:9001/user/" + SecurityContextHolder.getContext().getAuthentication().getName(), UserBean.class);
+            model.addAttribute("visitorIsAdmin", visitor.getIsAdmin());
+            for (ConventionBean convention : Arrays.asList(new RestTemplate().getForEntity("http://localhost:9002/ended_conventions_recipient/" + userId, ConventionBean[].class).getBody())) {
+                if (convention.getSenderId() == (int) model.getAttribute("userId")) {
+                    model.addAttribute("hasConvention", true);
+                    break;
+                }
+                model.addAttribute("hasConvention", false);
             }
-            model.addAttribute("hasConvention", false);
+            model.addAttribute("opinions", Arrays.asList(new RestTemplate().getForEntity("http://localhost:9003/opinions_user/" + userId, OpinionBean[].class).getBody()));
+            model.addAttribute("titlePage", "Profil de " + user.getFirstName() + " " + user.getLastName());
+            return "Profile";
+        } else {
+            return "Error";
         }
-        model.addAttribute("opinions", Arrays.asList(new RestTemplate().getForEntity("http://localhost:9003/opinions_user/" + userId, OpinionBean[].class).getBody()));
-        model.addAttribute("titlePage", "Profil de " + user.getFirstName() + " " + user.getLastName());
-        return "Profile";
     }
 
     @GetMapping(value = "/demands")
@@ -715,7 +719,8 @@ public class ClientController {
     }
 
     @GetMapping(value = "/error")
-    public String getErrorPage() {
+    public String getErrorPage(Model model) {
+        catchLoggedUserIdPointsAndFirstName(model);
         return "Error";
     }
 }
